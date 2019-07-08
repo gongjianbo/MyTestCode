@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QtAV>
 #include <QtAVWidgets>
+#include <QtAV/AVTranscoder.h>
 
 namespace Ui {
 class MainWindow;
@@ -23,6 +24,7 @@ private:
     //QtAV::VideoOutput 会异常退出
     QtAV::VideoRenderer *theRender;
     QtAV::AVPlayer *thePlayer;
+    QtAV::AVTranscoder *theAvt;
     //QtAV::VideoPreviewWidget
 };
 

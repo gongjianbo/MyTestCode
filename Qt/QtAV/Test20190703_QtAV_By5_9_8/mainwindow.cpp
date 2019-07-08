@@ -14,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //thePlayer->set
     //qDebug()<<1;
     thePlayer=new AVPlayer(this);
+    theAvt=new AVTranscoder(this);
     //qDebug()<<2;
     //QtAV::VideoOutput 退出时异常
     theRender=new GLWidgetRenderer2(this);
@@ -46,9 +47,20 @@ MainWindow::MainWindow(QWidget *parent) :
         thePlayer->stop();
     });
     connect(ui->btnSaveBegin,&QPushButton::clicked,this,[=](){
+        theAvt->setMediaSource(thePlayer);
+        theAvt->setOutputFormat("mp4");
+        theAvt->setOutputMedia("C:/Users/zhaozhao/Videos/record.mp4");
+
+        if(!theAvt->createVideoEncoder()){
+            return;
+        }
+        theAvt->videoEncoder()->setCodecName("mpeg4");
+        //venc->setCodecName("");
+        theAvt->setAsync(true);
+        theAvt->start();
     });
     connect(ui->btnSaveEnd,&QPushButton::clicked,this,[=](){
-
+        theAvt->stop();
     });
 
     connect(ui->btnOther,&QPushButton::clicked,this,[=](){
