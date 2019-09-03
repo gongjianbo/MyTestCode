@@ -1,0 +1,58 @@
+1.Scrapy架构介绍
+Engine 引擎：处理整个系统的数据流处理、触发事务，是整个框架的核心
+Item 项目：定义了爬取结果的数据结构，爬取的数据会被赋值成该Item对象
+Scheduler 调度器：接受引擎发过来的请求并将其加入队列中，在引擎再次请求的时候将请求提供给引擎
+Downloader 下载器：下载网页内容，并将网页内容返回给Spider
+Spiders 爬虫：定义了爬取的逻辑和网页的解析规则，主要负责解析响应并生成提取结果和新的请求
+Item Pipeline 项目管道：负责处理由Spider从网页中抽取的Item，主要任务是清洗、验证和存储数据
+Downloader Middlewares 下载中间件：位于引擎和下载器之间的钩子框架，主要处理引擎和下载器之间的请求和响应
+Spider Middlewares 爬虫中间件：位于引擎和Spider之间的钩子框架，主要处理Spider输入的响应和输出的结果及新的请求
+
+2.数据流
+Engine首先打开一个网站，找到处理该网站的Spider，并向该Spider请求第一个要爬取的URL
+Engine从Spider中获取到第一个要爬取的URL，并通过Scheduler以Request的形式调度
+Engine向Scheduler请求下一个要爬取的URL
+Scheduler返回下一个要爬取的URL给Engine，Engine将URL通过Downloader Middlewares转发给Downloader下载
+当页面下载完毕，Downloader生成该页面的Response，并通过Downloader Moddlewares发送给Engine
+Engine从下载器中接收到Response，并将其通过Spider Middlewares发送给Spider处理
+Spider处理Response，并返回爬取到的Item及新的Request给Engine
+Engine将Spider返回的Item给Item Pipeline，将新的Request给Scheduler
+重复第二到第八步，直到Scheduler中没有更多的Request，Engine关闭该网站，爬取结束
+
+3.项目中的主要文件
+scrapy.cfg 项目配置文件，定义了配置文件路径，部署相关等内容
+items.py 定义Item数据结构
+pipelines.py 定义Item Pipeline实现
+settings.py 定义项目的全局配置
+middlewares.py 定义Spider和Downloader中间件实现
+spiders.py 包含一个个Spider的实现，每个Spider都有一个文件
+
+4.简单的操作
+4.1 创建项目  
+找个目录执行命令：scrapy startproject tutorial
+//tutorial为项目名，执行完后会提示下一步
+将会创建一个名为tutorial的文件夹，包含了基本的项目文件
+4.2 创建Spider
+在刚才的路径执行命令：cd tutorial
+执行命令：scrapy genspider quotes quotes.toscrape.com
+//quotes为爬虫名
+4.3 写爬虫
+创建Spider之后就该根据页面结构去写items.py和quotes.py了，解析Response并提取新的Request
+4.4 运行爬虫
+执行命令：scrapy crawl quotes
+可以运行爬虫并保存到文件，如下：
+执行命令：scrapy crawl quotes -o quotes.json
+//保存到json文件中，也可以指定别的格式
+4.5 使用Item Pipeline
+修改pipelines.py，清洗、验证和存储数据
+//我这里只写了书里的textpipeline
+定义好pipeline后需要在settings.py中使用他们，并重新执行爬取
+settings.py修改如下(存储到mongodb的部分我没写)：
+ITEM_PIPELINES={
+    //数字为优先级，越小越高
+    'tutorial.pipelines.TextPipeline':300,
+    'tutorial.pipelines.MongoPipeline':400,
+}
+MONGO_URI='localhost'
+MONGO_DB='tutorial'
+
