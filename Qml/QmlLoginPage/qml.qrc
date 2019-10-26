@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>LoginPage/LoginButton.qml</file>
+        <file>LoginPage/LoginCheckBox.qml</file>
+        <file>LoginPage/LoginCompleter.qml</file>
+        <file>LoginPage/LoginField.qml</file>
+        <file>LoginPage/LoginLabel.qml</file>
+        <file>LoginPage/LoginPage.qml</file>
+        <file>MainPage/MainPage.qml</file>
+    </qresource>
+</RCC>
