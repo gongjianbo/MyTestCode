@@ -146,8 +146,8 @@ Qt::ItemFlags JsonTreeModel::flags(const QModelIndex &index) const
         return 0;
 
     JsonTreeItem *item = getItem(index);
-    return (item->editable(index.column())?Qt::ItemIsEditable:0)
-            | QAbstractItemModel::flags(index);
+    return (item->editable(index.column())?Qt::ItemIsEditable:Qt::NoItemFlags)
+            |QAbstractItemModel::flags(index);
 }
 
 bool JsonTreeModel::setData(const QModelIndex &index, const QVariant &value, int role)
