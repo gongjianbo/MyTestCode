@@ -1,0 +1,520 @@
+{
+    "VencAblityList": [{
+        "Device": 0,
+        "Channel": 0,
+        "Stream": 0,
+        "Profiles": ["BaseLine", "Main", "Hight"]
+    }, {
+        "Device": 0,
+        "Channel": 0,
+        "Stream": 1,
+        "Profiles": ["BaseLine", "Main", "Hight"]
+    }],
+    "BoardSys": {
+        "VideoInput": {
+            "Attribute": {
+                "All": {
+                    "InputList": [{
+                        "Device": 0,
+                        "Width": 1920,
+                        "Height": 1080,
+                        "Fps": 25,
+                        "Format": 1
+                    }]
+                }
+            }
+        },
+        "Image": {
+            "Attribute": {
+                "All": {
+                    "ImageList": [{
+                        "Device": 0,
+                        "TypeName": "DayNight",
+                        "Type": 0,
+                        "Param": {
+                            "Mode": 0,
+                            "Delay": 3,
+                            "NightToDayThreshold": 35,
+                            "DayToNightThreshold": 20,
+                            "DayStart": 0,
+                            "DayEnd": 0
+                        }
+                    }, {
+                        "Device": 0,
+                        "TypeName": "Exposure",
+                        "Type": 1,
+                        "Param": {
+                            "Shutter": 1,
+                            "Gain": 3,
+                            "AeRouteMode": 0
+                        }
+                    }, {
+                        "Device": 0,
+                        "TypeName": "WhiteBalance",
+                        "Type": 2,
+                        "Param": {
+                            "Mode": 0,
+                            "CustomR": 114,
+                            "CustomG": 64,
+                            "CustomB": 115,
+                            "CurR": 114,
+                            "CurG": 64,
+                            "CurB": 115
+                        }
+                    }, {
+                        "Device": 0,
+                        "TypeName": "Fouce",
+                        "Type": 3,
+                        "Param": {}
+                    }, {
+                        "Device": 0,
+                        "TypeName": "Sharpen",
+                        "Type": 4,
+                        "Param": {
+                            "Enable": 1,
+                            "Level": 128
+                        }
+                    }, {
+                        "Device": 0,
+                        "TypeName": "Nr3d",
+                        "Type": 5,
+                        "Param": {
+                            "Enable": 0,
+                            "Level": 0
+                        }
+                    }, {
+                        "Device": 0,
+                        "TypeName": "Wdr",
+                        "Type": 6,
+                        "Param": {
+                            "Enable": 1,
+                            "Level": 0,
+                            "Mode": 0
+                        }
+                    }, {
+                        "Device": 0,
+                        "TypeName": "Defog",
+                        "Type": 7,
+                        "Param": {
+                            "Enable": 0,
+                            "Level": 0
+                        }
+                    }, {
+                        "Device": 0,
+                        "TypeName": "Gamma",
+                        "Type": 8,
+                        "Param": {
+                            "Enable": 1,
+                            "Mode": 2
+                        }
+                    }, {
+                        "Device": 0,
+                        "TypeName": "ColorStyle",
+                        "Type": 9,
+                        "Param": {
+                            "Mode": 0
+                        }
+                    }, {
+                        "Device": 0,
+                        "TypeName": "Mirror",
+                        "Type": 10,
+                        "Param": {
+                            "Mode": 0
+                        }
+                    }, {
+                        "Device": 0,
+                        "TypeName": "Flicker",
+                        "Type": 11,
+                        "Param": {
+                            "Mode": 0
+                        }
+                    }, {
+                        "Device": 0,
+                        "TypeName": "IrLight",
+                        "Type": 12,
+                        "Param": {
+                            "Enable": 1,
+                            "Mode": 0,
+                            "Level": 0
+                        }
+                    }, {
+                        "Device": 0,
+                        "TypeName": "ColorAdjust",
+                        "Type": 15,
+                        "Param": {
+                            "Brightness": 128,
+                            "Contrast": 128,
+                            "Saturation": 128,
+                            "Hue": 128
+                        }
+                    }, {
+                        "Device": 0,
+                        "TypeName": "SlowFrame",
+                        "Type": 16,
+                        "Param": {
+                            "Mode": 0
+                        }
+                    }, {
+                        "Device": 0,
+                        "TypeName": "SignalNoiseRatio",
+                        "Type": 17,
+                        "Param": {
+                            "Mode": 0
+                        }
+                    }, {
+                        "Device": 0,
+                        "TypeName": "AEStrategy",
+                        "Type": 26,
+                        "Param": {
+                            "Mode": 1,
+                            "Level": 5
+                        }
+                    }, {
+                        "Device": 0,
+                        "TypeName": "AECompensation",
+                        "Type": 27,
+                        "Param": {
+                            "Level": 50
+                        }
+                    }]
+                }
+            }
+        },
+        "Video": {
+            "WaterMark": {
+                "Enable": 0,
+                "String": ""
+            },
+            "Attribute": {
+                "All": {
+                    "AttributeList": [{
+                        "Device": 0,
+                        "Channel": 0,
+                        "Stream": 0,
+                        "Width": 1920,
+                        "Height": 1080,
+                        "Quality": 0,
+                        "Fps": 0,
+                        "Iinterval": 25,
+                        "BitrateCtrlMode": 1,
+                        "EncodeFormat": 0,
+                        "Profiles": 1,
+                        "Bitrate": 4096,
+                        "BitrateIsCustom": 0,
+                        "ResoStr": "1080P(1920*1080)"
+                    }, {
+                        "Device": 0,
+                        "Channel": 0,
+                        "Stream": 1,
+                        "Width": 704,
+                        "Height": 576,
+                        "Quality": 0,
+                        "Fps": 0,
+                        "Iinterval": 25,
+                        "BitrateCtrlMode": 1,
+                        "EncodeFormat": 0,
+                        "Profiles": 1,
+                        "Bitrate": 1024,
+                        "BitrateIsCustom": 0,
+                        "ResoStr": "704*576"
+                    }]
+                }
+            }
+        },
+        "Osd": {
+            "ChannelName": {
+                "Attribute": {
+                    "All": {
+                        "NameOsdList": [{
+                            "Device": 0,
+                            "Channel": 0,
+                            "Stream": 0,
+                            "Enable": 1,
+                            "X": 0,
+                            "Y": 0,
+                            "Location": 0,
+                            "Gap": 0,
+                            "Size": 0,
+                            "String": "IpCamera0",
+                            "ColorAttr": {
+                                "TextColorEx": 32767
+                            },
+                            "UseRemoteBm": 1,
+                            "BitMapArr": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB//wAAAAAB+EAAAAAAAAAAAAAAAAAAAAAHwAABwAAAAAAGD8AAAAAAAAAAAAAAAAAAAAAcMAABwAAAAAAYA8AAAAAAAAAAAAAAAAAAAAA4GAABwAAAAAAwAcAAAAAAAAAAAAAAAAAAAABwDAABwAAAAABwAMAAAAAAAAAAAAAAAAAAAABgDgABwAAAAABgAMAAAAAAAAAAAAAAAAAAAADgBgABwAAAAADgAGAAAAAAAAAAAAAAAAAAAADABgABwAAAAADAAGAAAAAAAAAAAAAAAAAAAAHABwABwAAAAAHAACAAAAAAAAAAAAAAAAAAAAHABwABwAAAAAHAAAAAAAAAAAAAAAAAAAAAAAHAAwABwAAgAAGAAAAAAACAAAAAAAAMAAAAAAOAA4ABwAfh8AOAAAAP4A+fHgAH4AP8DwAP4AOAA4ABwADn/AOAAAAwOAO/PwAcGAAcP8AwOAOAA4ABwADuDwOAAADgHAPj44AwDgAcY8DgHAOAA4ABwAD4BwOAAAHADgPDw4BgBwAcw8HADgOAA4ABwADwA4OAAAHADgODg4BgBwAdg4HADgOAA4ABwADgA4OAAAHADgODg4DAAwAfAAHADgOAA4ABwADgAcOAAAHADgODg4DAA4AeAAHADgOAA4ABwADgAcOAAAAADgODg4HAA4AeAAAADgOAA4ABwADgAcOAAAAA/gODg4HAA4AcAAAA/gOAA4ABwADgAcOAAAAPjgODg4H//4AcAAAPjgOAA4ABwADgAcOAAAB4DgODg4HAAAAcAAB4DgOAA4ABwADgAcHAACDgDgODg4HAAAAcAADgDgHAAwABwADgAcHAAGHADgODg4HAAAAcAAHADgHABwABwADgAcHAAEHADgODg4HAAAAcAAHADgHABwABwADgAYDgAEOADgODg4DgAAAcAAOADgDABgABwADgA4DgAMOADgODg4DgAQAcAAOADgDgBgABwADgA4BwAYOADiODg4DwAwAcAAOADiBgDAABwADwBwB4AwOADiODg4BwBgAcAAOADiBwDAABwAD4DgA8DgHAPmODg4A8DAAcAAHAPmAwGAABwADsHAAP/ADgz8ODg4Af+AAcAADgz8AcMAB//wDj8AAD8AA/B4/v7+AH4AP/8AA/B4AHwAAAAADgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAf8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                            "BitMapArrLen": 1296,
+                            "BitMapW": 216,
+                            "BitMapH": 48,
+                            "BitMapSize": 30,
+                            "FontName": "SongTi"
+                        }, {
+                            "Device": 0,
+                            "Channel": 0,
+                            "Stream": 1,
+                            "Enable": 1,
+                            "X": 0,
+                            "Y": 0,
+                            "Location": 0,
+                            "Gap": 0,
+                            "Size": 0,
+                            "String": "IpCamera0",
+                            "ColorAttr": {
+                                "TextColorEx": 32767
+                            },
+                            "UseRemoteBm": 1,
+                            "BitMapArr": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAfAA+AAAAAAAYEABCAAAAAAAkEABCAAAAAABCEACAAAAAAABCENiAPP487jxCEGSAQklCMkJCEEKAHkl+IB5CEEKAIklAICJCEEJCQklAIEJCEEREQklCIEIkfHg4P+08+D8YAEAAAAAAAAAAAOAAAAAAAAAA",
+                            "BitMapArrLen": 144,
+                            "BitMapW": 72,
+                            "BitMapH": 16,
+                            "BitMapSize": 10,
+                            "FontName": "SongTi"
+                        }]
+                    }
+                }
+            },
+            "MulString": {
+                "Attribute": {
+                    "All": {
+                        "MulOsdList": [{
+                            "Device": 0,
+                            "Channel": 0,
+                            "Stream": 0,
+                            "Enable": 0,
+                            "X": 1020,
+                            "Y": 1020,
+                            "Location": 0,
+                            "Gap": 0,
+                            "Size": 0,
+                            "String": "",
+                            "ColorAttr": {
+                                "TextColorEx": 32767
+                            },
+                            "UseRemoteBm": 1,
+                            "BitMapArr": "",
+                            "BitMapArrLen": 0,
+                            "BitMapW": 0,
+                            "BitMapH": 0,
+                            "BitMapSize": 30,
+                            "FontName": "SongTi"
+                        }, {
+                            "Device": 0,
+                            "Channel": 0,
+                            "Stream": 1,
+                            "Enable": 0,
+                            "X": 1020,
+                            "Y": 1020,
+                            "Location": 0,
+                            "Gap": 0,
+                            "Size": 0,
+                            "String": "",
+                            "ColorAttr": {
+                                "TextColorEx": 32767
+                            },
+                            "UseRemoteBm": 1,
+                            "BitMapArr": "",
+                            "BitMapArrLen": 0,
+                            "BitMapW": 0,
+                            "BitMapH": 0,
+                            "BitMapSize": 10,
+                            "FontName": "SongTi"
+                        }]
+                    }
+                }
+            },
+            "Time": {
+                "Attribute": {
+                    "All": {
+                        "TimeOsdList": [{
+                            "Device": 0,
+                            "Channel": 0,
+                            "Stream": 0,
+                            "Enable": 1,
+                            "X": 1020,
+                            "Y": 0,
+                            "Location": 0,
+                            "Gap": 0,
+                            "Size": 30,
+                            "ColorAttr": {
+                                "TextColorEx": 32767
+                            },
+                            "WeekDay": 0,
+                            "Style": 0,
+                            "HourStyle": 0,
+                            "RevData": 0
+                        }, {
+                            "Device": 0,
+                            "Channel": 0,
+                            "Stream": 1,
+                            "Enable": 1,
+                            "X": 1020,
+                            "Y": 0,
+                            "Location": 0,
+                            "Gap": 0,
+                            "Size": 10,
+                            "ColorAttr": {
+                                "TextColorEx": 32767
+                            },
+                            "WeekDay": 0,
+                            "Style": 0,
+                            "HourStyle": 0,
+                            "RevData": 0
+                        }]
+                    }
+                }
+            },
+            "Custom0": {
+                "Attribute": {
+                    "All": {
+                        "CustomOsdList": [{
+                            "Device": 0,
+                            "Channel": 0,
+                            "Stream": 0,
+                            "Enable": 0,
+                            "X": 0,
+                            "Y": 0,
+                            "Location": 0,
+                            "Gap": 0,
+                            "Size": 30,
+                            "String": "",
+                            "TextColorEx": 32767,
+                            "UseColorArr": 0,
+                            "ColorArr": [65535, 65535, 65535, 65535, 65535, 65535, 65535, 65535, 65535, 65535, 65535, 65535, 65535, 65535, 65535, 65535],
+                            "UseRemoteBm": 0,
+                            "BitMapSize": 0,
+                            "FontName": ""
+                        }, {
+                            "Device": 0,
+                            "Channel": 0,
+                            "Stream": 1,
+                            "Enable": 0,
+                            "X": 0,
+                            "Y": 0,
+                            "Location": 0,
+                            "Gap": 0,
+                            "Size": 30,
+                            "String": "",
+                            "TextColorEx": 32767,
+                            "UseColorArr": 0,
+                            "ColorArr": [65535, 65535, 65535, 65535, 65535, 65535, 65535, 65535, 65535, 65535, 65535, 65535, 65535, 65535, 65535, 65535],
+                            "UseRemoteBm": 0,
+                            "BitMapSize": 0,
+                            "FontName": ""
+                        }]
+                    }
+                }
+            }
+        },
+        "Mask": {
+            "All": {
+                "MaskList": [{
+                    "Device": 0,
+                    "Channel": 0,
+                    "Rect": 0,
+                    "Enable": 0,
+                    "X": 0,
+                    "Y": 0,
+                    "W": 500,
+                    "H": 500
+                }, {
+                    "Device": 0,
+                    "Channel": 0,
+                    "Rect": 1,
+                    "Enable": 0,
+                    "X": 0,
+                    "Y": 0,
+                    "W": 500,
+                    "H": 500
+                }, {
+                    "Device": 0,
+                    "Channel": 0,
+                    "Rect": 2,
+                    "Enable": 0,
+                    "X": 0,
+                    "Y": 0,
+                    "W": 500,
+                    "H": 500
+                }, {
+                    "Device": 0,
+                    "Channel": 0,
+                    "Rect": 3,
+                    "Enable": 0,
+                    "X": 0,
+                    "Y": 0,
+                    "W": 500,
+                    "H": 500
+                }]
+            }
+        },
+        "Event": {
+            "AlarmIn": {
+                "Attribute": {
+                    "All": {
+                        "EventList": [{
+                            "Channel": 0,
+                            "Enable": 1,
+                            "TriggerMode": 0,
+                            "Name": "AlarmIn0"
+                        }, {
+                            "Channel": 1,
+                            "Enable": 1,
+                            "TriggerMode": 0,
+                            "Name": "AlarmIn1"
+                        }]
+                    }
+                }
+            },
+            "Motion": {
+                "Attribute": {
+                    "All": {
+                        "EventList": [{
+                            "Device": 0,
+                            "Channel": 0,
+                            "Enable": 0,
+                            "Sensitivity": 5,
+                            "Rect": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                            "BlockW": 32,
+                            "BlockH": 32
+                        }]
+                    }
+                }
+            },
+            "Hide": {
+                "Attribute": {
+                    "All": {
+                        "EventList": [{
+                            "Device": 0,
+                            "Channel": 0,
+                            "Enable": 0,
+                            "Sensitivity": 2,
+                            "X": 0,
+                            "Y": 0,
+                            "W": 0,
+                            "H": 0
+                        }]
+                    }
+                }
+            }
+        },
+        "AlarmOut": {
+            "Attribute": {
+                "All": {
+                    "AlaramOutList": [{
+                        "Channel": 0,
+                        "TriggerMode": 0,
+                        "Delay": 5,
+                        "Name": "AlarmOut0"
+                    }]
+                }
+            }
+        },
+        "Audio": {
+            "Attribute": {
+                "All": {
+                    "AudioEnable": 1,
+                    "AudioSource": 0,
+                    "InputVol": 50,
+                    "OutputVol": 50
+                }
+            }
+        }
+    }
+}
