@@ -40,6 +40,7 @@ class LinkedList:
 
     def __len__(self):
         ''' Node个数 '''
+        # 应该拿个变量保存长度，这样不用每次都去遍历
         count = 0
         cursor = self.__head
         while cursor.next != self.__tail:
@@ -99,6 +100,7 @@ class LinkedList:
     def insert(self, pos, value):
         ''' 任意位置插入 '''
         # 对于无效的位置，可以抛出异常，或者用布尔返回值
+        # （也可先判断pos离头还是尾更近，再进行循环）
         length = len(self)
         if pos >= 0 and pos <= length:
             cursor = self.__head
@@ -116,6 +118,7 @@ class LinkedList:
     def remove(self, pos):
         ''' 任意位置删除 '''
         # 对于无效的位置，可以抛出异常，或者用布尔返回值
+        # （也可先判断pos离头还是尾更近，再进行循环）
         length = len(self)
         if pos >= 0 and pos < length:
             cursor = self.__head.next
@@ -135,13 +138,27 @@ class LinkedList:
         if (self.__head.next == self.__tail or
                 self.__head.next.next == self.__tail):
             return
-        cursor=self.__head
+        cursor = self.__head
         while cursor != None:
             # 交换节点的前后指向
-            cursor.prev,cursor.next=cursor.next,cursor.prev
-            cursor=cursor.prev
+            cursor.prev, cursor.next = cursor.next, cursor.prev
+            cursor = cursor.prev
         # 原来的head和tail交换
-        self.__head,self.__tail=self.__tail,self.__head
+        self.__head, self.__tail = self.__tail, self.__head
+
+    def sort(self):
+        ''' 排序，这里用冒泡排序演示下就行了 '''
+        # 外部指针每次移动一个位置，内部指针每次循环一次
+        outer = self.__head.next
+        # 不等于tail.prev是因为比较的是 index 和 index+1 的节点，总不能拿 tail 来比较吧
+        while outer != self.__tail and outer != self.__tail.prev:
+            inner = outer
+            while inner != self.__tail and inner != self.__tail.prev:
+                if inner.value > inner.next.value:
+                    # 这里根据自己的需求选择交换值还是交换节点，交换结点的话要拿变量保存节点
+                    inner.value, inner.next.value = inner.next.value, inner.value
+                inner = inner.next
+            outer = outer.next
 
 
 if __name__ == "__main__":
@@ -184,6 +201,8 @@ if __name__ == "__main__":
     mylist.insert(0, 111)
     mylist.insert(2, 520)
     print(len(mylist))
+    print(str(mylist))
+    mylist.sort()
     print(str(mylist))
     mylist.remove(2)
     mylist.remove(0)
