@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>HollowHeart.qml</file>
+        <file>SolidHeart.qml</file>
+        <file>CircleHeart.qml</file>
+    </qresource>
+</RCC>
