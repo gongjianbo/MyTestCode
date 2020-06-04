@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>129</width>
+    <height>162</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">/*下拉框*/
+QComboBox{
+min-width:1px;
+min-height:26px;
+padding-left: 5px;
+padding-right: 2px;
+color: white;
+border:1px solid rgb(128, 128, 128);
+background-color:  rgb(100 ,100 ,100);
+}
+QComboBox:on{
+/*弹出为on*/
+}
+QComboBox:hover{
+border:1px solid rgb(255, 170, 0);
+}
+QComboBox:disabled{
+color: rgb(230, 230, 230);
+background-color:rgb(150, 150, 150);
+}
+QComboBox:editable{
+background-color:rgb(100, 100, 100);
+}
+QComboBox:editable:disabled{
+background-color:rgb(150, 150, 150);
+}
+/*下拉按钮-配合贴图*/
+QComboBox::drop-down{
+min-width:24px;
+}
+/*下拉框弹出项*/
+QComboBox QAbstractItemView{
+font: 15px &quot;宋体&quot;;
+background-color:rgb(110, 110, 110);
+}
+QComboBox QAbstractItemView::item{
+height:24px;
+color:white;
+}
+QComboBox QAbstractItemView::item:hover{
+background-color: rgb(255, 170, 0);
+}
+QComboBox QAbstractItemView::item:selected{
+background-color: rgb(255, 170, 0);
+}
+/*按钮样式*/
+QComboBox QAbstractItemView QPushButton{
+max-width:20px;
+min-width:20px;
+max-height:20px;
+min-height:20px;
+border:0;
+margin-right:20px;
+background-color:white;
+}
+QComboBox QAbstractItemView QPushButton:hover{
+background-color:cyan;
+}</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QComboBox" name="comboBoxA"/>
+    </item>
+    <item>
+     <widget class="MyComboBox" name="comboBoxB"/>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>129</width>
+     <height>23</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QToolBar" name="mainToolBar">
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>MyComboBox</class>
+   <extends>QComboBox</extends>
+   <header>MyComboBox.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
