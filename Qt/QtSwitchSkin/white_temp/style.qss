@@ -1,0 +1,20 @@
+*{
+color:black;
+background-color:white;
+}
+QPushButton{
+width:90px;
+height:30px;
+border:1px solid black;
+background-color:white;
+}
+QPushButton:hover{
+background-color:rgb(200,200,200);
+}
+QLabel{
+border:1px solid black;
+background-color:white;
+background-image:url(:/love.png);
+background-repeat:none;
+background-position:center;
+}
