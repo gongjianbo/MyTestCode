@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>triangle1.frag</file>
+        <file>triangle1.vert</file>
+    </qresource>
+</RCC>
