@@ -61,10 +61,8 @@ void ComboDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
 {
     QStyleOptionViewItem opt(option);
     //去掉焦点带来的虚线框
-    //opt.state ^= ~QStyle::State_HasFocus;
-    if (opt.state & QStyle::State_HasFocus){
-        opt.state ^= QStyle::State_HasFocus;
-    }
+    opt.state &= ~QStyle::State_HasFocus;
+    
     initStyleOption(&opt, index);
     QStyledItemDelegate::paint(painter, opt, index);
 }
