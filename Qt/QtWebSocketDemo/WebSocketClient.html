@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qt WebSocket Demo</title>
+</head>
+
+<body>
+    <input type="text" id="edit_url" value="ws://localhost:12345" />
+    <input type="button" id="btn_open" value="Open" onclick="doOpen()" />
+    <br />
+    <p>Recv:</p>
+    <br />
+    <textarea id="edit_recv" cols="50" rows="10"></textarea>
+    <br />
+    <p>Send:</p>
+    <br />
+    <textarea id="edit_send" cols="50" rows="10">Hello</textarea>
+    <br />
+    <input type="button" value="Send" onclick="doSend()" />
+    <script>
+        var edit_url = document.getElementById("edit_url");
+        var btn_open = document.getElementById("btn_open");
+        var edit_recv = document.getElementById("edit_recv");
+        var edit_send = document.getElementById("edit_send");
+
+        var client = null;
+
+        function doOpen() {
+            console.log("open")
+            if (!("WebSocket" in window)) {
+                //不支持WebSocket
+                return;
+            }
+            if (client === null) {
+                client = new WebSocket(edit_url.value);
+
+                client.onopen = function () {
+                    btn_open.value = "Close";
+                }
+                //收到数据后追加到尾巴上
+                client.onmessage = function (event) {
+                    edit_recv.value += String(event.data);
+                }
+                client.onclose = function () {
+                    client = null;
+                    btn_open.value = "Open";
+                }
+            } else {
+                client.close();
+                client = null;
+            }
+        }
+
+        function doSend() {
+            console.log("send")
+            if (client === null)
+                return;
+            client.send(edit_send.value);
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>732</width>
+    <height>417</height>
+   </rect>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="WebSocketServer" name="server" native="true"/>
+    </item>
+    <item>
+     <widget class="WebSocketClient" name="client" native="true"/>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>WebSocketClient</class>
+   <extends>QWidget</extends>
+   <header>WebSocketClient.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>WebSocketServer</class>
+   <extends>QWidget</extends>
+   <header>WebSocketServer.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
