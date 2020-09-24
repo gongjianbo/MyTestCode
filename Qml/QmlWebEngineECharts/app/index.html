@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        html,
+        body,
+        #echarts {
+            margin: 0px;
+            padding: 0px;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="echarts"></div>
+    <!-- 引入 echarts -->
+    <script src="./echarts.min.js"></script>
+    <script>
+        //每次now+一天
+        function randomData() {
+            now = new Date(+now + oneDay);
+            //name给标签用，value是x-y坐标点
+            return {
+                name: now.toString(),
+                value: [now, Math.random() * 1000 + 500]
+            };
+        }
+
+        //新的数据
+        function newData(dataitem) {
+            now = new Date(dataitem.date);
+            return {
+                name: now.toString(),
+                value: [now, dataitem.value]
+            };
+        }
+
+        var myChart = echarts.init(document.getElementById('echarts'));
+        var data = [];
+        var now = +new Date(1970, 1, 1);
+        var oneDay = 24 * 3600 * 1000;
+
+        myChart.setOption({
+            title: {
+                text: '动态数据 + 时间坐标轴'
+            },
+            tooltip: {
+                trigger: 'axis',
+                formatter: function (params) {
+                    params = params[0];
+                    var date = new Date(params.name);
+                    return date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + ' : ' +
+                        params.value[1];
+                },
+                axisPointer: {
+                    animation: false
+                }
+            },
+            xAxis: {
+                type: 'time',
+                min: now - 100 * oneDay,
+                max: now,
+                splitLine: {
+                    show: false
+                }
+            },
+            yAxis: {
+                type: 'value',
+                min: 0,
+                max: 2000,
+                boundaryGap: [0, '100%'],
+                splitLine: {
+                    show: false
+                }
+            },
+            series: [{
+                name: '模拟数据',
+                type: 'line',
+                showSymbol: false,
+                hoverAnimation: false,
+                data: data
+            }]
+        });
+
+        //刷新数据
+        function updateData() {
+            myChart.setOption({
+                xAxis: {
+                    type: 'time',
+                    min: now - 100 * oneDay,
+                    max: now
+                },
+                series: [{
+                    data: data
+                }]
+            });
+        }
+
+        //定时填充数据
+        //每次数据x加一天，范围为100天
+        /*setInterval(function () {
+            if (data.length > 100)
+                data.shift();
+            data.push(randomData());
+
+            updateData();
+        }, 200);*/
+
+        //我们定义dataitem结构为[date,value]
+        //添加单个数据
+        function appendData(dataitem) {
+            if (data.length > 100)
+                data.shift();
+            data.push(newData(dataitem));
+
+            updateData();
+        }
+
+        //添加批量数据
+        function setData(datalist) {
+            if (datalist.length <= 0)
+                return;
+            while (datalist.length > 100)
+                datalist.shift();
+            data = [];
+            for (var i = 0; i < datalist.length; i++)
+                data.push(newData(datalist[i]));
+
+            updateData();
+        }
+
+        //自适应大小
+        window.addEventListener("resize", function () {
+            myChart.resize();
+        });
+    </script>
+</body>
+
+</html>
