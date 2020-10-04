@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>DemoText.qml</file>
+        <file>DemoJson.qml</file>
+        <file>localfile.json</file>
+        <file>flaskserver.py</file>
+    </qresource>
+</RCC>
