@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>MessageWindow.qml</file>
+        <file>close_gray.png</file>
+    </qresource>
+</RCC>
