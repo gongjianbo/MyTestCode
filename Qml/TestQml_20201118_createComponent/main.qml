@@ -4,6 +4,7 @@ import QtQuick.Controls 2.12
 import QtQml 2.12
 
 //js动态创建qml对象
+//参考文档：https://doc.qt.io/qt-5/qtqml-javascript-dynamicobjectcreation.html
 //参考文档：https://doc.qt.io/qt-5/qml-qtqml-component.html
 //参考文档：https://doc.qt.io/qt-5/qml-qtqml-qt.html
 Window {
@@ -38,6 +39,12 @@ Window {
             text: "incubate"
             onClicked: {
                 createFromIncubate();
+            }
+        }
+        Button{
+            text: "destroy"
+            onClicked: {
+                destroyItem();
             }
         }
     }
@@ -114,6 +121,15 @@ Window {
         } else {
             //... ...
         }
+    }
+    //销毁对象
+    function destroyItem(){
+        //item.destroy(msdelay=0)
+        //只有动态创建的对象才能动态销毁它们
+        //不应删除由Loader或者Repeater等创建的对象
+        //调用destroy时不会立即删除，延迟0时为代码块末尾到下一帧之间删除
+        if(flow.children.length>0)
+            flow.children[0].destroy(1000); //延迟1s删除
     }
 
     Rectangle{
