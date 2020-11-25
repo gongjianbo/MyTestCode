@@ -31,11 +31,38 @@ EasyAudioInfo EasyAudioContext::getAudioInfo() const
 {
     EasyAudioInfo info;
 
-    //待完成，把需要的格式信息copy过来
-    info.valid=isValid();
-    info.filepath=srcpath;
+    //把需要的格式信息copy过来
+    info.valid = isValid();
+    info.filepath = srcpath;
+    QFileInfo f_info(srcpath);
+    info.filename = f_info.fileName();
+    info.size = f_info.size();
+
+    if(!isValid())
+        return info;
+
+    info.encode = codec->name;
+    info.sampleRate = codecCtx->sample_rate; //hz
+    info.channels = codecCtx->channels;
+    info.sampleBit = (av_get_bytes_per_sample(codecCtx->sample_fmt)<<3);  //byte
+    info.duration = formatCtx->duration/(AV_TIME_BASE/1000.0);  //ms
+    info.bitRate = formatCtx->bit_rate; //bps
+    info.type = formatCtx->iformat->name;
 
     return info;
+}
+
+EasyAudioParameter EasyAudioContext::getAudioParameter() const
+{
+    EasyAudioParameter param;
+
+    if(!isValid())
+        return param;
+    param.channels=codecCtx->channels;
+    param.sampleFormat=codecCtx->sample_fmt;
+    param.sampleRate=codecCtx->sample_rate;
+
+    return param;
 }
 
 void EasyAudioContext::init(const QString &filepath)
@@ -169,7 +196,7 @@ void EasyAudioContext::free()
     if(codecCtx){
         //不要直接使用avcodec_close，而是用avcodec_free_context
         //把codec相关的其他东西一并释放
-        avcodec_free_context(&codecCtx);     
+        avcodec_free_context(&codecCtx);
     }
     if(formatCtx){
         //avformat_close_input内部其实已经调用了avformat_free_context

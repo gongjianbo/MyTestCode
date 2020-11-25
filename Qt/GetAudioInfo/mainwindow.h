@@ -21,5 +21,6 @@ private:
     Ui::MainWindow *ui;
 
     QByteArray pcmData;
+    bool isS16=false;
 };
 #endif // MAINWINDOW_H

@@ -93,8 +93,10 @@ public:
 
     //是否为有效的上下文
     bool isValid() const;
-    //获取音频格式等信息
+    //获取该上下文音频格式等信息
     EasyAudioInfo getAudioInfo() const;
+    //获取该上下文参数信息
+    EasyAudioParameter getAudioParameter() const;
 
 private:
     //根据文件初始化上下文
