@@ -8,11 +8,19 @@ KeysFilter::KeysFilter(QObject *parent)
     }
 }
 
-void KeysFilter::setEnable(bool enable)
+void KeysFilter::setEnabled(bool enable)
 {
-    if(this->enable!=enable){
-        this->enable=enable;
-        emit enableChanged();
+    if(enabled!=enable){
+        enabled=enable;
+        emit enabledChanged();
+    }
+}
+
+void KeysFilter::setAcceptShortcut(bool enable)
+{
+    if(acceptShortcut!=enable){
+        acceptShortcut=enable;
+        emit acceptShortcutChanged();
     }
 }
 
@@ -29,11 +37,15 @@ bool KeysFilter::eventFilter(QObject *watched, QEvent *event)
     {
     //对于control的space，触发了这三种keyevent
     case QEvent::ShortcutOverride:
+        if(acceptShortcut)
+            break;
     case QEvent::KeyPress:
     case QEvent::KeyRelease:
-        if(enable){
+        if(enabled){
             QKeyEvent *key_event=static_cast<QKeyEvent*>(event);
             if(filterKeys.contains(key_event->key())){
+                //accepted之后，shortcut就不再处理了
+                key_event->setAccepted(true);
                 return true;
             }
         }
