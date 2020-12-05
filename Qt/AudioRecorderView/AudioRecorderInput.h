@@ -1,0 +1,71 @@
+#ifndef AUDIORECORDERINPUT_H
+#define AUDIORECORDERINPUT_H
+
+#include <QObject>
+#include <QAudioDeviceInfo>
+#include <QAudioInput>
+
+#include "AudioRecorderDevice.h"
+
+/**
+ * @brief 音频录制的输入
+ * @author 龚建波
+ * @date 2020-12-5
+ */
+class AudioRecorderInput : public QObject
+{
+    Q_OBJECT
+    Q_PROPERTY(QList<QString> filterInputDevicesName READ getFilterInputDevicesName NOTIFY filterInputDevicesNameChanged)
+    Q_PROPERTY(QString inputDeviceName READ getInputDeviceName WRITE setInputDeviceName NOTIFY inputDeviceNameChanged)
+public:
+    explicit AudioRecorderInput(QObject *parent = nullptr);
+    ~AudioRecorderInput();
+
+    //重新检测输入设备列表
+    Q_INVOKABLE void checkInputDevices();
+    //置为当前默认设备
+    Q_INVOKABLE void resetToDefaultDevice();
+    //可用的输入设备列表
+    Q_INVOKABLE QList<QString> getAllInputDevicesName() const;
+    //过滤采样率后-可用的输入设备列表
+    Q_INVOKABLE QList<QString> getFilterInputDevicesName() const;
+
+    //当前使用的输入设备
+    Q_INVOKABLE QString getInputDeviceName() const;
+    Q_INVOKABLE void setInputDeviceName(const QString &device);
+    Q_INVOKABLE void setInputDeviceIndex(int index);
+
+private:
+    //开始录音
+    //io:回调处理数据
+    //format:音频参数QAudioFormat，内部获取需要的成员值
+    //device:输入设备名称，无则使用当前值
+    bool startRecord(AudioRecorderDevice *io,const QAudioFormat &format,const QString &device=QString());
+    //结束录制
+    void stopRecord();
+    //从文件读取
+    //暂时不带解析器，只能解析44字节固定wav-pcm
+    //（即本组件生成的wav文件）
+    bool loadFromFile(AudioRecorderDevice *io,const QString &filepath);
+
+signals:
+    void stateChanged(QAudio::State state);
+    void filterInputDevicesNameChanged();
+    void inputDeviceNameChanged();
+
+private:
+    //可用的输入设备列表
+    QList<QAudioDeviceInfo> allInputDevices;
+    //过滤采样率后-可用的输入设备列表
+    QList<QAudioDeviceInfo> filterInputDevices;
+    //当前使用的输入设备
+    QAudioDeviceInfo inputDevice;
+    //获取数据
+    QAudioInput *audioInput=nullptr;
+    //输入参数
+    QAudioFormat inputFormat;
+
+    friend class AudioRecorderView;
+};
+
+#endif // AUDIORECORDERINPUT_H
