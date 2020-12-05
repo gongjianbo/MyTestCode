@@ -9,15 +9,36 @@ Window {
     visible: true
     title: qsTr("GongJianBo 1992")
 
+    Shortcut{
+        sequence: "space"
+        onActivated: {
+            console.log("shortcut active space")
+        }
+    }
+
     Row{
         spacing: 10
         Button{
-           focus: true
-           text: "a"
-           onClicked: console.log("click",text)
-           onPressed: console.log("press",text)
+            focus: true
+            text: "a"
+            onClicked: console.log("click",text)
+            onPressed: console.log("press",text)
 
-           KeysFilter.filterKeys: [Qt.Key_Space]
+            //测试自定义Keys
+            //KeysFilter.enabled: false
+            KeysFilter.filterKeys: [Qt.Key_Space]
+            //KeysFilter.acceptShortcut: false
+
+            //测试Qt的Keys
+            //在5.12 5.13里accepted后组件只过滤了press，click还是会触发
+            /*Keys.onSpacePressed: {
+                console.log("key space")
+                event.accepted=false;
+            }
+            Keys.onShortcutOverride: {
+                console.log("key shortcut")
+                event.accepted=false;
+            }*/
         }
 
         Button{
