@@ -36,7 +36,6 @@ void AudioRecorderInput::checkInputDevices()
         if(info.supportedSampleRates().contains(inputFormat.sampleRate()))
             filterInputDevices.push_back(info);
     }
-
     emit filterInputDevicesNameChanged();
 }
 
@@ -45,17 +44,17 @@ void AudioRecorderInput::resetToDefaultDevice()
     inputDevice=QAudioDeviceInfo::defaultInputDevice();
 }
 
-QList<QString> AudioRecorderInput::getAllInputDevicesName() const
+QStringList AudioRecorderInput::getAllInputDevicesName() const
 {
-    QList<QString> name_list;
+    QStringList name_list;
     for(auto &info:allInputDevices)
         name_list.push_back(info.deviceName());
     return name_list;
 }
 
-QList<QString> AudioRecorderInput::getFilterInputDevicesName() const
+QStringList AudioRecorderInput::getFilterInputDevicesName() const
 {
-    QList<QString> name_list;
+    QStringList name_list;
     for(auto &info:filterInputDevices)
         name_list.push_back(info.deviceName());
     return name_list;
@@ -101,6 +100,7 @@ bool AudioRecorderInput::startRecord(AudioRecorderDevice *io, const QAudioFormat
 
     audioInput=new QAudioInput(inputDevice,inputFormat,this);
     connect(audioInput,&QAudioInput::stateChanged,this,&AudioRecorderInput::stateChanged);
+    connect(audioInput,&QAudioInput::notify,this,&AudioRecorderInput::notify);
     audioInput->start(io);
     return true;
 }

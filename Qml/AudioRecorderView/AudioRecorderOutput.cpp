@@ -46,17 +46,17 @@ void AudioRecorderOutput::resetToDefaultDevice()
     outputDevice=QAudioDeviceInfo::defaultOutputDevice();
 }
 
-QList<QString> AudioRecorderOutput::getAllOutputDevicesName() const
+QStringList AudioRecorderOutput::getAllOutputDevicesName() const
 {
-    QList<QString> name_list;
+    QStringList name_list;
     for(auto &info:allOutputDevices)
         name_list.push_back(info.deviceName());
     return name_list;
 }
 
-QList<QString> AudioRecorderOutput::getFilterOutputDevicesName() const
+QStringList AudioRecorderOutput::getFilterOutputDevicesName() const
 {
-    QList<QString> name_list;
+    QStringList name_list;
     for(auto &info:filterOutputDevices)
         name_list.push_back(info.deviceName());
     return name_list;
@@ -102,6 +102,8 @@ bool AudioRecorderOutput::startPlay(AudioRecorderDevice *io, const QAudioFormat 
     //QAudioFormat n_format=outputDevice.nearestFormat(outputFormat);
     audioOutput=new QAudioOutput(outputDevice,outputFormat,this);
     connect(audioOutput,&QAudioOutput::stateChanged,this,&AudioRecorderOutput::stateChanged);
+    connect(audioOutput,&QAudioOutput::notify,this,&AudioRecorderOutput::notify);
+    audioOutput->setNotifyInterval(50);
     audioOutput->start(io);
     return true;
 }
@@ -112,6 +114,20 @@ void AudioRecorderOutput::stopPlay()
         audioOutput->stop();
         audioOutput->deleteLater();
         audioOutput=nullptr;
+    }
+}
+
+void AudioRecorderOutput::suspendPlay()
+{
+    if(audioOutput){
+        audioOutput->suspend();
+    }
+}
+
+void AudioRecorderOutput::resumePlay()
+{
+    if(audioOutput){
+        audioOutput->resume();
     }
 }
 

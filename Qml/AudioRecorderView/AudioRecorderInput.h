@@ -11,11 +11,18 @@
  * @brief 音频录制的输入
  * @author 龚建波
  * @date 2020-12-5
+ * @note
+ * model要用QStringList而不是QList<QString>
+ *
+ * @note
+ * 获取输入设备名重复是插件问题，在新版本可以判断插件（如5.15）
+ * 参见：（Qt4）QTBUG-16841（Qt5）QTBUG-75781
+ * 暂时用采样率来过滤输入设备
  */
 class AudioRecorderInput : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QList<QString> filterInputDevicesName READ getFilterInputDevicesName NOTIFY filterInputDevicesNameChanged)
+    Q_PROPERTY(QStringList filterInputDevicesName READ getFilterInputDevicesName NOTIFY filterInputDevicesNameChanged)
     Q_PROPERTY(QString inputDeviceName READ getInputDeviceName WRITE setInputDeviceName NOTIFY inputDeviceNameChanged)
 public:
     explicit AudioRecorderInput(QObject *parent = nullptr);
@@ -26,9 +33,9 @@ public:
     //置为当前默认设备
     Q_INVOKABLE void resetToDefaultDevice();
     //可用的输入设备列表
-    Q_INVOKABLE QList<QString> getAllInputDevicesName() const;
+    Q_INVOKABLE QStringList getAllInputDevicesName() const;
     //过滤采样率后-可用的输入设备列表
-    Q_INVOKABLE QList<QString> getFilterInputDevicesName() const;
+    Q_INVOKABLE QStringList getFilterInputDevicesName() const;
 
     //当前使用的输入设备
     Q_INVOKABLE QString getInputDeviceName() const;
@@ -50,6 +57,7 @@ private:
 
 signals:
     void stateChanged(QAudio::State state);
+    void notify();
     void filterInputDevicesNameChanged();
     void inputDeviceNameChanged();
 

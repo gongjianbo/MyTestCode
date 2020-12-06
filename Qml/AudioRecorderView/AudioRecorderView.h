@@ -3,7 +3,7 @@
 
 #include <QQuickPaintedItem>
 #include <QQmlParserStatus>
-#include <QTime>
+#include <QDateTime>
 #include <QTimer>
 #include <QElapsedTimer>
 
@@ -18,26 +18,27 @@
  * @details
  * 录制可参照示例：audio和audioinput
  * 在操作录制、播放时会先调用stop，重置状态
- *
- * @note
- * 获取输入设备名重复是插件问题，在新版本可以判断插件（如5.15）
- * 参见：（Qt4）QTBUG-16841（Qt5）QTBUG-75781
- * 暂时用采样率来过滤输入设备
  */
 class AudioRecorderView : public QQuickPaintedItem, public AudioRecorderBase
 {
     Q_OBJECT
-    Q_PROPERTY(AudioRecorderView::RecordState recordState READ getRecordState WRITE setRecordState NOTIFY recordStateChanged)
+    Q_PROPERTY(AudioRecorderView::RecordState recordState READ getRecordState NOTIFY recordStateChanged)
     Q_PROPERTY(AudioRecorderView::ViewMode viewMode READ getViewMode WRITE setViewMode NOTIFY viewModeChanged)
     Q_PROPERTY(AudioRecorderInput *input READ getInput CONSTANT)
     Q_PROPERTY(AudioRecorderOutput *output READ getOutput CONSTANT)
+    Q_PROPERTY(qint64 duration READ getDuration NOTIFY durationChanged)
+    Q_PROPERTY(QString durationString READ getDurationString NOTIFY durationChanged)
+    Q_PROPERTY(int leftPadding READ getLeftPadding WRITE setLeftPadding NOTIFY leftPaddingChanged)
+    Q_PROPERTY(int rightPadding READ getRightPadding WRITE setRightPadding NOTIFY rightPaddingChanged)
+    Q_PROPERTY(int topPadding READ getTopPadding WRITE setTopPadding NOTIFY topPaddingChanged)
+    Q_PROPERTY(int bottomPadding READ getBottomPadding WRITE setBottomPadding NOTIFY bottomPaddingChanged)
 public:
     //状态
     enum RecordState
     {
         Stop //默认停止状态
         ,Playing //播放
-        //,Pause //播放暂停
+        ,PlayPause //播放暂停
         ,Record //录制
     };
     Q_ENUM(RecordState)
@@ -46,7 +47,7 @@ public:
     {
         FullRange //绘制全部数据
         ,Tracking //跟踪最新数据
-        ,Wiper //雨刷，一屏满了再刷新
+        //,Wiper //雨刷，一屏满了再刷新
     };
     Q_ENUM(ViewMode)
 public:
@@ -66,6 +67,23 @@ public:
     //输出
     AudioRecorderOutput* getOutput() { return &audioOutput; }
 
+    //当前数据的总时长ms
+    qint64 getDuration() const { return audioDuration; }
+    void setDuration(qint64 duration);
+    //将duration毫秒数转为时分秒格式
+    QString getDurationString() const;
+
+    //四个边距
+    //该版本刻度是一体的，所以刻度的宽高也算在padding里
+    int getLeftPadding() const { return leftPadding; }
+    void setLeftPadding(int px);
+    int getRightPadding() const { return rightPadding; }
+    void setRightPadding(int px);
+    int getTopPadding() const { return topPadding; }
+    void setTopPadding(int px);
+    int getBottomPadding() const { return bottomPadding; }
+    void setBottomPadding(int px);
+
     //获取到的录音数据
     qint64 writeData(const char *data, qint64 maxSize) override;
     //导出缓存数据
@@ -73,11 +91,13 @@ public:
 
     //停止操作
     Q_INVOKABLE void stop();
-
     //播放
     //device:输入设备名称
     Q_INVOKABLE void play(const QString &device=QString());
-
+    //暂停播放
+    Q_INVOKABLE void suspendPlay();
+    //暂停后恢复
+    Q_INVOKABLE void resumePlay();
     //开始录音
     //sampleRate:输入采样率
     //device:输入设备名称
@@ -97,12 +117,23 @@ public:
 protected:
     void paint(QPainter *painter) override;
     void geometryChanged(const QRectF &newGeometry, const QRectF &oldGeometry) override;
+    //去掉padding的宽高
+    int plotAreaWidth() const;
+    int plotAreaHeight() const;
     //更新数据点抽样，绘制时根据抽样绘制
     void updateDataSample();
+    //计算y周像素间隔
+    void calculateSpace(double yAxisLen);
+    double calculateSpaceHelper(double valueRefRange, int dividend) const;
 
 signals:
     void recordStateChanged();
     void viewModeChanged();
+    void durationChanged();
+    void leftPaddingChanged();
+    void rightPaddingChanged();
+    void topPaddingChanged();
+    void bottomPaddingChanged();
 
 private:
     //QAudioInput/Output处理数据时回调IODevice的接口
@@ -112,7 +143,9 @@ private:
     //处理输出
     AudioRecorderOutput audioOutput;
     //输出数据计数
-    qint64 outputPos=0;
+    qint64 outputCount=0;
+    //播放数据计数
+    qint64 playCount=0;
 
     //当前状态
     RecordState recordState=Stop;
@@ -123,6 +156,8 @@ private:
     //表示一个绘制用的抽样点信息
     struct SamplePoint
     {
+        //目前是没有滚轮缩放的
+        //暂时抽样时就把像素位置算好了
         int x; //像素坐标，相对于横轴0点
         int y; //像素坐标，相对于横轴0点
     };
@@ -132,6 +167,21 @@ private:
     QElapsedTimer updateElapse;
     //刷新定时器
     QTimer updateTimer;
+    //数据时长ms
+    qint64 audioDuration=0;
+
+    //四个边距
+    //该版本刻度是一体的，所以刻度的宽高也算在padding里
+    int leftPadding=60;
+    int rightPadding=5;
+    int topPadding=5;
+    int bottomPadding=5;
+
+    //计算刻度间隔
+    double y1PxToValue=1;
+    double y1ValueToPx=1;
+    double yRefPxSpace=40;
+    int yValueSpace=1000;
 };
 
 #endif // AUDIORECORDERVIEW_H
