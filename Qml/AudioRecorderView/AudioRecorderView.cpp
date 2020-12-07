@@ -45,6 +45,7 @@ AudioRecorderView::AudioRecorderView(QQuickItem *parent)
             if(playCount>outputCount)
                 playCount=outputCount;
             refresh();
+            updatePosition();
         }
     });
 }
@@ -93,6 +94,35 @@ QString AudioRecorderView::getDurationString() const
     return QTime(0,0).addMSecs(audioDuration).toString("hh:mm:ss");
 }
 
+void AudioRecorderView::updatePosition()
+{
+    if(getRecordState()==Playing||getRecordState()==PlayPause){
+        const int sample_rate=audioInput.inputFormat.sampleRate();
+        audioPostion=((playCount/2)/(1.0*sample_rate)*1000);
+    }else{
+        audioPostion=getDuration();
+    }
+    emit positionChanged();
+}
+
+QString AudioRecorderView::getPositionString() const
+{
+    return QTime(0,0).addMSecs(audioPostion).toString("hh:mm:ss");
+}
+
+bool AudioRecorderView::getHasData() const
+{
+    return hasData;
+}
+
+void AudioRecorderView::setHasData(bool has)
+{
+    if(hasData!=has){
+        hasData=has;
+        emit hasDataChanged();
+    }
+}
+
 void AudioRecorderView::setLeftPadding(int px)
 {
     if(leftPadding!=px){
@@ -129,8 +159,10 @@ qint64 AudioRecorderView::writeData(const char *data, qint64 maxSize)
 {
     //默认为单声道，16bit
     audioData.append(data,maxSize);
+    setHasData(!audioData.isEmpty());
     updateDataSample();
     refresh();
+    updatePosition();
     return maxSize;
 }
 
@@ -157,13 +189,13 @@ void AudioRecorderView::stop()
     //录制、播放时都会调用stop，所以把一些状态重置放这里
     outputCount=0;
     playCount=0;
-    switch (recordState)
+    switch (getRecordState())
     {
     case Stop: break;
     case Playing:
+    case PlayPause:
         audioOutput.stopPlay();
         break;
-        //case Pause: break;
     case Record:
         audioInput.stopRecord();
         break;
@@ -171,6 +203,7 @@ void AudioRecorderView::stop()
         break;
     }
     setRecordState(Stop);
+    updatePosition();
 }
 
 void AudioRecorderView::play(const QString &device)
@@ -214,6 +247,7 @@ void AudioRecorderView::record(int sampleRate, const QString &device)
     stop();
     //录制时清空数据缓存
     audioData.clear();
+    setHasData(false);
     sampleData.clear();
 
     QAudioFormat format;

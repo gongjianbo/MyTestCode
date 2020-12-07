@@ -28,6 +28,9 @@ class AudioRecorderView : public QQuickPaintedItem, public AudioRecorderBase
     Q_PROPERTY(AudioRecorderOutput *output READ getOutput CONSTANT)
     Q_PROPERTY(qint64 duration READ getDuration NOTIFY durationChanged)
     Q_PROPERTY(QString durationString READ getDurationString NOTIFY durationChanged)
+    Q_PROPERTY(qint64 position READ getPosition NOTIFY positionChanged)
+    Q_PROPERTY(QString positionString READ getPositionString NOTIFY positionChanged)
+    Q_PROPERTY(bool hasData READ getHasData NOTIFY hasDataChanged)
     Q_PROPERTY(int leftPadding READ getLeftPadding WRITE setLeftPadding NOTIFY leftPaddingChanged)
     Q_PROPERTY(int rightPadding READ getRightPadding WRITE setRightPadding NOTIFY rightPaddingChanged)
     Q_PROPERTY(int topPadding READ getTopPadding WRITE setTopPadding NOTIFY topPaddingChanged)
@@ -47,7 +50,6 @@ public:
     {
         FullRange //绘制全部数据
         ,Tracking //跟踪最新数据
-        //,Wiper //雨刷，一屏满了再刷新
     };
     Q_ENUM(ViewMode)
 public:
@@ -72,6 +74,15 @@ public:
     void setDuration(qint64 duration);
     //将duration毫秒数转为时分秒格式
     QString getDurationString() const;
+
+    //当前播放或者录制的时间ms
+    qint64 getPosition() const { return audioPostion; }
+    void updatePosition();
+    QString getPositionString() const;
+
+    //当前是否有数据
+    bool getHasData() const;
+    void setHasData(bool has);
 
     //四个边距
     //该版本刻度是一体的，所以刻度的宽高也算在padding里
@@ -130,6 +141,8 @@ signals:
     void recordStateChanged();
     void viewModeChanged();
     void durationChanged();
+    void positionChanged();
+    void hasDataChanged();
     void leftPaddingChanged();
     void rightPaddingChanged();
     void topPaddingChanged();
@@ -153,6 +166,7 @@ private:
     ViewMode viewMode=Tracking;
     //数据缓冲区
     QByteArray audioData;
+    bool hasData=false;
     //表示一个绘制用的抽样点信息
     struct SamplePoint
     {
@@ -169,6 +183,8 @@ private:
     QTimer updateTimer;
     //数据时长ms
     qint64 audioDuration=0;
+    //播放或者录制时长ms
+    qint64 audioPostion=0;
 
     //四个边距
     //该版本刻度是一体的，所以刻度的宽高也算在padding里
