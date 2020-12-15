@@ -1,6 +1,8 @@
 #include "AudioRecorderView.h"
 
 #include <cmath>
+#include <Windows.h>
+//#include <Dbt.h>
 
 #include <QPainter>
 #include <QFileInfo>
@@ -48,10 +50,22 @@ AudioRecorderView::AudioRecorderView(QQuickItem *parent)
             updatePosition();
         }
     });
+
+    //不可见后stop
+    connect(this,&AudioRecorderView::visibleChanged,this,[this]{
+        if(!isVisible()){
+            stop();
+        }
+    });
+
+    //注册到qApp过滤native事件
+    qApp->installNativeEventFilter(this);
 }
 
 AudioRecorderView::~AudioRecorderView()
 {
+    //貌似析构的时候自动会remove
+    qApp->removeNativeEventFilter(this);
     stop();
     audioIODevice->close();
 }
@@ -100,7 +114,8 @@ void AudioRecorderView::updatePosition()
         const int sample_rate=audioInput.inputFormat.sampleRate();
         audioPostion=((playCount/2)/(1.0*sample_rate)*1000);
     }else{
-        audioPostion=getDuration();
+        //未播放时positon为0
+        audioPostion=0; //getDuration();
     }
     emit positionChanged();
 }
@@ -120,38 +135,6 @@ void AudioRecorderView::setHasData(bool has)
     if(hasData!=has){
         hasData=has;
         emit hasDataChanged();
-    }
-}
-
-void AudioRecorderView::setLeftPadding(int px)
-{
-    if(leftPadding!=px){
-        leftPadding=px;
-        emit leftPaddingChanged();
-    }
-}
-
-void AudioRecorderView::setRightPadding(int px)
-{
-    if(rightPadding!=px){
-        rightPadding=px;
-        emit rightPaddingChanged();
-    }
-}
-
-void AudioRecorderView::setTopPadding(int px)
-{
-    if(topPadding!=px){
-        topPadding=px;
-        emit topPaddingChanged();
-    }
-}
-
-void AudioRecorderView::setBottomPadding(int px)
-{
-    if(bottomPadding!=px){
-        bottomPadding=px;
-        emit bottomPaddingChanged();
     }
 }
 
@@ -187,6 +170,7 @@ qint64 AudioRecorderView::readData(char *data, qint64 maxSize)
 void AudioRecorderView::stop()
 {
     //录制、播放时都会调用stop，所以把一些状态重置放这里
+    //(停止的时候audioData的数据保留，在start时才清空)
     outputCount=0;
     playCount=0;
     switch (getRecordState())
@@ -263,6 +247,10 @@ void AudioRecorderView::record(int sampleRate, const QString &device)
 bool AudioRecorderView::loadFromFile(const QString &filepath)
 {
     stop();
+    //加载时清空数据缓存
+    audioData.clear();
+    setHasData(false);
+    sampleData.clear();
     return audioInput.loadFromFile(audioIODevice,filepath);
 }
 
@@ -270,6 +258,12 @@ bool AudioRecorderView::saveToFile(const QString &filepath)
 {
     stop();
     return audioOutput.saveToFile(audioData,audioInput.inputFormat,filepath);
+}
+
+QString AudioRecorderView::saveToCache(const QString &uuid)
+{
+    stop();
+    return audioOutput.saveToCache(audioData,audioInput.inputFormat,uuid);
 }
 
 void AudioRecorderView::refresh()
@@ -285,13 +279,13 @@ void AudioRecorderView::refresh()
     }
 
     //大于xx ms立即刷新，否则定时器刷新
-    if(updateElapse.elapsed()>50){
+    if(updateElapse.elapsed()>30){
         updateTimer.stop();
         update();
         updateElapse.restart();
     }else{
         //未结束则重新start
-        updateTimer.start(50);
+        updateTimer.start(30);
     }
 }
 
@@ -306,15 +300,20 @@ void AudioRecorderView::paint(QPainter *painter)
     const int wave_y=view_height/2+topPadding;
 
     //背景色
-    painter->fillRect(0,0,width(),height(),QColor(34,34,34));
-    painter->fillRect(leftPadding,rightPadding,view_width,view_height,QColor(0,0,0));
+    painter->setPen(Qt::NoPen);
+    //painter->setRenderHint(QPainter::Antialiasing,true);
+    painter->setBrush(backgroundColor);
+    painter->drawRoundedRect(0,0,width(),height(),radius,radius);
+    //painter->setRenderHint(QPainter::Antialiasing,false);
+    painter->setBrush(Qt::NoBrush);
+    painter->fillRect(leftPadding,rightPadding,view_width,view_height,viewColor);
 
     //网格
     painter->translate(wave_x,wave_y);
-    painter->setPen(QColor(200,10,10));
+    painter->setPen(cursorColor);
     painter->drawLine(0,0,view_width,0);
     int y_px=0;
-    painter->setPen(QColor(0,34,0));
+    painter->setPen(gridColor);
     for(int i=yValueSpace;i<0xFFFF/2;i+=yValueSpace)
     {
         y_px=i*y1ValueToPx;
@@ -327,7 +326,7 @@ void AudioRecorderView::paint(QPainter *painter)
     if(!audioData.isEmpty())
     {
         //绘制波形
-        painter->setPen(QColor(30,144,255));
+        painter->setPen(seriesColor);
         painter->translate(wave_x,wave_y);
         for(int i=0;i<sampleData.count()-1;i++)
         {
@@ -338,7 +337,7 @@ void AudioRecorderView::paint(QPainter *painter)
         painter->translate(-wave_x,-wave_y);
 
         //画游标
-        painter->setPen(QColor(200,10,10));
+        painter->setPen(cursorColor);
         const int play_pos=double(playCount)/audioData.count()*view_width+leftPadding;
         painter->drawLine(play_pos,topPadding,
                           play_pos,height()-bottomPadding);
@@ -347,7 +346,7 @@ void AudioRecorderView::paint(QPainter *painter)
     //纵轴幅度
     painter->translate(wave_x,wave_y);
     QString y_text;
-    painter->setPen(QColor(200,200,200));
+    painter->setPen(textColor);
     painter->drawText(-5-painter->fontMetrics().width("0"),painter->fontMetrics().height()/2,"0");
     for(int i=yValueSpace;i<0xFFFF/2;i+=yValueSpace)
     {
@@ -362,6 +361,7 @@ void AudioRecorderView::paint(QPainter *painter)
                           y_text);
     }
     painter->translate(-wave_x,-wave_y);
+    painter->setPen(axisColor);
     painter->drawLine(leftPadding,topPadding,leftPadding,topPadding+view_height);
 
     //横轴时间，略
@@ -374,6 +374,50 @@ void AudioRecorderView::geometryChanged(const QRectF &newGeometry, const QRectF 
     updateDataSample();
     calculateSpace(plotAreaHeight());
     refresh();
+}
+
+bool AudioRecorderView::nativeEventFilter(const QByteArray &eventType, void *message, long *)
+{
+    if(eventType == "windows_generic_MSG" || eventType == "windows_dispatcher_MSG")
+    {
+        MSG* msg = reinterpret_cast<MSG*>(message);
+        //设备插拔
+        if(msg&&msg->message == WM_DEVICECHANGE)
+        {
+            //同步阻塞会有警告
+            //Could not invoke audio interface activation.
+            //(因为应用程序正在发送一个输入同步呼叫，所以无法执行传出的呼叫。)
+            QTimer::singleShot(0,[this]{
+                //一些详细信息需要注册，这里改为change就去查询输入列表是否变更
+                //qDebug()<<"change"<<msg->wParam;
+                //switch(msg->wParam)
+                //{
+                //default: break;
+                //    //设备插入
+                //case DBT_DEVICEARRIVAL:
+                //    qDebug()<<"in";
+                //    break;
+                //    //设备移除
+                //case DBT_DEVICEREMOVECOMPLETE:
+                //    qDebug()<<"out";
+                //    break;
+                //}
+
+                //使用中的设备不存在，停止
+                const RecordState cur_state=recordState;
+                audioInput.updateInputDevices();
+                audioOutput.updateOutputDevices();
+                if(!audioInput.checkInputExists()){
+                    stop();
+                    emit inputDeviceChanged(cur_state);
+                }
+                if(!audioOutput.checkOutputExists()){
+                    emit outputDeviceChanged(cur_state);
+                }
+            });
+        }
+    }
+    return false;
 }
 
 int AudioRecorderView::plotAreaWidth() const

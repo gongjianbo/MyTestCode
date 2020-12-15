@@ -14,7 +14,7 @@ AudioRecorderInput::AudioRecorderInput(QObject *parent)
     inputFormat.setByteOrder(QAudioFormat::LittleEndian);
     inputFormat.setSampleType(QAudioFormat::SignedInt);
 
-    checkInputDevices();
+    updateInputDevices();
     resetToDefaultDevice();
     //if(filterInputDevices.count()>0)
     //    inputDevice=filterInputDevices.first();
@@ -22,10 +22,10 @@ AudioRecorderInput::AudioRecorderInput(QObject *parent)
 
 AudioRecorderInput::~AudioRecorderInput()
 {
-    stopRecord();
+    freeRecord();
 }
 
-void AudioRecorderInput::checkInputDevices()
+void AudioRecorderInput::updateInputDevices()
 {
     allInputDevices=QAudioDeviceInfo::availableDevices(QAudio::AudioInput);
     filterInputDevices.clear();
@@ -33,10 +33,25 @@ void AudioRecorderInput::checkInputDevices()
     //根据采样率过滤输入设备
     for(auto &info:allInputDevices)
     {
-        if(info.supportedSampleRates().contains(inputFormat.sampleRate()))
+        if(info.supportedSampleRates().contains(inputFormat.sampleRate())){
             filterInputDevices.push_back(info);
+        }
     }
     emit filterInputDevicesNameChanged();
+}
+
+bool AudioRecorderInput::checkInputExists() const
+{
+    //插拔设备后，deviceInfo不相等了
+    for(auto &info:QAudioDeviceInfo::availableDevices(QAudio::AudioInput))
+    {
+        if(info.deviceName()==audioDevice.deviceName()
+                &&info.supportedSampleRates()==audioDevice.supportedSampleRates()){
+            return true;
+        }
+    }
+    return false;
+    //return QAudioDeviceInfo::availableDevices(QAudio::AudioInput).contains(audioDevice);
 }
 
 void AudioRecorderInput::resetToDefaultDevice()
@@ -84,6 +99,17 @@ void AudioRecorderInput::setInputDeviceIndex(int index)
     inputDevice=filterInputDevices.at(index);
 }
 
+bool AudioRecorderInput::isAvailableDevice(const QString &device)
+{
+    QList<QAudioDeviceInfo> device_list=QAudioDeviceInfo::availableDevices(QAudio::AudioInput);
+    for(auto &info:device_list)
+    {
+        if(info.deviceName()==device&&filterInputDevices.contains(info))
+            return true;
+    }
+    return false;
+}
+
 bool AudioRecorderInput::startRecord(AudioRecorderDevice *io, const QAudioFormat &format, const QString &device)
 {
     stopRecord();
@@ -98,14 +124,30 @@ bool AudioRecorderInput::startRecord(AudioRecorderDevice *io, const QAudioFormat
         return false;
     }
 
-    audioInput=new QAudioInput(inputDevice,inputFormat,this);
-    connect(audioInput,&QAudioInput::stateChanged,this,&AudioRecorderInput::stateChanged);
-    connect(audioInput,&QAudioInput::notify,this,&AudioRecorderInput::notify);
+    //参数不相等才重新new
+    if(audioInput&&(audioDevice!=inputDevice||audioInput->format()!=inputFormat)){
+        freeRecord();
+    }
+    if(!audioInput){
+        //qDebug()<<"new audioInput";
+        //保存当前deviceinfo，下次对比是否相同
+        audioDevice=inputDevice;
+        audioInput=new QAudioInput(inputDevice,inputFormat,this);
+        connect(audioInput,&QAudioInput::stateChanged,this,&AudioRecorderInput::stateChanged);
+        connect(audioInput,&QAudioInput::notify,this,&AudioRecorderInput::notify);
+    }
     audioInput->start(io);
     return true;
 }
 
 void AudioRecorderInput::stopRecord()
+{
+    if(audioInput){
+        audioInput->stop();
+    }
+}
+
+void AudioRecorderInput::freeRecord()
 {
     if(audioInput){
         audioInput->stop();

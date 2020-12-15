@@ -15,7 +15,8 @@
  * 参照：https://www.cnblogs.com/ranson7zop/p/7657874.html
  * 参照：https://www.cnblogs.com/Ph-one/p/6839892.html
  * @note
- * 本来就是4字节对齐，=44，这里加字节对齐只是提示
+ * 最大元素为4字节，所以本身就是44字节对齐的
+ * 加字节对齐只是为了提醒
  */
 #pragma pack(push,1)
 struct AudioRecorderWavHead

@@ -2,7 +2,7 @@
 #define AUDIORECORDERVIEW_H
 
 #include <QQuickPaintedItem>
-#include <QQmlParserStatus>
+#include <QAbstractNativeEventFilter>
 #include <QDateTime>
 #include <QTimer>
 #include <QElapsedTimer>
@@ -18,8 +18,16 @@
  * @details
  * 录制可参照示例：audio和audioinput
  * 在操作录制、播放时会先调用stop，重置状态
+ *
+ * @history
+ * 2020-12-11 增加saveToCache接口
+ * （导入音频库时为了文件名唯一性，目前采用uuid作为文件名，所以保存的时候名字用uuid）
+ * （显示的名字映射该uuid）
+ * 2020-12-14 增加设备插拔监测
  */
-class AudioRecorderView : public QQuickPaintedItem, public AudioRecorderBase
+class AudioRecorderView : public QQuickPaintedItem
+        , public QAbstractNativeEventFilter
+        , public AudioRecorderBase
 {
     Q_OBJECT
     Q_PROPERTY(AudioRecorderView::RecordState recordState READ getRecordState NOTIFY recordStateChanged)
@@ -31,10 +39,19 @@ class AudioRecorderView : public QQuickPaintedItem, public AudioRecorderBase
     Q_PROPERTY(qint64 position READ getPosition NOTIFY positionChanged)
     Q_PROPERTY(QString positionString READ getPositionString NOTIFY positionChanged)
     Q_PROPERTY(bool hasData READ getHasData NOTIFY hasDataChanged)
-    Q_PROPERTY(int leftPadding READ getLeftPadding WRITE setLeftPadding NOTIFY leftPaddingChanged)
-    Q_PROPERTY(int rightPadding READ getRightPadding WRITE setRightPadding NOTIFY rightPaddingChanged)
-    Q_PROPERTY(int topPadding READ getTopPadding WRITE setTopPadding NOTIFY topPaddingChanged)
-    Q_PROPERTY(int bottomPadding READ getBottomPadding WRITE setBottomPadding NOTIFY bottomPaddingChanged)
+    //目前这些属性不会触发交互，暂时用member
+    Q_PROPERTY(int leftPadding MEMBER leftPadding)
+    Q_PROPERTY(int rightPadding MEMBER rightPadding)
+    Q_PROPERTY(int topPadding MEMBER topPadding)
+    Q_PROPERTY(int bottomPadding MEMBER bottomPadding)
+    Q_PROPERTY(int radius MEMBER radius)
+    Q_PROPERTY(QColor backgroundColor MEMBER backgroundColor)
+    Q_PROPERTY(QColor viewColor MEMBER viewColor)
+    Q_PROPERTY(QColor gridColor MEMBER gridColor)
+    Q_PROPERTY(QColor seriesColor MEMBER seriesColor)
+    Q_PROPERTY(QColor cursorColor MEMBER cursorColor)
+    Q_PROPERTY(QColor axisColor MEMBER axisColor)
+    Q_PROPERTY(QColor textColor MEMBER textColor)
 public:
     //状态
     enum RecordState
@@ -84,17 +101,6 @@ public:
     bool getHasData() const;
     void setHasData(bool has);
 
-    //四个边距
-    //该版本刻度是一体的，所以刻度的宽高也算在padding里
-    int getLeftPadding() const { return leftPadding; }
-    void setLeftPadding(int px);
-    int getRightPadding() const { return rightPadding; }
-    void setRightPadding(int px);
-    int getTopPadding() const { return topPadding; }
-    void setTopPadding(int px);
-    int getBottomPadding() const { return bottomPadding; }
-    void setBottomPadding(int px);
-
     //获取到的录音数据
     qint64 writeData(const char *data, qint64 maxSize) override;
     //导出缓存数据
@@ -121,6 +127,10 @@ public:
 
     //保存到文件
     Q_INVOKABLE bool saveToFile(const QString &filepath);
+    //保存到cache路径
+    //（因为导入到音频库是以uuid为文件名，所以传入的文件名为uuid）
+    //return 完整路径，路径为空则保存失败
+    Q_INVOKABLE QString saveToCache(const QString &uuid);
 
     //刷新，调用update
     Q_INVOKABLE void refresh();
@@ -128,6 +138,8 @@ public:
 protected:
     void paint(QPainter *painter) override;
     void geometryChanged(const QRectF &newGeometry, const QRectF &oldGeometry) override;
+    bool nativeEventFilter(const QByteArray &eventType, void *message, long *result) override;
+
     //去掉padding的宽高
     int plotAreaWidth() const;
     int plotAreaHeight() const;
@@ -143,10 +155,9 @@ signals:
     void durationChanged();
     void positionChanged();
     void hasDataChanged();
-    void leftPaddingChanged();
-    void rightPaddingChanged();
-    void topPaddingChanged();
-    void bottomPaddingChanged();
+    //输入输出设备变更，state为change时view的状态
+    void inputDeviceChanged(AudioRecorderView::RecordState oldState);
+    void outputDeviceChanged(AudioRecorderView::RecordState oldState);
 
 private:
     //QAudioInput/Output处理数据时回调IODevice的接口
@@ -192,6 +203,24 @@ private:
     int rightPadding=5;
     int topPadding=5;
     int bottomPadding=5;
+    //圆角
+    int radius=0;
+
+    //颜色
+    //背景色
+    QColor backgroundColor{34,34,34};
+    //图区域颜色
+    QColor viewColor{10,10,10};
+    //网格颜色
+    QColor gridColor{50,50,50};
+    //曲线颜色
+    QColor seriesColor{30,144,255};
+    //游标颜色
+    QColor cursorColor{200,10,10};
+    //刻度轴颜色
+    QColor axisColor{200,200,200};
+    //文本颜色
+    QColor textColor{200,200,200};
 
     //计算刻度间隔
     double y1PxToValue=1;

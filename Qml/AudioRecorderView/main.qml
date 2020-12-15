@@ -50,14 +50,17 @@ Window {
     Row{
         y:50
         spacing: 10
+        //开始录制
         Button{
             text: "record"
             onClicked: recorder.record(16000,input_comb.currentText)
         }
+        //停止
         Button{
             text: "stop"
             onClicked: recorder.stop()
         }
+        //播放
         Button{
             text: "play"
             onClicked: {
@@ -65,22 +68,26 @@ Window {
                 recorder.play(output_comb.currentText)
             }
         }
+        //暂停
         Button{
             text: "suspend"
             onClicked: recorder.suspendPlay()
         }
+        //恢复
         Button{
             text: "resume"
             onClicked: recorder.resumePlay()
         }
+        //保存到指定路径
         Button{
             text: "save"
             onClicked: recorder.saveToFile("./save.wav")
         }
+        //加载保存的文件
         Button{
             text: "load"
             onClicked: recorder.loadFromFile("./save.wav")
-        }      
+        }
     }
 
 }
