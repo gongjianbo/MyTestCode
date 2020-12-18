@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>TextFieldWithCompleter.qml</file>
+    </qresource>
+</RCC>
