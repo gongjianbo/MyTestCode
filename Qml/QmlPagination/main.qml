@@ -15,8 +15,24 @@ Window {
         border.color: "gray"
         radius: 4
 
-        //pageCurrent: 10
+        pageCurrent: 1
         itemCount: 99
+        onRequestPage: {
+            console.log("Pagination1 request page:",page,"count:",count)
+            pageCurrent=page;
+        }
+    }
+
+    Pagination2{
+        x: 10
+        y: 60
+        height: 40
+        //width: parent.width-20
+        border.color: "gray"
+        radius: 4
+
+        pageCurrent: 1
+        itemCount: 31
         onRequestPage: {
             console.log("Pagination1 request page:",page,"count:",count)
             pageCurrent=page;

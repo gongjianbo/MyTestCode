@@ -55,7 +55,7 @@ Rectangle {
             anchors.verticalCenter: parent.verticalCenter
             font: control.font
             color: control.textColor
-            text: "共 "+itemCount+" 条"
+            text: "共 "+control.itemCount+" 条"
         }
 
         //每页多少条
@@ -81,7 +81,7 @@ Rectangle {
                     //设置页码后从1开始
                     control.__itemPerPage=model[currentIndex];
                     control.pageCurrent=1;
-                    control.requestPage(pageCurrent,__itemPerPage);
+                    control.requestPage(control.pageCurrent,control.__itemPerPage);
                 }
             }
             Text{
@@ -95,16 +95,19 @@ Rectangle {
         Row{
             spacing: 5
             anchors.verticalCenter: parent.verticalCenter
-            //左侧前一页
-            Button{
-                visible: pageCount>1
+            //左侧前一页，应该使用图片，这里仅作演示
+            PageButton{
+                visible: control.pageCount>1
                 enabled: control.pageCurrent>1
                 anchors.verticalCenter: parent.verticalCenter
                 width: 30
                 height: 30
+                font: control.font
+                textColor: control.textColor
+                highlightedColor: control.highlightedColor
                 text: "<"
                 onClicked: {
-                    control.calcNewPage(pageCurrent-1);
+                    control.calcNewPage(control.pageCurrent-1);
                 }
             }
             //中间显示页码
@@ -112,12 +115,15 @@ Rectangle {
                 spacing: 5
                 anchors.verticalCenter: parent.verticalCenter
                 //第一页
-                Button{
-                    visible: pageCount>0
+                PageButton{
+                    visible: control.pageCount>0
                     width: 30
                     height: control.elementHeight
-                    text: "1"
-                    padding: 0
+                    font: control.font
+                    textColor: control.textColor
+                    highlightedColor: control.highlightedColor
+                    pageNumber: 1
+                    pageCurrent: control.pageCurrent
                     onClicked: {
                         control.calcNewPage(1);
                     }
@@ -125,7 +131,8 @@ Rectangle {
                 Text {
                     //pageCount<btnCount不用显示
                     //当前页在前countHalf页不用显示
-                    visible: (pageCount>pageButtonCount&&pageCurrent>__pageButtonHalf)
+                    visible: (control.pageCount>control.pageButtonCount&&
+                              control.pageCurrent>control.__pageButtonHalf)
                     text: "..."
                     font: control.font
                     color: control.textColor
@@ -139,18 +146,21 @@ Rectangle {
                            :(control.pageCount>=control.pageButtonCount)
                              ?(control.pageButtonCount-2)
                              :(control.pageCount-2)
-                    delegate: Button{
+                    delegate: PageButton{
                         width: 30
                         height: control.elementHeight
+                        font: control.font
+                        textColor: control.textColor
+                        highlightedColor: control.highlightedColor
                         //在首或者尾相连时，值要连续，避免和首尾重复
-                        text: (pageCurrent<=__pageButtonHalf)
-                              ?(2+index)
-                              :(pageCount-pageCurrent<=pageButtonCount-__pageButtonHalf)
-                        ?(pageCount-button_repeator.count+index)
-                        :(pageCurrent+2+index-__pageButtonHalf)
-                        padding: 0
+                        pageNumber: (control.pageCurrent<=control.__pageButtonHalf)
+                                    ?(2+index)
+                                    :(control.pageCount-control.pageCurrent<=control.pageButtonCount-control.__pageButtonHalf)
+                                      ?(control.pageCount-button_repeator.count+index)
+                                      :(control.pageCurrent+2+index-control.__pageButtonHalf)
+                        pageCurrent: control.pageCurrent
                         onClicked: {
-                            control.calcNewPage(Number(text));
+                            control.calcNewPage(pageNumber);
                         }
                     }
                 }
@@ -158,34 +168,41 @@ Rectangle {
                     id: page_moreright
                     //pageCount<btnCount不用显示
                     //当前页在倒数countHalf页不用显示
-                    visible: (pageCount>pageButtonCount&&pageCount-pageCurrent>pageButtonCount-__pageButtonHalf)
+                    visible: (control.pageCount>control.pageButtonCount&&
+                              control.pageCount-control.pageCurrent>control.pageButtonCount-control.__pageButtonHalf)
                     text: "..."
                     font: control.font
                     color: control.textColor
                     height: control.elementHeight
                 }
                 //最后一页
-                Button{
-                    visible: pageCount>1
+                PageButton{
+                    visible: control.pageCount>1
                     width: 30
                     height: control.elementHeight
-                    text: control.pageCount
-                    padding: 0
+                    font: control.font
+                    textColor: control.textColor
+                    highlightedColor: control.highlightedColor
+                    pageNumber: control.pageCount
+                    pageCurrent: control.pageCurrent
                     onClicked: {
-                        control.calcNewPage(control.pageCount);
+                        control.calcNewPage(pageNumber);
                     }
                 }
             }
-            //右侧下一页
-            Button{
-                visible: pageCount>1
+            //右侧下一页，应该使用图片，这里仅作演示
+            PageButton{
+                visible: control.pageCount>1
                 enabled: control.pageCurrent<control.pageCount
                 anchors.verticalCenter: parent.verticalCenter
                 width: 30
                 height: 30
+                font: control.font
+                textColor: control.textColor
+                highlightedColor: control.highlightedColor
                 text: ">"
                 onClicked: {
-                    control.calcNewPage(pageCurrent+1);
+                    control.calcNewPage(control.pageCurrent+1);
                 }
             }
         }
@@ -210,6 +227,13 @@ Rectangle {
                     bottom: 0
                     top: 999999
                 }
+                selectByMouse: true
+                selectedTextColor: "white"
+                selectionColor: "blue"
+                background: Rectangle{
+                    border.color: control.elementBorderColor
+                }
+
                 Keys.onPressed: {
                     //enter小键盘enter
                     //return主键盘enter
@@ -217,7 +241,7 @@ Rectangle {
                         focus=false;
                         if(edit_goto_page.text){
                             //编辑结束就去请求该页数据
-                            control.requestPage(Number(edit_goto_page.text),__itemPerPage);
+                            control.requestPage(Number(edit_goto_page.text),control.__itemPerPage);
                         }
                     }
                 }
@@ -241,6 +265,6 @@ Rectangle {
         if(page_num<1||page_num>control.pageCount||page_num===control.pageCurrent)
             return;
         control.pageCurrent=page_num;
-        control.requestPage(page_num,__itemPerPage)
+        control.requestPage(page_num,control.__itemPerPage)
     }
 }

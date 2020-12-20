@@ -2,5 +2,7 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>Pagination1.qml</file>
+        <file>Pagination2.qml</file>
+        <file>PageButton.qml</file>
     </qresource>
 </RCC>
