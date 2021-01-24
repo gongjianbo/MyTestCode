@@ -32,6 +32,12 @@
         <property name="maximum">
          <number>99</number>
         </property>
+        <property name="singleStep">
+         <number>1</number>
+        </property>
+        <property name="value">
+         <number>5</number>
+        </property>
        </widget>
       </item>
       <item>
@@ -75,6 +81,9 @@
        <widget class="QCheckBox" name="lockBox">
         <property name="text">
          <string>加锁</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
         </property>
        </widget>
       </item>

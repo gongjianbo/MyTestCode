@@ -5,7 +5,9 @@
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QSqlError>
+#include <QCalendar>
 #include <QDateTime>
+#include <QElapsedTimer>
 #include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent)
@@ -53,6 +55,7 @@ void MainWindow::createTable()
         db = QSqlDatabase::addDatabase("QSQLITE",connect_name);
         db.setDatabaseName("Test.db");
     }
+    db.setConnectOptions("");
 
     if(db.open()){
         const QString sql=QString(R"(CREATE TABLE IF NOT EXISTS MY_TABLE(
@@ -63,7 +66,7 @@ TIME  TEXT
 );)");
         QSqlQuery query(db);
         bool result=query.exec(sql);
-        qDebug()<<"create table"<<result;
+        qDebug()<<"create table"<<result<<query.lastError();
         db.close();
     }
 }
@@ -78,18 +81,21 @@ void MainWindow::clearTable()
         db = QSqlDatabase::addDatabase("QSQLITE",connect_name);
         db.setDatabaseName("Test.db");
     }
+    db.setConnectOptions("");
 
     if(db.open()){
         const QString sql=QString(R"(DELETE FROM MY_TABLE;)");
         QSqlQuery query(db);
         bool result=query.exec(sql);
-        qDebug()<<"drop table"<<result;
+        qDebug()<<"clear table"<<result<<query.lastError();
         db.close();
     }
 }
 
 void MainWindow::searchCount()
 {
+    QElapsedTimer elapse;
+    elapse.start();
     QSqlDatabase db;
     const QString connect_name="ConnectMain";
     if (QSqlDatabase::contains(connect_name)){
@@ -98,15 +104,24 @@ void MainWindow::searchCount()
         db = QSqlDatabase::addDatabase("QSQLITE",connect_name);
         db.setDatabaseName("Test.db");
     }
+    //只读模式打开，qt这个封装不可行 QSQLITE_OPEN_READONLY;
+    //db.setConnectOptions("QSQLITE_OPEN_READONLY;QSQLITE_BUSY_TIMEOUT=100");
+    //把超时设置长一点可行，如果同一进程读写直接加锁还快点
+    //db.setConnectOptions("QSQLITE_BUSY_TIMEOUT=10000");
+    //qDebug()<<db.connectOptions();
 
     if(db.open()){
         QSqlQuery query(db);
         int result=0;
         const QString sql=QString("SELECT COUNT(*) FROM MY_TABLE;");
+
+        this->mtx.lock();
         if(query.exec(sql)&&query.next()){
             result=query.value("COUNT(*)").toInt();
         }
-        qDebug()<<"search count"<<result;
+        this->mtx.unlock();
+
+        qDebug()<<"search count:"<<result<<"elapse:"<<elapse.elapsed()<<"ms"<<query.lastError();
         db.close();
     }
 }
@@ -121,6 +136,7 @@ void MainWindow::writeTest(int index, int loop, bool lock)
     }
     db = QSqlDatabase::addDatabase("QSQLITE",connect_name);
     db.setDatabaseName("Test.db");
+    //db.setConnectOptions("QSQLITE_BUSY_TIMEOUT=100");
 
     if(db.open()){
         qDebug()<<"open"<<index;
@@ -131,15 +147,20 @@ void MainWindow::writeTest(int index, int loop, bool lock)
             if(stopFlag)
                 break;
 
-            if(lock){
-                this->mtx.lock();
-            }
-
             if(query.prepare(sql)){
                 query.bindValue(0,index);
                 query.bindValue(1,i);
-                query.bindValue(2,QTime::currentTime().toString("hh:mm:ss:zzz"));
-                if(query.exec()){
+                query.bindValue(2,QDateTime::currentDateTime().toString("hh:mm:ss:zzz"));
+
+                if(lock){
+                    this->mtx.lock();
+                }
+                bool insert_result=query.exec();
+                if(lock){
+                    this->mtx.unlock();
+                }
+
+                if(insert_result){
                     loop_count++;
                     qDebug()<<"index"<<index<<"success"<<i;
                 }else{
@@ -147,9 +168,12 @@ void MainWindow::writeTest(int index, int loop, bool lock)
                 }
             }
 
-            if(lock){
-                this->mtx.unlock();
+            int result=0;
+            const QString sql2=QString("SELECT COUNT(*) FROM MY_TABLE;");
+            if(query.exec(sql2)&&query.next()){
+                result=query.value("COUNT(*)").toInt();
             }
+            qDebug()<<"then count"<<result;
         }
         db.close();
     }
