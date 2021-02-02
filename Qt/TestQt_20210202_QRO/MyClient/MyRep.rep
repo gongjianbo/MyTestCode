@@ -1,0 +1,5 @@
+class MyRep
+{
+SIGNAL(mySend(const QString &data,int num))
+SLOT(myRecv(const QString &data,int num))
+}
