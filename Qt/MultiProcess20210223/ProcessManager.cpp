@@ -226,13 +226,13 @@ void ProcessManager::patrol()
         ::GetExitCodeProcess(node.hProcess,&exit_code);
         //如果进程尚未终止且函数成功，则返回的状态为STILL_ACTIVE
         if(exit_code!=STILL_ACTIVE){
-            qDebug()<<"ceash."<<node.path<<node.key;
+            qDebug()<<"process crash."<<node.path<<node.key;
             emit processCrashed(node.path,node.key);
             //如果是自动重启的就重启，否则从列表移除
             if(node.autoRestart){
                 //TODO 处理为成功重启的进程
                 if(doStart(node)){
-                    qDebug()<<"restart."<<node.path<<node.key;
+                    qDebug()<<"process restart."<<node.path<<node.key;
                     emit processRestarted(node.path,node.key);
                 }
             }else{
