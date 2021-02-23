@@ -3,7 +3,8 @@
 
 #include "form.h"
 
-//简易的多进程管理
+//简易的多进程管理demo
+//启动后选择本程序exe点击start测试
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);

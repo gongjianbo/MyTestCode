@@ -92,10 +92,13 @@ bool ProcessManager::doStart(const ProcessInfo &proInfo)
 {
     ProcessInfo info = proInfo;
     //本来想传handle，但是DuplicateHandle参数没看明白，就传pid算了
-    unsigned long current_pid = (unsigned long)(DWORD)::GetProcessId(::GetCurrentProcess());
-    qDebug()<<"current pid"<<current_pid<<QString::number(current_pid);
+    const unsigned long current_pid = (unsigned long)(DWORD)::GetProcessId(::GetCurrentProcess());
+    //qDebug()<<"current pid"<<current_pid<<QString::number(current_pid);
     QString info_arg = QString("%1 %2").arg(QString::number(current_pid)).arg(info.args.join(" "));
     const QString table_key = info.key.isEmpty()?info.path:info.key;
+    //byte放到外层，不然临时变量释放了，data里的数据也没了
+    QByteArray path_temp = info.path.toLocal8Bit();
+    QByteArray arg_temp = info_arg.toLocal8Bit();
 
     SHELLEXECUTEINFOA se_info;
     //in.required.此结构体字节大小
@@ -107,18 +110,17 @@ bool ProcessManager::doStart(const ProcessInfo &proInfo)
     //in.optional.要执行的动作，open打开指定lpFile文件，runas管理员身份启动应用程序
     se_info.lpVerb = "open";
     //in.以空值结尾的字符串的地址
-    QByteArray path_temp = info.path.toLocal8Bit();
-    se_info.lpFile = path_temp.data();
+    se_info.lpFile = path_temp.constData();
     //in.optional.执行参数
     if(info.args.isEmpty()){
         se_info.lpParameters = NULL;
     }else{
-        QByteArray arg_temp = info_arg.toLocal8Bit();
-        se_info.lpParameters = arg_temp.data();
+        se_info.lpParameters = arg_temp.constData();
     }
     //in.optional.工作目录，为NULL则使用当前目录
     //se_info.lpDirectory = NULL;
     //in.required.SW_HIDE隐藏该窗口并激活另一个窗口，打开的进程不会显示窗口
+    //因为hide不显示窗口，测试/调试时可以用SW_SHOW
     se_info.nShow = SW_SHOW;
     //out.如果设置了SEE_MASK_NOCLOSEPROCESS并且ShellExecuteEx调用成功，它将把该成员设置为大于32的值。
     //如果函数失败，则将其设置为SE_ERR_XXX错误值，以指示失败的原因。
@@ -183,7 +185,7 @@ void ProcessManager::initGuard()
     guardThread = new std::thread([this]{
         int counter = 0;
         const int ms_sleep = 10;
-        const int ms_guard = 1000;
+        const int ms_guard = 500;
         while(guardFlag){
             //达到巡检时间间隔就重置count，并检测进程状态
             counter += ms_sleep;
@@ -224,11 +226,13 @@ void ProcessManager::patrol()
         ::GetExitCodeProcess(node.hProcess,&exit_code);
         //如果进程尚未终止且函数成功，则返回的状态为STILL_ACTIVE
         if(exit_code!=STILL_ACTIVE){
+            qDebug()<<"ceash."<<node.path<<node.key;
             emit processCrashed(node.path,node.key);
             //如果是自动重启的就重启，否则从列表移除
             if(node.autoRestart){
                 //TODO 处理为成功重启的进程
                 if(doStart(node)){
+                    qDebug()<<"restart."<<node.path<<node.key;
                     emit processRestarted(node.path,node.key);
                 }
             }else{

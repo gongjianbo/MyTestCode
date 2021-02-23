@@ -36,7 +36,7 @@ void ProcessWorker::initWorker()
     guardThread = new std::thread([this]{
         int counter = 0;
         const int ms_sleep = 10;
-        const int ms_guard = 1000;
+        const int ms_guard = 500;
         while(guardFlag){
             //达到巡检时间间隔就重置count，并检测进程状态
             counter += ms_sleep;
