@@ -13,6 +13,9 @@
  * 1.manager和worker配对使用
  * 管理进程用manager，被管理的用worker
  * 2.每个进程只保持一个manager和worker
+ * @todo
+ * 通过event或者shared memory标记当前进程是否处于活跃状态
+ * 如果卡住也需要重新启动
  */
 class ProcessWorker : public QObject
 {

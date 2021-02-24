@@ -16,4 +16,7 @@ struct ProcessInfo{
     HANDLE hProcess = NULL;
     //自动重启
     bool autoRestart = true;
+    //重启计数，每次正常置零，autoRestart=true则异常+1，达到预定值再重启
+    //加一个计数只是防止异常情况
+    int restartCounter = 0;
 };

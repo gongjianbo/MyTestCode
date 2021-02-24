@@ -42,7 +42,7 @@ bool ProcessManager::init(int limit)
 QString ProcessManager::getAppPath()
 {
     DWORD v;
-    QVarLengthArray<char, 2048> buffer;
+    QVarLengthArray<char,2048> buffer;
     size_t size = 0;
     do {
         size += 2048;
@@ -75,6 +75,7 @@ bool ProcessManager::startProcess(const QString &exePath, const QString &key, co
     info.args = argList;
     info.hProcess = NULL;
     info.autoRestart = autoRestart;
+    info.restartCounter = 0;
 
     return doStart(info);
 }
@@ -94,15 +95,15 @@ bool ProcessManager::doStart(const ProcessInfo &proInfo)
     //本来想传handle，但是DuplicateHandle参数没看明白，就传pid算了
     const unsigned long current_pid = (unsigned long)(DWORD)::GetProcessId(::GetCurrentProcess());
     //qDebug()<<"current pid"<<current_pid<<QString::number(current_pid);
-    QString info_arg = QString("%1 %2").arg(QString::number(current_pid)).arg(info.args.join(" "));
+    const QString info_arg = QString("\"%1\" %2").arg(QString::number(current_pid)).arg(info.args.join(" "));
     const QString table_key = info.key.isEmpty()?info.path:info.key;
     //byte放到外层，不然临时变量释放了，data里的数据也没了
-    QByteArray path_temp = info.path.toLocal8Bit();
-    QByteArray arg_temp = info_arg.toLocal8Bit();
+    const QByteArray path_temp = info.path.toLocal8Bit();
+    const QByteArray arg_temp = info_arg.toLocal8Bit();
 
     SHELLEXECUTEINFOA se_info;
     //in.required.此结构体字节大小
-    se_info.cbSize = sizeof(SHELLEXECUTEINFO);
+    se_info.cbSize = sizeof(SHELLEXECUTEINFOA);
     //in.SEE_MASK_NOCLOSEPROCESS用于指示hProcess成员接收到进程句柄。
     se_info.fMask = SEE_MASK_NOCLOSEPROCESS;
     //in.optional.父窗口的句柄，用于显示系统在执行此功能时可能产生的任何消息框。该值可以为NULL。
@@ -112,11 +113,7 @@ bool ProcessManager::doStart(const ProcessInfo &proInfo)
     //in.以空值结尾的字符串的地址
     se_info.lpFile = path_temp.constData();
     //in.optional.执行参数
-    if(info.args.isEmpty()){
-        se_info.lpParameters = NULL;
-    }else{
-        se_info.lpParameters = arg_temp.constData();
-    }
+    se_info.lpParameters = arg_temp.constData();
     //in.optional.工作目录，为NULL则使用当前目录
     //se_info.lpDirectory = NULL;
     //in.required.SW_HIDE隐藏该窗口并激活另一个窗口，打开的进程不会显示窗口
@@ -144,6 +141,7 @@ bool ProcessManager::doStart(const ProcessInfo &proInfo)
     if(::ShellExecuteExA(&se_info)){
         if(se_info.hProcess != NULL){
             info.hProcess = se_info.hProcess;
+            info.restartCounter = 0;
             processTable[table_key] = info;
             qDebug()<<"execute success.";
             return true;
@@ -179,7 +177,7 @@ void ProcessManager::freeGuard()
 
 void ProcessManager::initGuard()
 {
-    if(guardFlag||guardThread)
+    if(guardFlag || guardThread)
         return;
     guardFlag = true;
     guardThread = new std::thread([this]{
@@ -230,14 +228,20 @@ void ProcessManager::patrol()
             emit processCrashed(node.path,node.key);
             //如果是自动重启的就重启，否则从列表移除
             if(node.autoRestart){
-                //TODO 处理为成功重启的进程
-                if(doStart(node)){
+                iter->restartCounter += 1;
+                //加一个计数只是防止异常情况
+                if(iter->restartCounter>=3 && doStart(node)){
                     qDebug()<<"process restart."<<node.path<<node.key;
                     emit processRestarted(node.path,node.key);
                 }
             }else{
                 const QString table_key = node.key.isEmpty()?node.path:node.key;
                 quit_keys.push_back(table_key);
+            }
+        }else{
+            //TODO 通过event或者shared memory查询当前进程是否处于活跃状态
+            if(node.autoRestart){
+                iter->restartCounter = 0;
             }
         }
     }
