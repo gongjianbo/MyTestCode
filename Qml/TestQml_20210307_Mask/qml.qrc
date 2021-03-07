@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>Mask1.qml</file>
+        <file>Mask2.qml</file>
+        <file>Mask3.qml</file>
+    </qresource>
+</RCC>
