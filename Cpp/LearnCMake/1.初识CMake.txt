@@ -1,0 +1,21 @@
+#指定cmake最低版本
+cmake_minimum_required (VERSION 3.8)
+
+#设置项目名称
+project(CMake_Learn)
+
+#c++标准
+#set(CMAKE_CXX_STANDARD 11)
+#设置指定的C++编译器版本是必须的，
+#如果不设置，或者为OFF，则指定版本不可用时，会使用上一版本。
+#set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+#查找对应目录下所有源文件
+#CMAKE_CURRENT_SOURCE_DIR 为cmakelist当前路径
+aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR} Src_Dir)
+#生成
+add_executable(CMake_Learn ${Src_Dir})
+#C++标准
+set_target_properties(CMake_Learn PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON)
+#可执行程序路径
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake_Bin)
