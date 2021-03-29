@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>TalkListView.qml</file>
+        <file>TalkItemBase.qml</file>
+        <file>TalkItemText.qml</file>
+        <file>TalkLabel.qml</file>
+        <file>TalkItemAudio.qml</file>
+    </qresource>
+</RCC>
