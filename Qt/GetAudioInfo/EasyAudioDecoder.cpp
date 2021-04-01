@@ -237,32 +237,40 @@ bool EasyAudioDecoder::toPcm(const QSharedPointer<EasyAudioContext> &contextPtr,
                 //获取给定音频参数所需的缓冲区大小=通道数 * 采样点数* 采样位数/8
                 const int out_bufuse = av_samples_get_buffer_size(NULL, out_channels, ret, out_sample_fmt, 1);
                 //qDebug()<<"out"<<out_bufuse<<"sample"<<ret<<"channel"<<out_channels<<sample_bytes*out_samples;
-                if(out_channels==2)
-                {
-                    //双声道时提取左声道数据
-                    //双声道区分planaer和packed
-                    if(out_is_planar){
-                        //planaer左右声道单独放的
-                        if(!callBack((const char*)out_buffer_arr[0], out_bufuse/2)){
-                            return false;
-                        }
-                    }else{
-                        //packed都在[0]，一左一右存放
-                        for(int i = 0; i < out_bufuse; i += sample_bytes*2)
-                        {
-                            //回调false则整体失败返回false
-                            if(!callBack((const char*)out_buffer_arr[0] + i, sample_bytes)){
-                                return false;
-                            }
-                        }
-                    }
-                }else if(out_channels==1){
-                    //单声道数据
+                //2021-04-01更正，之前导出没有处理多声道数据，导致数据长度不一致
+                //（因为原本的设计是双声道可以导出为两个单声道文件）
+                if(out_bufuse > 0){
                     //回调false则整体失败返回false
-                    if(!callBack((const char*)out_buffer_arr[0], out_bufuse)){
+                    if(!callBack((const char*)out_buffer, out_bufuse)){
                         return false;
                     }
                 }
+                //if(out_channels==2)
+                //{
+                //    //双声道时提取左声道数据
+                //    //双声道区分planaer和packed
+                //    if(out_is_planar){
+                //        //planaer左右声道单独放的
+                //        if(!callBack((const char*)out_buffer_arr[0], out_bufuse/2)){
+                //            return false;
+                //        }
+                //    }else{
+                //        //packed都在[0]，一左一右存放
+                //        for(int i = 0; i < out_bufuse; i += sample_bytes*2)
+                //        {
+                //            //回调false则整体失败返回false
+                //            if(!callBack((const char*)out_buffer_arr[0] + i, sample_bytes)){
+                //                return false;
+                //            }
+                //        }
+                //    }
+                //}else if(out_channels==1){
+                //    //单声道数据
+                //    //回调false则整体失败返回false
+                //    if(!callBack((const char*)out_buffer_arr[0], out_bufuse)){
+                //        return false;
+                //    }
+                //}
                 av_frame_unref(frame);
             }
         }
