@@ -29,7 +29,7 @@ void updateToolTip(QQmlApplicationEngine *engine)
 {
     //替换默认的ToolTip附加属性样式
     static const char *name = "_q_QQuickToolTip";
-    QQmlComponent *component = new QQmlComponent(engine,QUrl("qrc:/BasicToolTip.qml"));
+    QQmlComponent *component = new QQmlComponent(engine,QUrl("qrc:/BasicToolTip.qml"),qApp);
     auto create_func = [component,engine]{
         if(component->isError()){
             qWarning() << "create BasicToolTip failed." << component->errors();
