@@ -1,7 +1,7 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
-
+import QtMultimedia 5.12
 import TalkModel 1.0
 
 //聊天框ListView
@@ -9,8 +9,14 @@ import TalkModel 1.0
 ListView {
     id: control
 
+    //增加部分属性，用于在delegate中访问
+    //这样多个view时互不干扰
+    property TalkListModel talkModel
+    property MediaPlayer audioPlayer
+
     clip: true
     headerPositioning: ListView.OverlayHeader
+    footerPositioning: ListView.OverlayFooter
     boundsBehavior: Flickable.StopAtBounds
 
     highlightFollowsCurrentItem: true
@@ -43,6 +49,14 @@ ListView {
             id: none_comp
             Item{ }
         }
+    }
+
+    //相当于头尾边距
+    header: Item{
+        height: 10
+    }
+    footer: Item{
+        height: 10
     }
 
     //竖向滚动条

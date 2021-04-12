@@ -13,6 +13,8 @@ TalkItemBase {
         width: control.contentWidth
         layoutDirection: control.isUser?Qt.RightToLeft:Qt.LeftToRight
         height: 50
+        spacing: 12
+
         Rectangle{
             radius: 4
             width: 80+Math.min(210,Math.pow(model.audio_duration/1000,0.5)*20)
@@ -33,6 +35,8 @@ TalkItemBase {
                 anchors{
                     verticalCenter: parent.verticalCenter
                     margins: 14
+                    //left和right这样互斥写，属性绑定会有问题
+                    //但是layoutDirection切换后会刷新
                     left: control.isUser?undefined:parent.left
                     right: control.isUser?parent.right:parent.undefined
                 }
@@ -40,8 +44,8 @@ TalkItemBase {
                 spacing: 0
                 AnimatedImage{
                     anchors.verticalCenter: parent.verticalCenter
-                    source: (talk_player.playbackState===MediaPlayer.PlayingState&&
-                             talk_player.currentId===index)
+                    source: (audioPlayer.playbackState===MediaPlayer.PlayingState&&
+                             audioPlayer.currentId===index)
                             ?"qrc:/Image/audio_playing.gif"
                             :"qrc:/Image/audio_20_play.png"
                     rotation: control.isUser?180:0
@@ -58,65 +62,67 @@ TalkItemBase {
             MouseArea{
                 anchors.fill: parent
                 onClicked: {
-                    if(talk_player.playbackState===MediaPlayer.PlayingState){
-                        talk_player.stop();
+                    if(audioPlayer.playbackState===MediaPlayer.PlayingState){
+                        audioPlayer.stop();
                     }else{
                         //source没变不能再次播放？
-                        talk_player.source="";
-                        talk_player.source=model.audio_path;
-                        talk_player.currentId=index;
-                        talk_player.play();
+                        audioPlayer.source="";
+                        audioPlayer.source=model.audio_path;
+                        audioPlayer.currentId=index;
+                        audioPlayer.play();
                     }
                 }
             }
-
-            //转换按钮
-            Rectangle{
-                visible: (model.status!==TalkData.ParseSuccess)
-                anchors{
-                    verticalCenter: parent.verticalCenter
-                    margins: 12
-                    left: control.isUser?undefined:parent.right
-                    right: control.isUser?parent.left:parent.undefined
-                }
-                height: control.messageHeight-16
-                width: label_item.width+24
-                radius: height/2
-                color: "#A4ACC6"
-
-                TalkLabel{
-                    id: label_item
-                    anchors.centerIn: parent
-                    color: "white"
-                    text: {
-                        switch(model.status)
-                        {
-                        case TalkData.DataError: return "无效数据";
-                        case TalkData.DataReady: return "转文字";
-                        case TalkData.ParseOn: return "      ";
-                        case TalkData.ParseSuccess: return "转换成功";
-                        case TalkData.ParseError: return "转换失败";
-                        }
-                        return "      ";
-                    }
-                }
-
-                AnimatedImage{
-                    anchors.centerIn: parent
-                    visible: (model.status===TalkData.ParseOn)
-                    source: "qrc:/Image/audio_loading.gif"
-                }
-
-                MouseArea{
-                    anchors.fill: parent
-                    onClicked: {
-                        //直接通过id访问外部对象
-                        //需要处理当前是否可以点击
-                        talk_model.parseRow(index);
-                    }
-                }
-            }//end 转换按钮
         }
+
+        //转换按钮
+        Rectangle{
+            visible: (model.status!==TalkData.ParseSuccess)
+            anchors.verticalCenter: parent.verticalCenter
+            //之前放在消息rect内部了，现在作为兄弟
+            //anchors{
+            //    verticalCenter: parent.verticalCenter
+            //    margins: control.isUser?-width-12:12
+            //    left: control.isUser?parent.left:parent.right
+            //    //right: control.isUser?parent.left:parent.undefined
+            //}
+            height: control.messageHeight-16
+            width: label_item.width+24
+            radius: height/2
+            color: "#A4ACC6"
+
+            TalkLabel{
+                id: label_item
+                anchors.centerIn: parent
+                color: "white"
+                text: {
+                    switch(model.status)
+                    {
+                    case TalkData.DataError: return "无效数据";
+                    case TalkData.DataReady: return "转文字";
+                    case TalkData.ParseOn: return "      ";
+                    case TalkData.ParseSuccess: return "转换成功";
+                    case TalkData.ParseError: return "转换失败";
+                    }
+                    return "      ";
+                }
+            }
+
+            AnimatedImage{
+                anchors.centerIn: parent
+                visible: (model.status===TalkData.ParseOn)
+                source: "qrc:/Image/audio_loading.gif"
+            }
+
+            MouseArea{
+                anchors.fill: parent
+                onClicked: {
+                    //直接通过id访问外部对象
+                    //需要处理当前是否可以点击
+                    talkModel.parseRow(index);
+                }
+            }
+        }//end 转换按钮
     }
 
     Row{
@@ -143,6 +149,8 @@ TalkItemBase {
             Image {
                 visible: model.audio_text.length<=0
                 x: 14
+                //有些情况下图片显示异常，设置透明度0.9解决了
+                opacity: 0.999
                 anchors.verticalCenter: parent.verticalCenter
                 source: "qrc:/Image/warn_20_red.png"
             }

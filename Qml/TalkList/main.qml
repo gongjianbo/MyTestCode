@@ -65,8 +65,9 @@ Window {
                 id: talk_view
                 anchors.fill: parent
                 anchors.margins: 10
-                model:talk_model
-                clip: true
+                model: talk_model
+                talkModel: talk_model
+                audioPlayer: talk_player
             }
         }
 
