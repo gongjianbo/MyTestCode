@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/">
+        <file>SkinNormal.qml</file>
+        <file>EasyButton.qml</file>
+        <file>qmldir</file>
+        <file>SkinSkyBlue.qml</file>
+        <file>SkinBase.qml</file>
+        <file>EasyRectangle.qml</file>
+    </qresource>
+</RCC>
