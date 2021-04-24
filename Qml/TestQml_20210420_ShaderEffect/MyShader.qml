@@ -80,7 +80,7 @@ out vec4 fragColor;
     }
 
     // default vertex shader code
-    vertexShader: "#version 330
+    vertexShader: "#version 150
             uniform mat4 qt_Matrix;
             in vec4 qt_Vertex;
             in vec2 qt_MultiTexCoord0;
@@ -90,7 +90,7 @@ out vec4 fragColor;
                 gl_Position = qt_Matrix * qt_Vertex;
             }"
     // default fragment shader code
-    fragmentShader: "#version 330
+    fragmentShader: "#version 150
             uniform sampler2D source;
             uniform float qt_Opacity;
             in vec2 qt_TexCoord0;

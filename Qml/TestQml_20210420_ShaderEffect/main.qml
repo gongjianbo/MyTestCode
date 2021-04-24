@@ -1,5 +1,6 @@
 import QtQuick 2.12
 import QtQuick.Window 2.12
+import QtGraphicalEffects 1.0
 
 Window {
     id: root
@@ -32,7 +33,7 @@ Window {
                 }
             }
         }
-       /* ShaderEffect {
+        /* ShaderEffect {
             id: effect2
             width: img.width
             height: img.height
@@ -128,6 +129,22 @@ Window {
             width: img.width
             height: img.height
             property variant source: img
+            MouseArea{
+                anchors.fill: parent
+                onClicked: {
+                    console.log(parent.vertexShader)
+                    console.log(parent.fragmentShader)
+                }
+            }
+        }
+
+        DirectionalBlur {
+            width: img.width
+            height: img.height
+            source: img
+            angle: 90
+            length: 32
+            samples: 24
             MouseArea{
                 anchors.fill: parent
                 onClicked: {
