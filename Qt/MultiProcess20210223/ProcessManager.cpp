@@ -102,6 +102,7 @@ bool ProcessManager::doStart(const ProcessInfo &proInfo)
     const QByteArray arg_temp = info_arg.toLocal8Bit();
 
     SHELLEXECUTEINFOA se_info;
+    memset(&se_info, 0x00, sizeof(SHELLEXECUTEINFOA));
     //in.required.此结构体字节大小
     se_info.cbSize = sizeof(SHELLEXECUTEINFOA);
     //in.SEE_MASK_NOCLOSEPROCESS用于指示hProcess成员接收到进程句柄。
