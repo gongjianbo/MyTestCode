@@ -53,8 +53,9 @@ MainWindow::MainWindow(QWidget *parent)
         setting.setValue("BB/AA","测试");
         setting.setValue("BB/BB",true);
         setting.setValue("BB/CC",123.7);
-        //会把中文写成unicode：%U4E2D%U6587
-        //但是手动输入的中文时不能读的，且写的时候会修改掉手写的中文
+        //保存ini会把中文写成unicode："%U4E2D%U6587"
+        //但是读取ini时，手动输入的中文是不能正常读取的，
+        //且保存ini的时候会修改掉手写中文的格式，如中文变成"%E4%B8%AD%E6%96%87"
         setting.setValue("中文/中文","测试中文");
     });
     connect(ui->btnRead,&QPushButton::clicked,this,[this]{
