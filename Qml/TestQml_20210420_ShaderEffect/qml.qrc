@@ -1,7 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file>main.qml</file>
-        <file>hua.png</file>
-        <file>MyShader.qml</file>
-    </qresource>
-</RCC>
