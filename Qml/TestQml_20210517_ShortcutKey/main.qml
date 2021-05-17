@@ -243,6 +243,12 @@ Window {
                             console.log('Keys onSpacePressed',counter++)
                             event.accepted=true;
                         }
+                        //通过onShortcutOverride accepted可以拦截快捷键
+                        Keys.onShortcutOverride: {
+                            console.log('Keys onShortcutOverride',counter++)
+                            event.accepted=(event.key===Qt.Key_Space);
+                        }
+
                         onClicked: {
                             console.log('Button onClicked',counter++)
                         }
@@ -294,6 +300,9 @@ Window {
                 Column {
                     anchors.centerIn: parent
                     spacing: 10
+                    Keys.onPressed: {
+                        console.log('Keys mid pressed.',event.key,counter++)
+                    }
                     Item {
                         width: 100
                         height: 30
@@ -326,6 +335,7 @@ Window {
                             console.log('Keys onSpacePressed',counter++)
                             event.accepted=false;
                         }
+                        //除非被Item处理，如Control2会接受space空格，否则Keys会一直往上传递
                         Keys.onPressed: {
                             console.log('Keys in pressed.',event.key,counter++)
                         }
