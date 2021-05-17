@@ -288,7 +288,7 @@ Window {
                 }
                 //过滤掉ShortcutOverride后，Keys可以正常触发了
                 Keys.onPressed: {
-                    console.log('Keys pressed.',event.key,counter++)
+                    console.log('Keys out pressed.',event.key,counter++)
                 }
 
                 Column {
@@ -324,8 +324,12 @@ Window {
                         //被Shortcut或者Keys处理了，5.15不会触发click，5.12、5.13会
                         Keys.onSpacePressed: {
                             console.log('Keys onSpacePressed',counter++)
-                            event.accepted=true;
+                            event.accepted=false;
                         }
+                        Keys.onPressed: {
+                            console.log('Keys in pressed.',event.key,counter++)
+                        }
+
                         onClicked: {
                             console.log('Button onClicked',counter++)
                         }
