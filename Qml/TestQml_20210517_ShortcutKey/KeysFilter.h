@@ -7,9 +7,12 @@
  * @date 2021-05-17
  *
  * @details
- * 主要用于过滤应用快捷键，避免被全局Shortcut、Action获取
- * 过滤快捷键后可以正常触发FocusScope的Keys.onPressed
- *
+ * 主要用于区域需要快捷键时过滤全局快捷键
+ * 避免被全局 Shortcut、Action 获取
+ * （触发快捷键后 Keys 就不会往上传递）
+ * 过滤快捷键后可以正常触发 activeFocus 的 Keys.onPressed
+ * @note
+ * 如果只是单个组件请用 Keys.onShortcutOverride
  * @example
  * FocusScope {
  *     id: keys_scope

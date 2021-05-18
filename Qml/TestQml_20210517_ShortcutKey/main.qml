@@ -11,7 +11,7 @@ import Tools 1.0
 //3.按键事件由scene传递给active focus的Item(activeFocus属性)，
 //  如果当前没有active focus Item则此按键事件被忽略(ignore)
 // （注：如果注册了快捷键，Item收到事件顺序为ShortcutOverride-KeyPress-KeyRelease，
-//  ShortcutOverride如果自己没处理交给Shortcut了，就不会触发Press，只剩Release）
+//  ShortcutOverride如果active focus Item没处理就交给Shortcut了，不会触发Press，只剩Release）
 //4.如果此active focus Item接受(accept)此事件，则传递结束，
 //  否则一直往父级Item传递，直到达到根节点
 Window {
@@ -237,12 +237,20 @@ Window {
                         width: 100
                         height: 30
                         focus: true
+                        //无焦点则不会成为active focus，也就不会被快捷键触发
+                        //focusPolicy: Qt.NoFocus
                         //被Shortcut捕获了就不会触发Keys.press
                         //被Shortcut或者Keys处理了，5.15不会触发click，5.12、5.13会
                         Keys.onSpacePressed: {
                             console.log('Keys onSpacePressed',counter++)
+                            //5.15 accepted了press就不会触发点击，5.12、5.13需要设置release的accepted
                             event.accepted=true;
                         }
+                        Keys.onReleased: {
+                            console.log('Keys onReleased',counter++)
+                            event.accepted=(event.key===Qt.Key_Space);
+                        }
+
                         //通过onShortcutOverride accepted可以拦截快捷键
                         Keys.onShortcutOverride: {
                             console.log('Keys onShortcutOverride',counter++)
@@ -332,16 +340,20 @@ Window {
                         //被Shortcut捕获了就不会触发Keys.press
                         //被Shortcut或者Keys处理了，5.15不会触发click，5.12、5.13会
                         Keys.onSpacePressed: {
-                            console.log('Keys onSpacePressed',counter++)
+                            console.log('Keys in onSpacePressed',counter++)
+                            //5.15 accepted了press就不会触发点击，5.12、5.13需要设置release的accepted
                             event.accepted=false;
                         }
                         //除非被Item处理，如Control2会接受space空格，否则Keys会一直往上传递
                         Keys.onPressed: {
-                            console.log('Keys in pressed.',event.key,counter++)
+                            console.log('Keys in onPressed.',event.key,counter++)
                         }
-
+                        Keys.onReleased: {
+                            console.log('Keys in onReleased',counter++)
+                            event.accepted=(event.key===Qt.Key_Space);
+                        }
                         onClicked: {
-                            console.log('Button onClicked',counter++)
+                            console.log('Button in onClicked',counter++)
                         }
 
                         background: Rectangle {
