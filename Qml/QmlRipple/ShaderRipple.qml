@@ -47,14 +47,15 @@ void main()
 {
 outColor = vec4(1,0,0,0);
 float aSmoothWidth=20.0/float(width);
-//distance(pos)=[0,1],on center=0,on border=1
+// distance(pos)=[0,1],on center=0,on border=1
 float dis=distance(thePos,vec2(0.0,0.0))*width;
 float maxlen=float(int(width)/int(spacing*2.0))*spacing*2.0-spacing*2.0+offset*2.0;
 if(dis<=maxlen){
 outColor.a=mod(dis-offset*2.0,spacing*2.0)/(spacing*2.0);
 if(outColor.a>0.99-aSmoothWidth)
 outColor.a=smoothstep(0.99,0.98-aSmoothWidth,outColor.a);
-outColor.a*=outColor.a;
+// erasing
+outColor.a=pow(outColor.a,1.8);
 }
 gl_FragColor = outColor * qt_Opacity;
 gl_FragColor.rgb *= gl_FragColor.a;
