@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>ShaderRipple.qml</file>
+        <file>GradientRipple.qml</file>
+    </qresource>
+</RCC>
