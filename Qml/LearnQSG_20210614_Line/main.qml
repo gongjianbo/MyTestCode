@@ -9,10 +9,16 @@ Window {
     title: qsTr("Learn QSG")
 
     MyLine{
+        visible: false
         anchors.fill: parent
         anchors.margins: 10
         //通过多重采样来实现线条抗锯齿
         //layer.enabled: true
         //layer.samples: 32
+    }
+
+    SmoothLine{
+        anchors.fill: parent
+        anchors.margins: 10
     }
 }

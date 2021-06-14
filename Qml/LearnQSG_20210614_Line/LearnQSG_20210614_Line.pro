@@ -1,4 +1,5 @@
-QT += quick
+QT += quick \
+    widgets
 
 CONFIG += c++11 utf8_source
 
@@ -8,6 +9,7 @@ CONFIG += c++11 utf8_source
 
 SOURCES += \
         MyLine.cpp \
+        SmoothLine.cpp \
         main.cpp
 
 RESOURCES += qml.qrc
@@ -24,4 +26,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
-    MyLine.h
+    MyLine.h \
+    SmoothLine.h
