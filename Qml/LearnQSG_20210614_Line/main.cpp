@@ -1,5 +1,6 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include "QSGLine.h"
 #include "MyLine.h"
 #include "SmoothLine.h"
 
@@ -11,6 +12,7 @@ int main(int argc, char *argv[])
 
     QGuiApplication app(argc, argv);
 
+    qmlRegisterType<QSGLine>("Gt.Component", 1, 0, "QSGLine");
     qmlRegisterType<MyLine>("Gt.Component", 1, 0, "MyLine");
     qmlRegisterType<SmoothLine>("Gt.Component", 1, 0, "SmoothLine");
 

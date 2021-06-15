@@ -1,6 +1,4 @@
-#ifndef SMOOTHLINE_H
-#define SMOOTHLINE_H
-
+#pragma once
 //参照Qt源码和stackoverflow，效果不是很好
 //https://stackoverflow.com/questions/28125425/how-to-smooth-the-painting-of-a-custom-qml-element#
 //同时也可以参照示例graph
@@ -86,5 +84,3 @@ public:
 
     QSGNode *updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *updatePaintNodeData) override;
 };
-
-#endif // SMOOTHLINE_H

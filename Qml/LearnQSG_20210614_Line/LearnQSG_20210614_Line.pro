@@ -8,7 +8,10 @@ CONFIG += c++11 utf8_source
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-        MyLine.cpp \
+        MyGeometry.cpp \
+        MyLine.cpp\
+        MyMaterial.cpp \
+        QSGLine.cpp \
         SmoothLine.cpp \
         main.cpp
 
@@ -26,5 +29,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
+    MyGeometry.h \
     MyLine.h \
+    MyMaterial.h \
+    QSGLine.h \
     SmoothLine.h
