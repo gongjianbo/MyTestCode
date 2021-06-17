@@ -7,17 +7,24 @@ Window {
     height: 480
     visible: true
     title: qsTr("Learn QSG")
+    color: "darkGreen"
 
-    MyLine{
-        visible: false
-        anchors.fill: parent
-        anchors.margins: 10
+    QSGLine{
+        width: parent.width/2
+        height: parent.height
         //通过多重采样来实现线条抗锯齿
         //layer.enabled: true
         //layer.samples: 32
     }
 
+    MyLine{
+        x: parent.width/2
+        width: parent.width/2
+        height: parent.height
+    }
+
     SmoothLine{
+        visible: false
         anchors.fill: parent
         anchors.margins: 10
     }
