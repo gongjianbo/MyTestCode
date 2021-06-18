@@ -11,7 +11,9 @@ print(ctypes.c_int.in_dll(dll, 'my_number').value)
 #访问函数
 print(dll.my_func)
 print(dll.my_func(12, 34))
-my_func2 = dll.my_func2  # ctypes输入输出默认为int类型
+#ctypes 默认假定函数返回 int 类型，可以设置函数对象的 restype 属性来指定具体类型。
+#对于参数类型也可以通过设置函数对象的 argtypes 来指定具体类型，防止不合理的参数传递。
+my_func2 = dll.my_func2
 my_func2.argtypes = [ctypes.c_double, ctypes.c_double]
 my_func2.restype = ctypes.c_double
 print(my_func2(12, 34.5))
