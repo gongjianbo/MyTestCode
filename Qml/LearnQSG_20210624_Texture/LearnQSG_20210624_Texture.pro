@@ -7,8 +7,9 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-        MyBlender.cpp \
-        MyMaterial512.cpp \
+        MyBlenderItem.cpp \
+        MyTextureItem.cpp \
+        MyXorNode.cpp \
         main.cpp
 
 RESOURCES += qml.qrc
@@ -25,5 +26,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
-    MyBlender.h \
-    MyMaterial512.h
+    MyBlenderItem.h \
+    MyTextureItem.h \
+    MyXorNode.h

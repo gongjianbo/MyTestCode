@@ -1,5 +1,14 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
+        <file>shaders/checker.frag</file>
+        <file>shaders/checker_rhi.frag</file>
+        <file>shaders/xorblender.frag</file>
+        <file>shaders/xorblender.vert</file>
+        <file>shaders/xorblender_rhi.frag</file>
+        <file>shaders/xorblender_rhi.vert</file>
+        <file>shaders/+qsb/checker.frag</file>
+        <file>shaders/+qsb/xorblender.frag</file>
+        <file>shaders/+qsb/xorblender.vert</file>
     </qresource>
 </RCC>

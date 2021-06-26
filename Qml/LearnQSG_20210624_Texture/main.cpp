@@ -1,6 +1,7 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
-#include "MyBlender.h"
+#include "MyTextureItem.h"
+#include "MyBlenderItem.h"
 
 int main(int argc, char *argv[])
 {
@@ -10,7 +11,8 @@ int main(int argc, char *argv[])
 
     QGuiApplication app(argc, argv);
 
-    qmlRegisterType<MyBlender>("Gt.Component",1,0,"MyBlender");
+    qmlRegisterType<MyTextureItem>("Gt.Component",1,0,"MyTextureItem");
+    qmlRegisterType<MyBlenderItem>("Gt.Component",1,0,"MyBlenderItem");
 
     QQmlApplicationEngine engine;
     const QUrl url(QStringLiteral("qrc:/main.qml"));
