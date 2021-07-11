@@ -8,6 +8,7 @@
 #include <QThread>
 #include <QDebug>
 #include <mutex>
+#include <thread>
 
 class MyDb : public QObject
 {
