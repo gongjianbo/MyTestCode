@@ -6,6 +6,7 @@ import QtQuick.Controls 2.12
 //--也可以扩展下，如输入28明显不会有第三位，就可以去下一段了
 //--win自带的效果是超出范围就弹提示框
 //ok:删除完再按删除自动删除上一段末尾字符
+//--我这里只是进入了上一段末尾，但是没做删除，需要再按一次删除
 //ok:按左右可以跨段移动光标
 //ok:任意段ctrl+v，粘贴ip，粘贴完整格式的ip（格式带小数点）或者单个段
 //--粘贴单个段时是覆盖原内容，不是在光标处插入
@@ -14,6 +15,8 @@ import QtQuick.Controls 2.12
 //--原效果左右按不会全选，小数点主动切换会全选该段
 //--没有上下加减数字功能，原效果同按左右
 //todo没有处理和其他组件的焦点切换
+//思路参照1：https://www.cnblogs.com/feiyangqingyun/p/11665022.html
+//思路参照2：https://blog.csdn.net/zhengtianzuo06/article/details/89186074
 Rectangle {
     id: control
 
