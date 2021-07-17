@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>IpInput.qml</file>
+        <file>IpItem.qml</file>
+    </qresource>
+</RCC>
