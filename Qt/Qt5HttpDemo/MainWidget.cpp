@@ -17,10 +17,9 @@ MainWidget::MainWidget(QWidget *parent) :
 
     manager=new QNetworkAccessManager(this);
 
-
     //查看支持的协议
     qDebug()<<manager->supportedSchemes();
-    //这里可能是我没安装openssl，所以没有https
+    //安装了openssl，会有https
     //("ftp", "file", "qrc", "http", "data")
 
     //QNetworkAccessManager是异步的
@@ -59,12 +58,24 @@ void MainWidget::getTest()
 
     //发送请求
     manager->get(request);
-    //可以开启一个局部的事件循环，等待响应，不会阻塞线程
+
+    //同步处理，可以开启一个局部的事件循环，等待响应，不会阻塞线程
     //QNetworkReply *reply=manager->get(request);
     //QEventLoop eventLoop;
-    //connect(manager, &QNetworkAccessManager::finished, &eventLoop, &QEventLoop::quit);
+    //connect(reply, &QNetworkReply::finished, &eventLoop, &QEventLoop::quit);
     //eventLoop.exec();
     //receiveReply(reply);
+
+    //超时处理，可以使用定时器调用abort、close来终止当前的请求
+    //QNetworkReply *reply=manager->get(request);
+    //if(reply->isRunning()){
+    //    QTimer *timer=new QTimer(reply);//对象树关联释放，也可以在finish进行释放
+    //    timer->setSingleShot(true);
+    //    //超时就结束
+    //    connect(timer,&QTimer::timeout,reply,&QNetworkReply::abort);
+    //    //结束就关定时器
+    //    connect(reply,&QNetworkReply::finished,timer,&QTimer::stop);
+    //}
 }
 
 void MainWidget::postTest()
@@ -134,7 +145,7 @@ void MainWidget::formTest()
     multiPart->setParent(reply); //在删除reply时一并释放
 
     QEventLoop eventLoop;
-    connect(&manager2, &QNetworkAccessManager::finished, &eventLoop, &QEventLoop::quit);
+    connect(reply, &QNetworkReply::finished, &eventLoop, &QEventLoop::quit);
     eventLoop.exec();
 
     qDebug()<<"reply:"<<reply->readAll();
@@ -143,17 +154,23 @@ void MainWidget::formTest()
 
 void MainWidget::receiveReply(QNetworkReply *reply)
 {
+    //请求方式get、post等，对应QNetworkAccessManager的Operation枚举
+    //对于restful接口需要判断此枚举
+    qDebug()<<"operation:"<<reply->operation();
+    //路径
+    qDebug()<<"url:"<<reply->url();
+    //状态码
+    const int status_code=reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+    qDebug()<<"status code:"<<status_code;
+    //主动调用QNetworkReply的close或者abort也会触发finished，这时状态码为0
+    if(status_code==0){
+        qDebug()<<"timeout";
+    }
+
     if(reply->error()!=QNetworkReply::NoError){
         //处理中的错误信息
         qDebug()<<"reply error:"<<reply->errorString();
     }else{
-        //请求方式
-        //对应QNetworkAccessManager的Operation枚举
-        qDebug()<<"operation:"<<reply->operation();
-        qDebug()<<"url:"<<reply->url();
-
-        //状态码
-        qDebug()<<"status code:"<<reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
         //重定向
         /*if (status_code == 301 || status_code == 302){
               // Or the target URL if it was a redirect:
@@ -172,13 +189,13 @@ void MainWidget::receiveReply(QNetworkReply *reply)
 
         //解析json
         /*QJsonParseError json_error;
-        QJsonDocument doucment = QJsonDocument::fromJson(reply_data, &json_error);
-        if (json_error.error == QJsonParseError::NoError) {
-            if (doucment.isObject()) {
-                const QJsonObject obj = doucment.object();
+        QJsonDocument document=QJsonDocument::fromJson(reply_data, &json_error);
+        if (json_error.error==QJsonParseError::NoError) {
+            if(document.isObject()){
+                const QJsonObject obj=document.object();
                 qDebug()<<obj;
-                if (obj.contains("args")) {
-                    QJsonValue value = obj.value("args");
+                if(obj.contains("args")){
+                    QJsonValue value=obj.value("args");
                     qDebug()<<value;
                     //QJsonValue(object, QJsonObject({"ie":"utf-8"}))
                 }

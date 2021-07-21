@@ -20,16 +20,19 @@ class MainWidget;
 class MainWidget : public QWidget
 {
     Q_OBJECT
-
 public:
     explicit MainWidget(QWidget *parent = nullptr);
     ~MainWidget();
 
+    //get请求测试
     void getTest();
+    //post请求测试
     void postTest();
+    //表单测试
     void formTest();
 
 public slots:
+    //获取异步结果
     void receiveReply(QNetworkReply *reply);
 
 private:
