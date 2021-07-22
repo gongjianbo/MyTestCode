@@ -75,6 +75,8 @@ void MainWidget::getTest()
     //    connect(timer,&QTimer::timeout,reply,&QNetworkReply::abort);
     //    //结束就关定时器
     //    connect(reply,&QNetworkReply::finished,timer,&QTimer::stop);
+    //    //定时
+    //    timer->start(5000);
     //}
 }
 
@@ -163,7 +165,8 @@ void MainWidget::receiveReply(QNetworkReply *reply)
     const int status_code=reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
     qDebug()<<"status code:"<<status_code;
     //主动调用QNetworkReply的close或者abort也会触发finished，这时状态码为0
-    if(status_code==0){
+    //访问失败状态码也会为0
+    if(status_code==0 && reply->errorString()=="Operation canceled"){
         qDebug()<<"timeout";
     }
 
