@@ -12,5 +12,7 @@ public:
     Q_INVOKABLE void copyIp(QStringList ip);
     //读取剪切板ip
     Q_INVOKABLE QStringList pasteIp();
+    //正则匹配ipv4
+    Q_INVOKABLE bool checkIPv4(const QString str);
 };
 

@@ -1,6 +1,9 @@
 #include "Clipboard.h"
 #include <QGuiApplication>
 #include <QClipboard>
+#include <QRegularExpression>
+#include <QRegularExpressionMatch>
+#include <QRegExp>
 #include <QDebug>
 
 void Clipboard::copyIp(QStringList ip)
@@ -33,7 +36,7 @@ QStringList Clipboard::pasteIp()
     bool ret;
     int val;
     if(item_list.size()==4){
-        for(QString item : item_list)
+        /*for(QString item : item_list)
         {
             ret=true;
             if(item.size()>0&&item.size()<=3){
@@ -59,8 +62,14 @@ QStringList Clipboard::pasteIp()
                 break;
             }
             ip.append(QString::number(val));
+        }*/
+        //改为正则匹配
+        if(checkIPv4(ip_text)){
+            for(QString item : item_list)
+                ip.append(QString::number(item.toInt()));
         }
     }else if(item_list.size()==1){
+        //这个懒得写正则了
         QString item=item_list.first();
         ret=true;
         if(item.size()>0&&item.size()<=3){
@@ -78,4 +87,20 @@ QStringList Clipboard::pasteIp()
     }
     qDebug()<<"paste ip"<<ip<<ip_text;
     return ip;
+}
+
+bool Clipboard::checkIPv4(const QString str)
+{
+    QString section="(\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5])";
+    QString exp=QString("^%1\\.%1\\.%1\\.%1$").arg(section);
+
+    //Qt4
+    //QRegExp reg1(exp);
+    //qDebug()<<reg1.exactMatch(str);
+
+    //Qt5
+    QRegularExpression reg2(QRegularExpression::anchoredPattern(exp));
+    QRegularExpressionMatch match=reg2.match(str);
+    //qDebug()<<match.hasMatch();
+    return match.hasMatch();
 }
