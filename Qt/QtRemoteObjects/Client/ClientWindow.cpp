@@ -17,6 +17,7 @@ ClientWindow::ClientWindow(QWidget *parent)
         //remoteNode->connectToNode(QUrl("tcp://127.0.0.1:12315"));
         remoteNode->connectToNode(QUrl("local:qro_test"));
         qDebug()<<"connectToNode finished";
+        //可以设置acquire的name，和host.enableRemoting的name配对
         InterfaceReplica *irep = remoteNode->acquire<InterfaceReplica>();
         connect(irep,&InterfaceReplica::stateChanged,
                 this,[this](QRemoteObjectReplica::State state, QRemoteObjectReplica::State oldState){
@@ -32,11 +33,13 @@ ClientWindow::ClientWindow(QWidget *parent)
         //连接接口的信号槽
         connect(irep,&InterfaceReplica::dataChanged,[=](const QString &data){
             //测试直接调用槽函数获取返回值
-            auto ret = irep->getData();
-            ret.waitForFinished(1000);
-            if(ret.error() == QRemoteObjectPendingCall::NoError){
-                ui->editRecv->append(ret.returnValue());
-            }
+            //auto ret = irep->getData();
+            //ret.waitForFinished(1000);
+            //if(ret.error() == QRemoteObjectPendingCall::NoError){
+            //    ui->editRecv->append(ret.returnValue());
+            //}
+            //或者使用信号带的参数
+            ui->editRecv->append(data);
         });
         replica.reset(irep);
         //可以等待连接，如果服务器没脸上，会在wait这里阻塞
@@ -55,11 +58,21 @@ ClientWindow::ClientWindow(QWidget *parent)
         replica.clear();
     });
 
-    //发送
-    connect(ui->btnSend,&QPushButton::clicked,[this]{
+    //测试信号
+    //(实测，replica发信号，souce是感知不到的)
+    connect(ui->btnSignal,&QPushButton::clicked,[this]{
         if(!remoteNode)
             return;
-        qDebug()<<"send"<<replica->isReplicaValid()<<ui->editSend->text();
+        qDebug()<<"signal"<<replica->isReplicaValid()<<ui->editSend->text();
+        if(!replica->isReplicaValid())
+            return;
+        emit replica->dataChanged("client dataChanged:"+ui->editSend->text());
+    });
+    //测试槽
+    connect(ui->btnSlot,&QPushButton::clicked,[this]{
+        if(!remoteNode)
+            return;
+        qDebug()<<"slot"<<replica->isReplicaValid()<<ui->editSend->text();
         if(!replica->isReplicaValid())
             return;
         replica->setData("client setData:"+ui->editSend->text());

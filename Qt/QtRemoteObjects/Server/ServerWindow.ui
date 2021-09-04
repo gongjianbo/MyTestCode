@@ -56,9 +56,16 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="btnSend">
+       <widget class="QPushButton" name="btnSignal">
         <property name="text">
-         <string>发送</string>
+         <string>信号</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnSlot">
+        <property name="text">
+         <string>槽</string>
         </property>
        </widget>
       </item>
