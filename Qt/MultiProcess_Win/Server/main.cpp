@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
     }
 
     ServerWindow w;
-    w.setWindowTitle(w.windowTitle()+":"+arguments.at(2));
+    w.setWindowTitle(w.windowTitle()+" : "+arguments.at(2)+" : "+arguments.at(3));
     w.show();
     return app.exec();
 }

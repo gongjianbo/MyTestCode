@@ -80,7 +80,7 @@ border-bottom:1px solid black;
       <item>
        <widget class="QLineEdit" name="editArg">
         <property name="text">
-         <string>arg</string>
+         <string>my arg</string>
         </property>
        </widget>
       </item>

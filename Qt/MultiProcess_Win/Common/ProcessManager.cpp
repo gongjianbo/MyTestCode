@@ -78,7 +78,14 @@ bool ProcessManager::startProcess(const QString &exePath, const QString &key, co
     ProcessInfo info;
     info.path = exePath;
     info.key = key;
-    info.args = argList;
+    //info.args = argList;
+    //参数加上双引号，避免有空格
+    for(const QString &argu : argList)
+    {
+        if(argu.isEmpty())
+            continue;
+        info.args.push_back(QString("\"%1\"").arg(argu));
+    }
     info.visible = visible;
     info.hProcess = NULL;
     info.autoRestart = autoRestart;
