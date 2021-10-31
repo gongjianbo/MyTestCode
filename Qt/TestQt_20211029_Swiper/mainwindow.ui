@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Swiper</string>
+   <string>Swiper by: GongJianBo</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QPushButton" name="btnPrev">

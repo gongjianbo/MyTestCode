@@ -12,6 +12,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     setMouseTracking(true);
 
+    //界面上放了两个按钮用来前进后退，切换当前图片
     connect(ui->btnPrev,&QPushButton::clicked,this,&MainWindow::toPrev);
     connect(ui->btnNext,&QPushButton::clicked,this,&MainWindow::toNext);
 
@@ -36,19 +37,21 @@ MainWindow::MainWindow(QWidget *parent)
     calcImagePos();
     calcBtnPath();
 
+    //自动切换
     connect(&swipTimer,&QTimer::timeout,[this]{
         //这里可以判断下是否hover某个图，不切换，略
         toNext();
     });
     swipTimer.start(2000);
 
+    //切换动画
     animation.setTargetObject(this);
     animation.setPropertyName("curIndex");
     animation.setEasingCurve(QEasingCurve::OutQuart);
     animation.setDuration(1000);
-
+    //动画结束后定时切换
     connect(&animation,&QPropertyAnimation::stateChanged,
-            [this](QAbstractAnimation::State newState, QAbstractAnimation::State oldState){
+            this,[this](QAbstractAnimation::State newState, QAbstractAnimation::State oldState){
         oldState;
         if(newState!=QAbstractAnimation::Stopped){
             swipTimer.stop();
@@ -60,6 +63,11 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
+    //避免结束程序stop时异常
+    swipTimer.disconnect(this);
+    animation.disconnect(this);
+    swipTimer.stop();
+    animation.stop();
     delete ui;
 }
 
@@ -72,6 +80,7 @@ void MainWindow::setCurIndex(double index)
 {
     curIndex=index;
     emit curIndexChanged();
+    //属性动画设置值会调用该接口，此处计算位置并刷新
     calcImagePos();
     update();
 }
@@ -82,6 +91,7 @@ bool MainWindow::event(QEvent *e)
     case QEvent::HoverMove:{
         QHoverEvent *hover = static_cast<QHoverEvent*>(e);
         if(hover){
+            //放到哪个按钮上就切换到对应图片
             for(int i=0;i<btnList.size();i++)
             {
                 if(btnList.at(i).contains(hover->pos()))
@@ -195,6 +205,7 @@ void MainWindow::toPrev()
 {
     animation.stop();
     setIndex--;
+    //到头了，就切换到尾巴上，为了动画连续，startvalue也设置到尾巴上
     if(setIndex<0){
         setIndex=imageList.size()-1;
         animation.setStartValue(getCurIndex()+imageList.size());
@@ -211,6 +222,7 @@ void MainWindow::toNext()
 {
     animation.stop();
     setIndex++;
+    //到尾了，就切换到头上，为了动画连续，startvalue也设置到头上
     if(setIndex>imageList.size()-1){
         setIndex=0;
         animation.setStartValue(getCurIndex()-imageList.size());
