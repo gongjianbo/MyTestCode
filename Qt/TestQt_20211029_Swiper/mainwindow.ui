@@ -17,8 +17,8 @@
    <widget class="QPushButton" name="btnPrev">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>10</y>
+      <x>21</x>
+      <y>11</y>
       <width>75</width>
       <height>23</height>
      </rect>
@@ -30,14 +30,27 @@
    <widget class="QPushButton" name="btnNext">
     <property name="geometry">
      <rect>
-      <x>120</x>
-      <y>10</y>
+      <x>102</x>
+      <y>11</y>
       <width>75</width>
       <height>23</height>
      </rect>
     </property>
     <property name="text">
      <string>next</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkBox">
+    <property name="geometry">
+     <rect>
+      <x>183</x>
+      <y>14</y>
+      <width>77</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>transform</string>
     </property>
    </widget>
   </widget>

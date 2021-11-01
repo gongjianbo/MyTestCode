@@ -101,7 +101,6 @@ bool MainWindow::event(QEvent *e)
                     animation.setStartValue(getCurIndex());
                     animation.setEndValue((double)setIndex);
                     animation.start();
-                    calcBtnPath();
                     break;
                 }
             }
@@ -119,24 +118,58 @@ void MainWindow::paintEvent(QPaintEvent *event)
     Q_UNUSED(event)
     QPainter painter(this);
     painter.fillRect(rect(),Qt::white);
-    //平移到中心点绘制，便于计算
-    painter.translate(width()/2,height()/2);
-    for(int i=0;i<imageList.size()&&i<drawList.size();i++)
+    if(imageList.isEmpty())
+        return;
+
+    //切换两种效果
+    if(!ui->checkBox->isChecked())
     {
-        const ImageNode &node=imageList.at(drawList.at(i));
-        QPointF center=QPointF(node.xf*node.img.width(),
-                               node.zf*50);
-        //缩放系数归一化到[0.5,1.0]
-        const double scale=0.5+0.25*(node.zf+1);
-        QRectF rect=QRectF(0,0,
-                           node.img.width()*scale,
-                           node.img.height()*scale);
-        rect.moveCenter(center);
-        painter.drawImage(rect,node.img);
+        painter.save();
+        //平移到中心点绘制，便于计算
+        painter.translate(width()/2,height()/2);
+        for(int i=0;i<imageList.size()&&i<drawList.size();i++)
+        {
+            const ImageNode &node=imageList.at(drawList.at(i));
+            QPointF center=QPointF(node.xf*node.img.width(),
+                                   node.zf*30);
+            //缩放系数归一化到[0.5,1.0]
+            const double scale=0.5+0.25*(node.zf+1);
+            QRectF rect=QRectF(0,0,
+                               node.img.width()*scale,
+                               node.img.height()*scale);
+            rect.moveCenter(center);
+            painter.drawImage(rect,node.img);
+        }
+        painter.restore();
+    }
+    else
+    {
+        for(int i=0;i<imageList.size()&&i<drawList.size();i++)
+        {
+            const ImageNode &node=imageList.at(drawList.at(i));
+            QPointF center=QPointF(node.xf*node.img.width(),
+                                   node.zf*20);
+            //缩放系数归一化到[0.5,1.0]
+            const double scale=0.5+0.25*(node.zf+1);
+            QRectF rect=QRectF(0,0,
+                               node.img.width()*scale,
+                               node.img.height()*scale);
+            rect.moveCenter(rect.topLeft());
+
+            painter.save();
+            painter.translate(width()/2,height()/2);
+            painter.translate(center);
+            QTransform trans;
+            const double step=360.0/imageList.size();
+            const double degree=step*drawList.at(i)-curIndex*step;
+            trans.rotate(-degree,Qt::YAxis);
+            painter.setTransform(trans, true);
+            painter.drawImage(rect,node.img);
+            painter.restore();
+        }
     }
 
     //底部画几个圆圈
-    painter.translate(-width()/2,-height()/2);
     painter.setPen(Qt::NoPen);
     painter.setRenderHint(QPainter::Antialiasing);
     for(int i=0;i<btnList.size();i++)
@@ -158,7 +191,7 @@ void MainWindow::calcImagePos()
         return;
     drawList.resize(imageList.size());
     //每个图之间的角度间隔
-    double step=360.0/imageList.size();
+    const double step=360.0/imageList.size();
     //绘制时会平移中心点，所以这里以0.0为中心点计算
     for(int i=0;i<imageList.size();i++)
     {
@@ -195,7 +228,7 @@ void MainWindow::calcBtnPath()
     int bar_width=btn_width*imageList.size()+btn_space*(imageList.size()-1);
     for(int i=0;i<imageList.size();i++)
     {
-        btnList[i]=QRectF(w/2-bar_width/2-btn_width/2+(btn_space+btn_width)*i,
+        btnList[i]=QRectF(w/2-bar_width/2+(btn_space+btn_width)*i,
                           h/2+100,
                           btn_width,btn_width);
     }
@@ -215,7 +248,6 @@ void MainWindow::toPrev()
 
     animation.setEndValue((double)setIndex);
     animation.start();
-    calcBtnPath();
 }
 
 void MainWindow::toNext()
@@ -231,6 +263,5 @@ void MainWindow::toNext()
     }
     animation.setEndValue((double)setIndex);
     animation.start();
-    calcBtnPath();
 }
 
