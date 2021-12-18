@@ -1,6 +1,7 @@
 #pragma once
 #include <QObject>
 #include <QTranslator>
+#include <QLocale>
 #include <QMap>
 
 //管理语言翻译
@@ -8,6 +9,7 @@ class Translator : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(Translator::Language language READ getLanguage WRITE setLanguage NOTIFY languageChanged)
+    Q_PROPERTY(QLocale locale READ getLocale NOTIFY languageChanged)
 public:
     enum Language {
         AnyLanguage = 0, //未设置
@@ -24,6 +26,9 @@ public:
     Translator::Language getLanguage() const;
     void setLanguage(Translator::Language type);
 
+    //用于一些组件属性绑定
+    QLocale getLocale() const;
+
 signals:
     void languageChanged();
 
@@ -34,5 +39,7 @@ private:
     QTranslator trans;
     //语言枚举与language name的映射表
     QMap<Language,QString> langMap;
+    //当前locale设置
+    QLocale locale;
 };
 

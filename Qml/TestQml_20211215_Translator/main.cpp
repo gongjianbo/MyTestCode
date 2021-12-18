@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
 #endif
     QGuiApplication app(argc, argv);
 
-    Translator::getInstance()->setLanguage(Translator::EN_US);
+    Translator::getInstance()->setLanguage(Translator::ZH_CN);
 
     QQmlApplicationEngine engine;
 

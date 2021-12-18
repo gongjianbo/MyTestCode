@@ -43,8 +43,14 @@ void Translator::setLanguage(Translator::Language type)
 
     trans.load(trans_path);
     //qDebug()<<QLocale("zh_CN")<<QLocale("zh_TW");
-    //qDebug()<<__FUNCTION__<<trans.language()<<trans_path<<QLocale::system().name();
+    qDebug()<<__FUNCTION__<<trans.language()<<trans_path<<QLocale::system().name();
     //可以根据翻译文件中的语言设置来设置locale
-    QLocale::setDefault(QLocale(trans.language()));
+    locale = QLocale(trans.language());
+    QLocale::setDefault(locale);
     emit languageChanged();
+}
+
+QLocale Translator::getLocale() const
+{
+return QLocale();
 }

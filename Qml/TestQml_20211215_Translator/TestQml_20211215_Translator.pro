@@ -12,7 +12,8 @@ HEADERS += \
     ListModel.h \
     Translator.h
 
-TRANSLATIONS += trans_zh_CN.ts trans_en_US.ts
+TRANSLATIONS += trans_zh_CN.ts \
+    trans_en_US.ts
 
 RESOURCES += qml.qrc
 

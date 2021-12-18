@@ -1,4 +1,5 @@
 import QtQuick 2.12
+import QtQml 2.12
 import QtQuick.Window 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Controls 1.4 as Ctrl1
@@ -207,5 +208,7 @@ Window {
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         anchors.margins: 10
+        //默认值为Qt.locale()不能动态切换
+        locale: translator.locale
     }
 }
