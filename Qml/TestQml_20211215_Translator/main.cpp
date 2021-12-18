@@ -14,7 +14,6 @@ int main(int argc, char *argv[])
     Translator::getInstance()->setLanguage(Translator::ZH_CN);
 
     QQmlApplicationEngine engine;
-
     QObject::connect(Translator::getInstance(), &Translator::languageChanged,
                      &engine, &QQmlEngine::retranslate);
     qmlRegisterUncreatableType<Translator>("Trans",1,0,"Translator","Translator Uncreatable");

@@ -29,6 +29,10 @@ public:
     //用于一些组件属性绑定
     QLocale getLocale() const;
 
+private:
+    //QTranslator在Qt5.15才有language接口，低版本可以自己解析
+    QString parseLanguage(const QString &qmpath);
+
 signals:
     void languageChanged();
 
@@ -42,4 +46,3 @@ private:
     //当前locale设置
     QLocale locale;
 };
-
