@@ -6,21 +6,21 @@
 
 //共享的数据
 //QSharedData带有原子类型的引用计数
-class ByteData : public QSharedData
+class SharedData : public QSharedData
 {
 public:
-    ByteData() {
-        qDebug()<<"ByteData()";
+    SharedData() {
+        qDebug()<<"SharedData()";
     }
     //拷贝构造不是必要的
-    ByteData(const ByteData &other)
+    SharedData(const SharedData &other)
         : QSharedData(other),
           num(other.num),
           name(other.name) {
-        qDebug()<<"ByteData(const ByteData &other)";
+        qDebug()<<"SharedData(const SharedData &other)";
     }
-    ~ByteData() {
-        qDebug()<<"~ByteData()";
+    ~SharedData() {
+        qDebug()<<"~SharedData()";
     }
 
     int getNum() const { return num; }
@@ -35,11 +35,11 @@ private:
 
 //隐式共享类
 //修改数据时调用QSharedDataPointer的detach创建副本
-class ByteArray
+class SharedObject
 {
 public:
-    ByteArray() { d = new ByteData; }
-    ByteArray(const ByteArray &other) : d(other.d) { }
+    SharedObject() { d = new SharedData; }
+    SharedObject(const SharedObject &other) : d(other.d) { }
 
     //非const接口会自动创建副本，而const接口与其他共享引用
     int getNum() const { return d->getNum(); }
@@ -48,6 +48,6 @@ public:
     void setName(const QString &str) { d->setName(str); }
 
 private:
-    QSharedDataPointer<ByteData> d;
+    QSharedDataPointer<SharedData> d;
 };
 

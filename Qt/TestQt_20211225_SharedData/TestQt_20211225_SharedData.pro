@@ -8,7 +8,7 @@ SOURCES += \
     main.cpp
 
 HEADERS += \
-    ByteArray.h
+    SharedObject.h
 
 
 # Default rules for deployment.
