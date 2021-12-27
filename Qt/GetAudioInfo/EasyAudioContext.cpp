@@ -3,15 +3,6 @@
 #include <QFileInfo>
 #include <QDebug>
 
-extern "C" {
-#include <libavcodec/avcodec.h>
-#include <libavformat/avformat.h>
-#include <libavformat/avio.h>
-#include "libswresample/swresample.h"
-#include <libavutil/frame.h>
-#include <libavutil/mem.h>
-}
-
 EasyAudioContext::EasyAudioContext(const QString &filepath)
 {
     init(filepath);
@@ -46,7 +37,8 @@ EasyAudioInfo EasyAudioContext::getAudioInfo() const
     info.channels = codecCtx->channels;
     info.sampleBit = (av_get_bytes_per_sample(codecCtx->sample_fmt)<<3);  //byte
     info.duration = formatCtx->duration/(AV_TIME_BASE/1000.0);  //ms
-    info.bitRate = codecCtx->bit_rate; //bps
+    //2020-12-31 测试一个ape文件时发现音频信息比特率为0，现判断无效则使用容器比特率
+    info.bitRate = codecCtx->bit_rate<1?formatCtx->bit_rate:codecCtx->bit_rate; //bps
     info.type = formatCtx->iformat->name;
 
     return info;
@@ -99,8 +91,7 @@ void EasyAudioContext::init(const QString &filepath)
     //qDebug()<<"duration"<<formatCtx->duration/(AV_TIME_BASE/1000.0)<<"ms";
     //文件格式，如wav
     //qDebug()<<"format"<<formatCtx->iformat->name<<":"<<formatCtx->iformat->long_name;
-    //容器比特率
-    //qDebug()<<"bit rate"<<formatCtx->bit_rate<<"bps";
+    //qDebug()<<"bitrate"<<formatCtx->bit_rate<<"bps";
     //qDebug()<<"n stream"<<formatCtx->nb_streams;
 
     status=EasyState::NoAudio;
@@ -163,8 +154,6 @@ void EasyAudioContext::init(const QString &filepath)
             //qDebug()<<"sample bit"<<codecCtx->sample_fmt<<":"<<(av_get_bytes_per_sample(codecCtx->sample_fmt)<<3);
             //编码，如pcm
             //qDebug()<<"codec name"<<codec->name<<":"<<codec->long_name;
-            //音频比特率
-            //qDebug()<<"bit rate"<<codecCtx->bit_rate<<"bps";
 
             status=EasyState::Success;
             return;

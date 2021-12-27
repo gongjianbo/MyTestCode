@@ -203,16 +203,16 @@ bool EasyAudioDecoder::toPcm(const QSharedPointer<EasyAudioContext> &contextPtr,
                 //swr_get_out_samples貌似算出来的比av_rescale_rnd多一丢丢
                 //但是比最终导出的采样数多一点
                 const int out_samples=swr_get_out_samples(swr_ctx,frame->nb_samples);
-                //const int out_nb_samples=av_rescale_rnd(swr_get_delay(swr_ctx, in_sample_rate)+
+                //const int out_samples=av_rescale_rnd(swr_get_delay(swr_ctx, in_sample_rate)+
                 //                                        frame->nb_samples,
                 //                                        out_sample_rate,
                 //                                        contextPtr->codecCtx->sample_rate,
                 //                                        AV_ROUND_ZERO);
-                //qDebug()<<out_samples<<out_nb_samples<<out_bufsize;
-                //缓冲区大小是否足够，不够就根据计算值扩充
+                //qDebug()<<out_samples<<out_bufsize<<sample_bytes*out_samples*out_channels;
+                //缓冲区大小是否足够，不够就根据计算值扩充缓冲区大小，且比实际值大0.5倍
                 if(out_bufsize<sample_bytes*out_samples*out_channels){
                     delete[] out_buffer;
-                    out_bufsize=sample_bytes*out_samples*1.5;
+                    out_bufsize=sample_bytes*out_samples*out_channels*1.5;
                     out_buffer=new uint8_t[out_bufsize];
                     out_buffer_arr[0]=out_buffer;
                     out_buffer_arr[1]=out_buffer+out_bufsize/2;
@@ -329,4 +329,3 @@ EasyAudioParameter EasyAudioDecoder::getOutParameter(const EasyAudioParameter &i
            :outParams.sampleRate;
     return param;
 }
-
