@@ -1,5 +1,6 @@
 #include "ProcessWorker.h"
 
+#include <QThread>
 #include <QDebug>
 
 ProcessWorker::ProcessWorker(QObject *parent)
@@ -47,7 +48,7 @@ void ProcessWorker::initWorker()
                     break;
                 }
             }
-            std::this_thread::sleep_for(std::chrono::milliseconds(ms_sleep));
+            QThread::msleep(ms_sleep);
         }
     });
 }

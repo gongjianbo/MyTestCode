@@ -1,8 +1,8 @@
 #include "ProcessManager.h"
 #include <QFile>
 #include <QFileInfo>
+#include <QThread>
 #include <QDebug>
-#include <chrono>
 #include <shellapi.h>
 //ShellExecuteEx
 #pragma comment(lib,"shell32.lib")
@@ -218,7 +218,7 @@ void ProcessManager::initGuard()
                 counter = 0;
                 patrol();
             }
-            std::this_thread::sleep_for(std::chrono::milliseconds(ms_sleep));
+            QThread::msleep(ms_sleep);
         }
 
         //全部退出，放到子进程去判断主进程是否还存在
