@@ -11,7 +11,8 @@ Window {
     Row {
         spacing: 20
 
-        CheckBox{
+        //勾选递增后定时器增加数值
+        CheckBox {
             id: auto_increment
             text: "递增"
             checked: true
@@ -21,7 +22,14 @@ Window {
     CanvasWave {
         id: wave
         anchors.centerIn: parent
-        waveColor: "darkCyan"
+        //waveColor: "darkCyan"
+
+        //用来测试边界
+        Rectangle {
+            anchors.fill: parent
+            color: "transparent"
+            border.color: "black"
+        }
     }
 
     Timer {
