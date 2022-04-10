@@ -17,7 +17,7 @@ SOURCES += \
         main.cpp
 
 RESOURCES += qml.qrc \
-    easy.qrc
+    $$PWD/EasyControl/EasyControl.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =

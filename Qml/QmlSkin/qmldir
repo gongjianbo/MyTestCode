@@ -1,4 +1,0 @@
-module EasyComponent
-SkinBase 1.0 SkinBase.qml
-singleton SkinNormal 1.0 SkinNormal.qml
-singleton SkinSkyBlue 1.0 SkinSkyBlue.qml

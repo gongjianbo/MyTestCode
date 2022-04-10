@@ -8,11 +8,8 @@ Window {
     height: 480
     title: qsTr("GongJianBo Qml Skin")
 
-    property SkinBase current_skin: SkinNormal
-
     EasyRectangle{
         anchors.fill: parent
-        skin: current_skin
     }
 
     Column{
@@ -20,17 +17,20 @@ Window {
         spacing: 10
         EasyButton{
             text: "Normal"
-            skin: current_skin
             onClicked: {
-                current_skin=SkinNormal;
+                SkinManager.currentSkin=SkinNormal;
             }
         }
         EasyButton{
             text: "SkyBlue"
-            skin: current_skin
             onClicked: {
-                current_skin=SkinSkyBlue;
+                SkinManager.currentSkin=SkinSkyBlue;
             }
+        }
+        EasyButton{
+            text: "Red Button"
+            //特殊样式
+            skin: SkinManager.currentSkin.redButton
         }
     }
 }

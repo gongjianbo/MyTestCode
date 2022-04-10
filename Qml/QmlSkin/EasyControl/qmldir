@@ -1,0 +1,8 @@
+module EasyControl
+SkinBase 1.0 SkinBase.qml
+singleton SkinNormal 1.0 SkinNormal.qml
+singleton SkinSkyBlue 1.0 SkinSkyBlue.qml
+singleton SkinManager 1.0 SkinManager.qml
+
+EasyButton 1.0 EasyButton.qml
+EasyReactangle 1.0 EasyReactangle.qml
