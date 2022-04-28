@@ -4,12 +4,11 @@ import QtQuick.Window 2.12
 import "LoginPage"
 import "MainPage"
 
-
 Window {
     visible: true
     width: 900
     height: 600
-    title: "龚建波 QQ：654344883"
+    title: "QML登录框    by:龚建波1992"
 
     LoginPage{
         id: login_page

@@ -1,6 +1,6 @@
 QT += quick qml sql
 
-CONFIG += c++11
+CONFIG += c++11 utf8_source
 
 # The following define makes your compiler emit warnings if you use
 # any Qt feature that has been marked deprecated (the exact warnings
@@ -24,10 +24,10 @@ include($$PWD/DataBase/DataBase.pri)
 include($$PWD/Tools/Tools.pri)
 include($$PWD/Icons/Icons.pri)
 
-INCLUDEPATH   += $$PWD/MainPage
-INCLUDEPATH   += $$PWD/LoginPage
-INCLUDEPATH   += $$PWD/DataBase
-INCLUDEPATH   += $$PWD/Tools
+INCLUDEPATH += $$PWD/MainPage
+INCLUDEPATH += $$PWD/LoginPage
+INCLUDEPATH += $$PWD/DataBase
+INCLUDEPATH += $$PWD/Tools
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =

@@ -185,7 +185,7 @@ Rectangle {
 
     Text {
         id: login_version
-        text: "当前版本：V0.00"
+        text: "当前版本：V0.0.0"
         anchors{
             right: parent.right
             bottom: parent.bottom
