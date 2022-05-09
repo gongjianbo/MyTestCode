@@ -1,7 +1,7 @@
 #include "FBOItem.h"
 
 #include "FBORenderer.h"
-//#include "FBORenderer2.h"
+#include "FBORenderer2.h"
 
 FBOItem::FBOItem(QQuickItem *parent)
     : QQuickFramebufferObject(parent)
@@ -12,6 +12,6 @@ FBOItem::FBOItem(QQuickItem *parent)
 
 QQuickFramebufferObject::Renderer *FBOItem::createRenderer() const
 {
-    //FBORenderer2中使用VAO VBO的方式不能正常缩放，不知道为什么
+    //Renderer 和 FBO 都是内部管理的内存
     return new FBORenderer();
 }

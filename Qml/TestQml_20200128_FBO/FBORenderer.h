@@ -1,40 +1,24 @@
-#ifndef FBORENDERER_H
-#define FBORENDERER_H
+#pragma once
 
 #include <QtQuick/QQuickFramebufferObject>
-
-//封装一个OpenGL帧缓冲区对象
 #include <QtGui/QOpenGLFramebufferObject>
-
-//代表了本地的OpenGL背景下，支持在OpenGL渲染QSurface
 #include <QtGui/QOpenGLContext>
-
-//允许OpenGL着色程序链接和使用
 #include <QtGui/QOpenGLShaderProgram>
-
-//提供了跨平台访问的OpenGL ES 2.0 API
-//Qt Quick2.0使用专用的基于OpenGL ES2.0的Qt Quick Scene Graph场景图进行所有渲染
 //#include <QtGui/QOpenGLFunctions>
-
-//提供OpenGL 3.3核心配置文件
 #include <QtGui/QOpenGLFunctions_3_3_Core>
 
-class FBORenderer
-        : public QQuickFramebufferObject::Renderer,
+//渲染相关放到 QQuickFramebufferObject::Renderer 子类
+class FBORenderer : public QQuickFramebufferObject::Renderer,
         protected QOpenGLFunctions_3_3_Core
 {
 public:
     FBORenderer();
+    //要渲染到 FBO，需要继承 Renderer 类并重新实现其 render() 函数
     void render() override;
+    //创建新的 FBO 时调用，如 resize 时
     QOpenGLFramebufferObject *createFramebufferObject(const QSize &size) override;
 
 private:
-    void doInitialize();
-    void doRender();
-
-private:
     //着色器程序
-    QOpenGLShaderProgram _program;
+    QOpenGLShaderProgram program;
 };
-
-#endif // FBORENDERER_H

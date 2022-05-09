@@ -1,5 +1,4 @@
-#ifndef FBORENDERER2_H
-#define FBORENDERER2_H
+#pragma once
 
 #include <QtQuick/QQuickFramebufferObject>
 #include <QtGui/QOpenGLFramebufferObject>
@@ -8,8 +7,7 @@
 #include <QtGui/QOpenGLShaderProgram>
 #include <QtGui/QOpenGLFunctions_3_3_Core>
 
-class FBORenderer2
-        : public QQuickFramebufferObject::Renderer,
+class FBORenderer2 : public QQuickFramebufferObject::Renderer,
         protected QOpenGLFunctions_3_3_Core
 {
 public:
@@ -26,11 +24,9 @@ private:
 
 private:
     //着色器程序
-    QOpenGLShaderProgram _program;
+    QOpenGLShaderProgram program;
     //
-    GLuint _VAO;
-    GLuint _VBO;
-    GLuint _EBO;
+    GLuint vao;
+    GLuint vbo;
+    GLuint ebo;
 };
-
-#endif // FBORENDERER2_H
