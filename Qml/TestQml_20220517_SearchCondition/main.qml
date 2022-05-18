@@ -97,7 +97,10 @@ Window {
                     }
                     ComboBox {
                         model: ["满足任意一个条件","条件同时满足"]
-                        currentIndex: model.matchAll?1:0
+                        currentIndex: matchAll?1:0
+                        onCurrentIndexChanged: {
+                            matchAll=currentIndex===0?false:true;
+                        }
                     }
                 }
                 Button {

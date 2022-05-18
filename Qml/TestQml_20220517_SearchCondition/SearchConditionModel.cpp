@@ -63,7 +63,7 @@ bool SearchConditionModel::setData(const QModelIndex &index, const QVariant &val
     case C2MatchAllRole: item.c2MatchAll = value.toBool(); break;
     case C2KeywordsRole: item.c2Keywords = value.toString(); break;
         //case EnableC2Role: item.enableC2 = value.toBool(); break;
-        //case MatchAllRole: item.matchAll = value.toBool(); break;
+    case MatchAllRole: item.matchAll = value.toBool(); break;
     default: return false;
     }
 
