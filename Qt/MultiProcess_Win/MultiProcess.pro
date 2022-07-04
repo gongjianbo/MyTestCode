@@ -1,10 +1,10 @@
 TEMPLATE = subdirs
 
 SUBDIRS += \
-    Client \
     Common \
-    Server
+    SubProcess \
+    MainProcess
 
-Server.depends += Common
-Client.depends += Server Common
+SubProcess.depends += Common
+MainProcess.depends += SubProcess Common
 

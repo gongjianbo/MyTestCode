@@ -1,18 +1,18 @@
-#include "ClientWindow.h"
-#include "ui_ClientWindow.h"
+#include "MainWindow.h"
+#include "ui_MainWindow.h"
 #include "ProcessManager.h"
 #include <QCoreApplication>
 #include <QFileDialog>
 #include <QDebug>
 
-ClientWindow::ClientWindow(QWidget *parent)
+MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::ClientWindow)
+    , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
 
     //选择路径
-    ui->editPath->setText(qApp->applicationDirPath()+"/Server.exe");
+    ui->editPath->setText(qApp->applicationDirPath()+"/SubProcess.exe");
     connect(ui->btnPath,&QPushButton::clicked,this,[=]{
         const QString exe_path=QFileDialog::getOpenFileName(this);
         if(exe_path.isEmpty())
@@ -49,7 +49,7 @@ ClientWindow::ClientWindow(QWidget *parent)
     });
 }
 
-ClientWindow::~ClientWindow()
+MainWindow::~MainWindow()
 {
     delete ui;
 }

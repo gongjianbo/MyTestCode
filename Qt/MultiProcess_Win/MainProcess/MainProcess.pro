@@ -8,14 +8,14 @@ DESTDIR = $$PWD/../bin
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    main.cpp \
-    ServerWindow.cpp
+    MainWindow.cpp \
+    main.cpp
 
 HEADERS += \
-    ServerWindow.h
+    MainWindow.h
 
 FORMS += \
-    ServerWindow.ui
+    MainWindow.ui
 
 INCLUDEPATH += $$PWD/../Common
 DEPENDPATH += $$PWD/../Common

@@ -13,14 +13,16 @@
  * 管理进程用manager，被管理的用worker
  * 2.每个进程只保持一个manager和worker
  * @todo
- * 通过event或者shared memory标记当前进程是否处于活跃状态
+ * 1.通过event或者shared memory标记当前进程是否处于活跃状态
  * 如果卡住也需要重新启动
+ * 2.start之前可以先kill该exe进程
  */
 class ProcessManager : public QObject
 {
     Q_OBJECT
 private:
     explicit ProcessManager(QObject *parent = nullptr);
+    Q_DISABLE_COPY_MOVE(ProcessManager)
 public:
     ~ProcessManager();
 
@@ -30,6 +32,11 @@ public:
     //初始化，启动时调用一次
     //limit=worker进程的最大限制数
     bool init(int limit = 10);
+    //是否处于活动状态
+    //未初始化默认false
+    //init时置为true
+    //释放时置为false
+    bool isActive() const;
 
     //获取exe所在目录
     Q_INVOKABLE static QString getAppPath();

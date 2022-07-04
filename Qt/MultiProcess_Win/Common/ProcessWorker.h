@@ -20,6 +20,7 @@ class ProcessWorker : public QObject
     Q_OBJECT
 private:
     explicit ProcessWorker(QObject *parent = nullptr);
+    Q_DISABLE_COPY_MOVE(ProcessWorker)
 public:
     ~ProcessWorker();
 
@@ -28,6 +29,11 @@ public:
 
     //根据pid初始化
     bool init(DWORD pid);
+    //是否处于活动状态
+    //未初始化默认false
+    //init时置为true
+    //managerFinished时置为false
+    bool isActive() const;
 
 private:
     //轮询检测manager进程是否存在

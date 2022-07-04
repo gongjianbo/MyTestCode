@@ -37,6 +37,11 @@ bool ProcessManager::init(int limit)
     return true;
 }
 
+bool ProcessManager::isActive() const
+{
+    return guardFlag;
+}
+
 QString ProcessManager::getAppPath()
 {
     //这段代码是参照QApplication
@@ -182,7 +187,7 @@ bool ProcessManager::doStop(const QString &tableKey)
     if(processTable.contains(tableKey)){
         //take并退出进程，回收offset
         ProcessInfo p_info = processTable.take(tableKey);
-        if(::TerminateProcess(p_info.hProcess,-1)){
+        if(::TerminateProcess(p_info.hProcess, -1)){
             updateKeys();
             qDebug()<<"terminate success.";
             return true;
@@ -248,9 +253,9 @@ void ProcessManager::patrol()
         DWORD exit_code;
 
         //检测进程是否正常运行，把需要重启的重启
-        ::GetExitCodeProcess(node.hProcess,&exit_code);
+        ::GetExitCodeProcess(node.hProcess, &exit_code);
         //如果进程尚未终止且函数成功，则返回的状态为STILL_ACTIVE
-        if(exit_code!=STILL_ACTIVE){
+        if(exit_code != STILL_ACTIVE){
             qDebug()<<"process crash."<<node.path<<node.key;
             emit processCrashed(node.path,node.key);
             //如果是自动重启的就重启，否则从列表移除
