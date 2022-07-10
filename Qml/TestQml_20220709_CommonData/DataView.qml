@@ -47,6 +47,7 @@ Rectangle {
                     height: 30
                     text: "update"
                     onClicked: {
+                        //update更新所有view中的该item
                         data_model.updateItemByRow(model.index, text_key.text, spin_val.value)
                     }
                 }
@@ -55,6 +56,7 @@ Rectangle {
                     height: 30
                     text: "delete"
                     onClicked: {
+                        //删除item
                         data_model.deleteItemByRow(model.index)
                     }
                 }
@@ -63,6 +65,7 @@ Rectangle {
                     height: 30
                     text: "clone"
                     onClicked: {
+                        //以当前值新增一个item
                         data_model.appendItem(model.key, model.value)
                     }
                 }
@@ -90,6 +93,8 @@ Rectangle {
         Button {
             text: "filter"
             onClicked: {
+                //根据value的范围过滤
+                //数据中有10001，而默认范围10000，测试时加1并重新过滤
                 data_model.searchItemByValue(value_min.value, value_max.value);
             }
         }
@@ -98,6 +103,7 @@ Rectangle {
     DataModel {
         id: data_model
         Component.onCompleted: {
+            //初始化时过滤一次
             data_model.searchItemByValue(value_min.value, value_max.value);
         }
     }
