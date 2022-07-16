@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Image/audio_20_play.png</file>
+        <file>Image/audio_loading.gif</file>
+        <file>Image/audio_playing.gif</file>
+        <file>Image/warn_20_red.png</file>
+        <file>Image/profile_48_gray.png</file>
+        <file>Image/audio.wav</file>
+    </qresource>
+</RCC>

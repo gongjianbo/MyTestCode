@@ -1,0 +1,37 @@
+//rep文档https://doc.qt.io/qt-5/qtremoteobjects-repc.html
+//引入结构体定义的头文件
+#include "Define.h"
+
+//POD，类似结构体，但是成员都是属性
+POD MyPod(QString name, int age, bool sex)
+
+//MODEL和QAbstractItemModel相关，太鸡肋，略去
+
+//类
+class MyObject{
+    //属性
+    PROP(int value)
+}
+//会生成两种接口
+//[类名Replica]给客户端
+//[类名Source]和[类名SimpleSource]给服务端
+class Interface{
+    //属性
+    PROP(QString name="gongjianbo" READONLY)
+    PROP(QString tag)
+    //使用rep中定义的类作为属性
+    CLASS subObject(MyObject)
+    //信号
+    SIGNAL(dataChanged(const QString &data))
+    //槽函数，省略返回值则为void
+    SLOT(void setData(const QString &data))
+    SLOT(QString getData())
+    //枚举，不放在class里会自动再套一层QObject类不方便访问
+    ENUM MyEnum{
+        EnumA = 0,
+        EnumB
+    }
+    SLOT(void testEnum(MyEnum t))
+    //使用自定义的结构体
+    SLOT(void testStruct(MyStruct t))
+}
