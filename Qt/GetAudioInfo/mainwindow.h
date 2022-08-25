@@ -1,6 +1,4 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
-
+#pragma once
 #include <QMainWindow>
 
 QT_BEGIN_NAMESPACE
@@ -23,4 +21,3 @@ private:
     QByteArray pcmData;
     bool isS16=false;
 };
-#endif // MAINWINDOW_H

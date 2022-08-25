@@ -1,6 +1,4 @@
-#ifndef EASYAUDIOCONTEXT_H
-#define EASYAUDIOCONTEXT_H
-
+#pragma once
 #include <QString>
 #include <QSharedPointer>
 
@@ -116,11 +114,11 @@ private:
     AVCodec *codec = NULL;
     //解码器上下文
     AVCodecContext *codecCtx = NULL;
+    //参数信息
+    AVCodecParameters *codecParam = NULL;
     //音频流index
-    int audioStreamIndex = -1;
+    int streamIndex = -1;
 
     //在友元中访问私有变量用
     friend class EasyAudioDecoder;
 };
-
-#endif // EASYAUDIOCONTEXT_H

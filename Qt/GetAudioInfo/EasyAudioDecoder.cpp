@@ -187,7 +187,7 @@ bool EasyAudioDecoder::toPcm(const QSharedPointer<EasyAudioContext> &contextPtr,
     while (av_read_frame(contextPtr->formatCtx, packet)>=0)
     {
         //取音频
-        if (packet->stream_index == contextPtr->audioStreamIndex)
+        if (packet->stream_index == contextPtr->streamIndex)
         {
             //提供原始数据作为解码器的输入(将packet写入到解码队列当中去)
             //返回0表示成功

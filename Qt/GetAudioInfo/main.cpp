@@ -1,7 +1,5 @@
-//#include "vld.h"
-#include "mainwindow.h"
-
 #include <QApplication>
+#include "mainwindow.h"
 
 int main(int argc, char *argv[])
 {

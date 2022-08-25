@@ -15,7 +15,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     ui->boxFormat->setCurrentIndex(1);
-    ui->lineEdit->setText(qApp->applicationDirPath()+"/wav-pcm16.wav");
+    ui->lineEdit->setText(qApp->applicationDirPath()+"/wav_1ch_11.025K_16bit.wav");
 
     //选择音频文件
     connect(ui->btnFile,&QPushButton::clicked,this,[this]{

@@ -1,8 +1,5 @@
-#ifndef EASYAUDIODECODER_H
-#define EASYAUDIODECODER_H
-
+#pragma once
 #include <functional>
-
 #include "EasyAudioContext.h"
 
 /**
@@ -110,5 +107,3 @@ public:
     //判断导出参数是否有效，在无效的情况下将使用输出参数对应字段值
     static EasyAudioParameter getOutParameter( const EasyAudioParameter &inParams,const EasyAudioParameter &outParams);
 };
-
-#endif // EASYAUDIODECODER_H

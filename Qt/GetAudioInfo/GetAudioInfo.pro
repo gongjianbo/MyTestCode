@@ -1,4 +1,4 @@
-QT       += core gui widgets
+QT += core gui widgets
 
 CONFIG += c++11 utf8_source
 
@@ -42,13 +42,8 @@ greaterThan(QT_MAJOR_VERSION, 4) {
 }
 
 contains(TARGET_ARCH, x86_64) {
-
 #only x64 msvc
 win32{
-#LIBS += $$PWD/vld/lib/*.lib
-#INCLUDEPATH += $$PWD/vld/include
-#DEPENDPATH += $$PWD/vld/include
-
 LIBS += $$PWD/ffmpeg/lib/*.lib
 INCLUDEPATH += $$PWD/ffmpeg/include
 DEPENDPATH += $$PWD/ffmpeg/include

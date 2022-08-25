@@ -3,6 +3,15 @@
 #include <QFileInfo>
 #include <QDebug>
 
+extern "C" {
+#include <libavcodec/avcodec.h>
+#include <libavformat/avformat.h>
+#include <libavformat/avio.h>
+#include "libswresample/swresample.h"
+#include <libavutil/frame.h>
+#include <libavutil/mem.h>
+}
+
 EasyAudioContext::EasyAudioContext(const QString &filepath)
 {
     init(filepath);
@@ -33,9 +42,14 @@ EasyAudioInfo EasyAudioContext::getAudioInfo() const
         return info;
 
     info.encode = codec->name;
-    info.sampleRate = codecCtx->sample_rate; //hz
-    info.channels = codecCtx->channels;
-    info.sampleBit = (av_get_bytes_per_sample(codecCtx->sample_fmt)<<3);  //byte
+    info.sampleRate = codecParam->sample_rate; //hz
+    info.channels = codecParam->channels;
+    //2022-08-25 之前取的采样精度不是文件实际的精度，导致24bit等不能正确识别
+    //info.sampleBit = (av_get_bytes_per_sample(codecCtx->sample_fmt)<<3);  //bit
+    info.sampleBit = av_get_bits_per_sample(codecParam->codec_id);
+    //if (codecCtx && codecCtx->bits_per_raw_sample > 0) {
+    //    info.sampleBit = codecCtx->bits_per_raw_sample;
+    //}
     info.duration = formatCtx->duration/(AV_TIME_BASE/1000.0);  //ms
     //2020-12-31 测试一个ape文件时发现音频信息比特率为0，现判断无效则使用容器比特率
     info.bitRate = codecCtx->bit_rate<1?formatCtx->bit_rate:codecCtx->bit_rate; //bps
@@ -102,8 +116,10 @@ void EasyAudioContext::init(const QString &filepath)
         AVStream *in_stream = formatCtx->streams[i];
 
         //类型为音频
-        if(in_stream->codecpar->codec_type == AVMEDIA_TYPE_AUDIO){
-            audioStreamIndex = i;
+        if(in_stream->codecpar->codec_type == AVMEDIA_TYPE_AUDIO)
+        {
+            codecParam = in_stream->codecpar;
+            streamIndex = i;
             //查找具有匹配编解码器ID的已注册解码器
             //失败返回NULL
             codec = avcodec_find_decoder(in_stream->codecpar->codec_id);
@@ -146,12 +162,6 @@ void EasyAudioContext::init(const QString &filepath)
 
             //采样率
             //qDebug()<<"sample rate"<<codecCtx->sample_rate;
-            //通道数
-            //qDebug()<<"channels"<<codecCtx->channels;
-            //采样深度
-            //in_stream->codec->sample_fmt枚举AVSampleFormat表示数据存储格式，如16位无符号
-            //av_get_bytes_per_sample返回AVSampleFormat对应的字节大小
-            //qDebug()<<"sample bit"<<codecCtx->sample_fmt<<":"<<(av_get_bytes_per_sample(codecCtx->sample_fmt)<<3);
             //编码，如pcm
             //qDebug()<<"codec name"<<codec->name<<":"<<codec->long_name;
 
@@ -167,11 +177,6 @@ void EasyAudioContext::init(const QString &filepath)
         }else if (avctx->codec_type == AVMEDIA_TYPE_AUDIO){
             //音频信息
             qDebug()<<"sample rate"<<in_stream->codec->sample_rate;
-            qDebug()<<"channels"<<in_stream->codec->channels;
-            //in_stream->codec->sample_fmt枚举AVSampleFormat表示数据存储格式，如16位无符号
-            //av_get_bytes_per_sample返回AVSampleFormat对应的字节大小
-            qDebug()<<"sample bit"<<in_stream->codec->sample_fmt<<":"<<(av_get_bytes_per_sample(in_stream->codec->sample_fmt)<<3);
-
             AVCodec *codec=avcodec_find_decoder(avctx->codec_id);
             if(codec==NULL){
                 return;
@@ -197,5 +202,6 @@ void EasyAudioContext::free()
     }
     codec=NULL;
     codecCtx=NULL;
+    codecParam=NULL;
     formatCtx=NULL;
 }
