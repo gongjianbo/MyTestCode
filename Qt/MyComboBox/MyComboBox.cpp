@@ -28,7 +28,7 @@ QRect ComboView::visualRect(const QModelIndex &index) const
 ComboItem::ComboItem(const QString &text, QWidget *parent)
     : QWidget(parent),
       textValue(text),
-      btn(new QPushButton(this))
+      btn(new QPushButton(text,this))
 {
     QHBoxLayout *layout=new QHBoxLayout(this);
     layout->addStretch();
@@ -91,6 +91,7 @@ void MyComboBox::setRemovableItems(const QStringList &items)
         ComboItem *item=new ComboItem(items.at(i),itemList);
         widget_item->setData(Qt::DisplayRole,items.at(i));
         //widget_item->setData(Qt::TextAlignmentRole,int(Qt::AlignRight|Qt::AlignVCenter));
+        //itemList->addItem(widget_item);
         itemList->setItemWidget(widget_item,item);
 
         connect(item,&ComboItem::itemClicked,this,[this,item,widget_item](){
@@ -102,5 +103,22 @@ void MyComboBox::setRemovableItems(const QStringList &items)
             emit itemRemoved(item->text());
         });
     }
+}
+
+void MyComboBox::showPopup()
+{
+    QComboBox::showPopup();
+}
+
+void MyComboBox::hidePopup()
+{
+    QStyle * const style = this->style();
+    QStyleOptionComboBox opt;
+    initStyleOption(&opt);
+    view()->scrollTo(view()->currentIndex(),
+                     style->styleHint(QStyle::SH_ComboBox_Popup, &opt, this)
+                     ? QAbstractItemView::PositionAtCenter
+                     : QAbstractItemView::EnsureVisible);
+    QComboBox::hidePopup();
 }
 

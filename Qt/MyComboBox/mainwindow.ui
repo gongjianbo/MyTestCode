@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>129</width>
-    <height>162</height>
+    <width>229</width>
+    <height>181</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>MyComboBox</string>
   </property>
   <property name="styleSheet">
    <string notr="true">/*下拉框*/
@@ -61,10 +61,11 @@ background-color: rgb(255, 170, 0);
 }
 /*按钮样式*/
 QComboBox QAbstractItemView QPushButton{
-max-width:20px;
-min-width:20px;
+max-width:40px;
+min-width:40px;
 max-height:20px;
 min-height:20px;
+border-radius:2px;
 border:0;
 margin-right:20px;
 background-color:white;
@@ -75,6 +76,13 @@ background-color:cyan;
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QLabel" name="label">
+      <property name="text">
+       <string>Click the item button to remove it.</string>
+      </property>
+     </widget>
+    </item>
     <item>
      <widget class="QComboBox" name="comboBoxA"/>
     </item>
@@ -88,8 +96,8 @@ background-color:cyan;
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>129</width>
-     <height>23</height>
+     <width>229</width>
+     <height>22</height>
     </rect>
    </property>
   </widget>

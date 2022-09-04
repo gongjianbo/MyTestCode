@@ -1,6 +1,4 @@
-#ifndef MYCOMBOBOX_H
-#define MYCOMBOBOX_H
-
+#pragma once
 #include <QComboBox>
 #include <QListView>
 #include <QListWidget>
@@ -48,7 +46,11 @@ class MyComboBox : public QComboBox
 public:
     explicit MyComboBox(QWidget *parent = nullptr);
 
+    //设置下拉选项
     void setRemovableItems(const QStringList &items);
+    //显示弹框
+    void showPopup() override;
+    void hidePopup() override;
 
 signals:
     void itemRemoved(const QString &text);
@@ -56,5 +58,3 @@ signals:
 private:
     QListWidget *itemList;
 };
-
-#endif // MYCOMBOBOX_H
