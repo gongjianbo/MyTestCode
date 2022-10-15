@@ -1,5 +1,4 @@
-#ifndef MYSOURCE_H
-#define MYSOURCE_H
+#pragma once
 #include "rep_simple_source.h"
 
 class MySource : public InterfaceSimpleSource
@@ -16,5 +15,3 @@ public:
 private:
     QString myData{ "default" };
 };
-
-#endif // MYSOURCE_H

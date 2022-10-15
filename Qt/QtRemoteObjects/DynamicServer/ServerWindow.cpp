@@ -8,10 +8,6 @@ ServerWindow::ServerWindow(QWidget *parent)
     ui->setupUi(this);
     ui->btnClose->setEnabled(false);
 
-    //成员属性如果为空，server启动和client释放都会有警告
-    //server警告：qt.remoteobjects: QRemoteObjectSourceBase: Cannot replicate a NULL object "subObject"
-    //client警告：QCoreApplication::postEvent: Unexpected null receiver
-    source.setSubObject(new MyObjectSimpleSource(this));
     connect(&source,&MySource::dataChanged,[this](const QString &data){
         //source.getData()
         ui->editRecv->append(data);
@@ -36,13 +32,9 @@ ServerWindow::ServerWindow(QWidget *parent)
         ui->btnClose->setEnabled(false);
     });
 
-    //信号测试
-    connect(ui->btnSignal,&QPushButton::clicked,[this]{
-        emit source.dataChanged("server dataChanged:"+ui->editSend->text());
-    });
-    //槽测试
-    connect(ui->btnSlot,&QPushButton::clicked,[this]{
-        source.setData("server setData:"+ui->editSend->text());
+    //测试通知客户端
+    connect(ui->btnNotify,&QPushButton::clicked,[this]{
+        emit source.dataChanged("dynamic notify dataChanged:"+ui->editSend->text());
     });
 }
 

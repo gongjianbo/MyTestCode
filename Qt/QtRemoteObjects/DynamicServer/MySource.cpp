@@ -10,13 +10,3 @@ QString MySource::getData()
 {
     return myData;
 }
-
-void MySource::testEnum(MyEnum t)
-{
-    Q_UNUSED(t)
-}
-
-void MySource::testStruct(MyStruct t)
-{
-    Q_UNUSED(t)
-}

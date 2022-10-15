@@ -19,8 +19,8 @@ ClientWindow::ClientWindow(QWidget *parent)
         remoteNode.connectToNode(QUrl("local:qro_test"));
         qDebug()<<"connectToNode finished";
         //可以设置acquire的name，和host.enableRemoting的name配对
-        InterfaceReplica *irep = remoteNode.acquire<InterfaceReplica>("QRO");
-        connect(irep,&InterfaceReplica::stateChanged,
+        QRemoteObjectDynamicReplica *irep = remoteNode.acquireDynamic("QRO");
+        connect(irep,&QRemoteObjectDynamicReplica::stateChanged,
                 this,[this](QRemoteObjectReplica::State state, QRemoteObjectReplica::State oldState){
             //五种状态，详见文档
             //Uninitialized，动态初始值
@@ -35,17 +35,9 @@ ClientWindow::ClientWindow(QWidget *parent)
             ui->btnConnect->setEnabled(!ok);
             ui->btnClose->setEnabled(ok);
         });
-        //连接接口的信号槽
-        connect(irep,&InterfaceReplica::dataChanged,[=](const QString &data){
-            //测试直接调用槽函数获取返回值
-            //auto ret = irep->getData();
-            //ret.waitForFinished(1000);
-            //if(ret.error() == QRemoteObjectPendingCall::NoError){
-            //    ui->editRecv->append(ret.returnValue());
-            //}
-            //或者使用信号带的参数
-            ui->editRecv->append(data);
-        });
+        //replica初始化完成后再进行信号槽绑定
+        connect(irep,&QRemoteObjectDynamicReplica::initialized,
+                this,&ClientWindow::initConnection);
         replica.reset(irep);
         //可以等待连接，如果服务器没脸上，会在wait这里阻塞
         //如果服务可用，可以用isReplicaValid判断
@@ -61,29 +53,36 @@ ClientWindow::ClientWindow(QWidget *parent)
         replica.clear();
     });
 
-    //测试信号
-    //(实测，replica发信号，souce是感知不到的)
-    connect(ui->btnSignal,&QPushButton::clicked,[this]{
+    //测试调用服务端接口
+    connect(ui->btnCall,&QPushButton::clicked,[this]{
         if(!replica)
             return;
-        qDebug()<<"signal"<<replica->isReplicaValid()<<ui->editSend->text();
+        qDebug()<<"dynamic call"<<replica->isReplicaValid()<<ui->editSend->text();
         if(!replica->isReplicaValid())
             return;
-        emit replica->dataChanged("client dataChanged:"+ui->editSend->text());
-    });
-    //测试槽
-    connect(ui->btnSlot,&QPushButton::clicked,[this]{
-        if(!replica)
-            return;
-        qDebug()<<"slot"<<replica->isReplicaValid()<<ui->editSend->text();
-        if(!replica->isReplicaValid())
-            return;
-        replica->setData("client setData:"+ui->editSend->text());
+        //可以用信号连接replica的槽，或者invoke
+        QMetaObject::invokeMethod(replica.data(), "setData", Qt::DirectConnection,
+                                  Q_ARG(QString, "dynamic call setData:"+ui->editSend->text()));
+
     });
 }
 
 ClientWindow::~ClientWindow()
 {
     delete ui;
+}
+
+void ClientWindow::initConnection()
+{
+    //replica初始化完成后再进行信号槽绑定
+    //因为元信息是动态获取的，所以只能使用宏的形式来连接信号槽
+    //connect(replica.data(), SIGNAL(serverSignal(const QString &)), this, SLOT(clientSlot(const QString &)));
+    //connect(this, SIGNAL(clientSignal(const QString &)), replica.data(), SLOT(serverSlot(const QString &)));
+    connect(replica.data(), SIGNAL(dataChanged(const QString &)), this, SLOT(onDataChange(const QString &)));
+}
+
+void ClientWindow::onDataChange(const QString &str)
+{
+    ui->editRecv->append(str);
 }
 

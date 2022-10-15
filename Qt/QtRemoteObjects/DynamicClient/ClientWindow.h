@@ -1,7 +1,7 @@
 #pragma once
 #include <QMainWindow>
 #include <QRemoteObjectNode>
-#include "rep_simple_replica.h"
+#include <QRemoteObjectDynamicReplica>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class ClientWindow; }
@@ -14,9 +14,13 @@ public:
     ClientWindow(QWidget *parent = nullptr);
     ~ClientWindow();
 
+public slots:
+    void initConnection();
+    void onDataChange(const QString &str);
+
 private:
     Ui::ClientWindow *ui;
 
     QRemoteObjectNode remoteNode;
-    QSharedPointer<InterfaceReplica> replica;
+    QSharedPointer<QRemoteObjectDynamicReplica> replica;
 };
