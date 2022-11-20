@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>BasicTreeView.qml</file>
+        <file>BasicTreeViewColumn.qml</file>
+        <file>BasicTreeViewItemLoader.qml</file>
+        <file>BasicTreeViewStyle.qml</file>
+    </qresource>
+</RCC>
