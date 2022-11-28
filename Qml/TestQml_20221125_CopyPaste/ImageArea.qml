@@ -65,6 +65,7 @@ Rectangle {
             if (drop.hasText && drop.text === "copy image") {
                 console.log("copy image inner")
                 //内部拖拽时设置一个text标记，避免内部拖拽复制
+                //这里为了方便用的text，可以自定义其他数据
                 return;
             }
 

@@ -1,6 +1,7 @@
 #include "ClipboardTool.h"
 #include <QGuiApplication>
 #include <QClipboard>
+#include <QMimeData>
 #include <QDebug>
 
 ClipboardTool::ClipboardTool(QObject *parent)
@@ -9,26 +10,27 @@ ClipboardTool::ClipboardTool(QObject *parent)
 
 }
 
-QString ClipboardTool::currentText()
+QUrl ClipboardTool::currentUrl()
 {
     QClipboard *clipboard = QGuiApplication::clipboard();
     if (clipboard) {
-        return clipboard->text();
+        auto md = clipboard->mimeData();
+        if (md) {
+            auto urls = md->urls();
+            if (!urls.isEmpty()) {
+                return urls.first();
+            }
+        }
     }
-    return QString();
-}
-
-QUrl ClipboardTool::currentUrl()
-{
-    return QUrl(currentText());
+    return QUrl();
 }
 
 void ClipboardTool::setCurrentUrl(const QUrl &url)
 {
     QClipboard *clipboard = QGuiApplication::clipboard();
     if (clipboard) {
-        //QClipboard内部会调用QMimeData::setText
-        //本来以为以为要自己设置mimedata的image，但是测试发现setText后ctrl+v粘贴就能把图片粘贴出去
-        clipboard->setText(url.toString());
+        QMimeData *md = new QMimeData;
+        md->setUrls(QList<QUrl>()<<url);
+        clipboard->setMimeData(md);
     }
 }

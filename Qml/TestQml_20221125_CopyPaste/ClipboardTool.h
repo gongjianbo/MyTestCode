@@ -9,10 +9,8 @@ class ClipboardTool : public QObject
 public:
     explicit ClipboardTool(QObject *parent = nullptr);
 
-    //当前剪切板的text
-    Q_INVOKABLE QString currentText();
-    //当前剪切板的text转为url
+    //当前剪切板的url
     Q_INVOKABLE QUrl currentUrl();
-    //设置剪切版的图片url
+    //设置剪切版的url
     Q_INVOKABLE void setCurrentUrl(const QUrl &url);
 };
