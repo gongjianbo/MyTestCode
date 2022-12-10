@@ -1,0 +1,4 @@
+HEADERS += \
+    $$PWD/WidgetInterface.h
+
+
