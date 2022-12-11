@@ -1,0 +1,4 @@
+HEADERS += \
+    $$PWD/PluginInterface.h
+
+

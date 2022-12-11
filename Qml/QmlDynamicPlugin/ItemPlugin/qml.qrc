@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/ItemPlugin">
+        <file>MyRect.qml</file>
+    </qresource>
+</RCC>
