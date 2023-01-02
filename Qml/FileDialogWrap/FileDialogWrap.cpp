@@ -122,6 +122,9 @@ void FileDialogWrap::initSetting(const QString &filepath, const QSettings::Forma
 
 QString FileDialogWrap::getDefaultPath()
 {
+    //QFileDialog默认实现在构造时恢复，析构时保存
+    //QSettings settings(QSettings::UserScope, QLatin1String("QtProject"));
+    //settings.beginGroup(QLatin1String("FileDialog"));
     //记录上一次选择的路径
     QSettings setting(iniPath, QSettings::IniFormat);
     QString dirpath = setting.value("LastPath").toString();

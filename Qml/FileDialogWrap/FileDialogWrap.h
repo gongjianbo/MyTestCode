@@ -8,6 +8,10 @@
  * @brief 包装QFileDialog在QML中使用
  * @author 龚建波
  * @date 2022-12-31
+ * @details
+ * 参考：https://doc.qt.io/qt-5/qtquick-performance.html
+ * 文档指出我们不应该在qml逻辑中执行自己的事件循环，所以通过信号槽异步调用对话框exec
+ * 而操作结果也只能通过信号传递，不能像cpp代码那样exec后面直接获取结果
  */
 class FileDialogWrap : public QObject
 {
