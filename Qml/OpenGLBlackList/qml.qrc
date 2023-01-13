@@ -1,6 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
-        <file>opengl-blacklist.json</file>
+        <file>glbuglist.json</file>
     </qresource>
 </RCC>

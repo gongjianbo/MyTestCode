@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
     //未指定时QT_OPENGL_BUGLIST，将使用内置列表
     //这通常包括一些较旧、功能较弱的图形卡disable_desktopgl，
     //以防止Qt使用其不稳定的桌面OpenGL实现，回退到ANGLE
-    qputenv("QT_OPENGL_BUGLIST", ":/opengl-blacklist.json");
+    qputenv("QT_OPENGL_BUGLIST", ":/glbuglist.json");
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
