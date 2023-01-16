@@ -8,15 +8,10 @@ CONFIG += c++17 utf8_source
 
 SOURCES += \
     DeviceEventFilter.cpp \
-    main.cpp \
-    mainwindow.cpp
+    main.cpp
 
 HEADERS += \
-    DeviceEventFilter.h \
-    mainwindow.h
-
-FORMS += \
-    mainwindow.ui
+    DeviceEventFilter.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
