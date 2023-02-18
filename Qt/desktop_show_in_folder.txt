@@ -1,0 +1,36 @@
+// https://github.com/wireshark/wireshark
+void desktop_show_in_folder(const QString file_path)
+{
+    bool success = false;
+
+    // https://stackoverflow.com/questions/3490336/how-to-reveal-in-finder-or-show-in-explorer-with-qt
+
+#if defined(Q_OS_WIN)
+    QString command = "explorer.exe";
+    QStringList arguments;
+    QString path = QDir::toNativeSeparators(file_path);
+    arguments << "/select," << path + "";
+    success = QProcess::startDetached(command, arguments);
+#elif defined(Q_OS_MAC)
+    QStringList script_args;
+    QString escaped_path = file_path;
+
+    escaped_path.replace('"', "\\\"");
+    script_args << "-e"
+               << QString("tell application \"Finder\" to reveal POSIX file \"%1\"")
+                                     .arg(escaped_path);
+    if (QProcess::execute("/usr/bin/osascript", script_args) == 0) {
+        success = true;
+        script_args.clear();
+        script_args << "-e"
+                   << "tell application \"Finder\" to activate";
+        QProcess::execute("/usr/bin/osascript", script_args);
+    }
+#else
+    // Is there a way to highlight the file using xdg-open?
+#endif
+    if (!success) {
+        QFileInfo file_info(file_path);
+        QDesktopServices::openUrl(QUrl::fromLocalFile(file_info.dir().absolutePath()));
+    }
+}
