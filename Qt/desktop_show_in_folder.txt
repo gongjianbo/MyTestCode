@@ -1,5 +1,24 @@
+#include <Windows.h>
+#include <objbase.h>
+#pragma comment(lib, "Ole32.lib")
+#include <ShlObj_core.h>
+#pragma comment(lib, "Shell32.lib")
+
+void win_show_in_folder(const QString &file_path)
+{
+    ::CoInitialize(nullptr);
+    QString path = QDir::toNativeSeparators(file_path);
+    std::wstring str = path.toStdWString();
+    PIDLIST_ABSOLUTE pidl = ::ILCreateFromPathW((PCWSTR)str.c_str());
+    if(pidl){
+        ::SHOpenFolderAndSelectItems(pidl,0,0,0);
+        ::ILFree(pidl);
+    }
+    ::CoUninitialize();
+}
+
 // https://github.com/wireshark/wireshark
-void desktop_show_in_folder(const QString file_path)
+void desktop_show_in_folder(const QString &file_path)
 {
     bool success = false;
 
