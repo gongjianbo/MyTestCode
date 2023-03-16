@@ -25,6 +25,8 @@ protected:
     void run() override;
 
 private:
+    // 连接一个地址并将socket放到容器
+    void checkAddress(const QString &ip);
     // 释放所有socket
     void clear();
 
