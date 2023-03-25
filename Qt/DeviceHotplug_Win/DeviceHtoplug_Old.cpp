@@ -1,20 +1,20 @@
-#include "DeviceEventFilterOld.h"
+#include "DeviceHtoplug_Old.h"
 #include <QDebug>
 #include <Dbt.h>
 #pragma comment(lib, "user32.lib")
 
-DeviceEventFilterOld::DeviceEventFilterOld(QObject *parent)
+DeviceHotplug_Old::DeviceHotplug_Old(QObject *parent)
     : QObject(parent)
 {
 
 }
 
-DeviceEventFilterOld::~DeviceEventFilterOld()
+DeviceHotplug_Old::~DeviceHotplug_Old()
 {
     uninstallFilter();
 }
 
-void DeviceEventFilterOld::installFilter(HANDLE winId, const QVector<QUuid> &uuids)
+void DeviceHotplug_Old::installFilter(HANDLE winId, const QVector<QUuid> &uuids)
 {
     if (!winId)
         return;
@@ -35,7 +35,7 @@ void DeviceEventFilterOld::installFilter(HANDLE winId, const QVector<QUuid> &uui
     }
 }
 
-void DeviceEventFilterOld::uninstallFilter()
+void DeviceHotplug_Old::uninstallFilter()
 {
     for (HDEVNOTIFY handle : qAsConst(devNotifys))
     {
@@ -44,7 +44,7 @@ void DeviceEventFilterOld::uninstallFilter()
     devNotifys.clear();
 }
 
-bool DeviceEventFilterOld::nativeEventFilter(const QByteArray &eventType, void *message, long *result)
+bool DeviceHotplug_Old::nativeEventFilter(const QByteArray &eventType, void *message, long *result)
 {
     Q_UNUSED(result);
     if (eventType == "windows_generic_MSG" || eventType == "windows_dispatcher_MSG")

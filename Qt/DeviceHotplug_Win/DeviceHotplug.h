@@ -3,7 +3,7 @@
 #include <QUuid>
 #include <QSharedPointer>
 #include <Windows.h>
-class DeviceEventFilterPrivate;
+class DeviceHotplugPrivate;
 
 /**
  * @brief 设备插拔事件监听
@@ -17,12 +17,12 @@ class DeviceEventFilterPrivate;
  * 参考 https://github.com/wang-bin/qdevicewatcher
  * 由 QAbstractNativeEventFilter 过滤事件改为了创建一个 win32 窗口来接收事件
  */
-class DeviceEventFilter : public QObject
+class DeviceHotplug : public QObject
 {
     Q_OBJECT
 public:
-    explicit DeviceEventFilter(QObject *parent = nullptr);
-    ~DeviceEventFilter();
+    explicit DeviceHotplug(QObject *parent = nullptr);
+    ~DeviceHotplug();
 
     // RegisterDeviceNotification 注册对应的 GUID 消息通知
     // 暂未考虑重复注册和注册失败的处理
@@ -39,6 +39,5 @@ signals:
     void deviceDetached(quint16 vid, quint16 pid);
 
 private:
-    friend class DeviceEventFilterPrivate;
-    QSharedPointer<DeviceEventFilterPrivate> dptr;
+    QSharedPointer<DeviceHotplugPrivate> dptr;
 };

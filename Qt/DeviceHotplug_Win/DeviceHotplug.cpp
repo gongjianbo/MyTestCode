@@ -1,22 +1,35 @@
-#include "DeviceEventFilter.h"
+#include "DeviceHotplug.h"
+#include <QMetaObject>
 #include <QHash>
 #include <QDebug>
 #include <Dbt.h>
 #pragma comment(lib, "user32.lib")
 
 // 内部结构，存储对应平台需要的数据
-class DeviceEventFilterPrivate
+class DeviceHotplugPrivate
 {
 public:
     void deviceAttached(quint16 vid, quint16 pid) {
-        emit ptr->deviceAttached(vid, pid);
+        QMetaObject::invokeMethod(ptr, "deviceAttached", Qt::QueuedConnection,
+                                  Q_ARG(quint16, vid),
+                                  Q_ARG(quint16, pid));
     }
     void deviceDetached(quint16 vid, quint16 pid) {
-        emit ptr->deviceDetached(vid, pid);
+        QMetaObject::invokeMethod(ptr, "deviceDetached", Qt::QueuedConnection,
+                                  Q_ARG(quint16, vid),
+                                  Q_ARG(quint16, pid));
     }
+    // 处理窗口消息
+    static LRESULT CALLBACK windowMessageProcess(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
+    // win32 窗口类名
+    static QString windowClassName();
+    // 创建一个用于接收消息的窗口，注册消息回调
+    bool createMessageWindow(const QVector<QUuid> &uuids);
+    // 释放
+    void destroyMessageWindow();
 
     // 关联的对象
-    DeviceEventFilter *ptr{nullptr};
+    DeviceHotplug *ptr{nullptr};
     // 关联的窗口
     HWND hwnd{nullptr};
     // 设备通知句柄和 UUID/GUID
@@ -24,7 +37,7 @@ public:
 };
 
 // 处理窗口消息
-LRESULT CALLBACK windowMessageProcess(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK DeviceHotplugPrivate::windowMessageProcess(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     if (message == WM_DEVICECHANGE) {
         do {
@@ -39,7 +52,7 @@ LRESULT CALLBACK windowMessageProcess(HWND hwnd, UINT message, WPARAM wParam, LP
             if (!broadcast || broadcast->dbch_devicetype != DBT_DEVTYP_DEVICEINTERFACE)
                 break;
             // 获取 SetWindowLongPtrW 设置的对象
-            DeviceEventFilterPrivate *data = reinterpret_cast<DeviceEventFilterPrivate *>(::GetWindowLongPtrW(hwnd, GWLP_USERDATA));
+            DeviceHotplugPrivate *data = reinterpret_cast<DeviceHotplugPrivate *>(::GetWindowLongPtrW(hwnd, GWLP_USERDATA));
             if (!data)
                 break;
             // 过滤不监听的设备类型
@@ -81,13 +94,13 @@ LRESULT CALLBACK windowMessageProcess(HWND hwnd, UINT message, WPARAM wParam, LP
 }
 
 // 窗口类名
-static inline QString windowClassName()
+QString DeviceHotplugPrivate::windowClassName()
 {
-    return QLatin1String("DeviceEventFilter_Window_") + QString::number(quintptr(windowMessageProcess));
+    return QLatin1String("Qt_DeviceHotplug_Window_") + QString::number(quintptr(windowMessageProcess));
 }
 
 // 创建一个用于接收消息的窗口，注册消息回调
-static inline HWND createMessageWindow(DeviceEventFilterPrivate *data, const QVector<QUuid> &uuids)
+bool DeviceHotplugPrivate::createMessageWindow(const QVector<QUuid> &uuids)
 {
     QString class_name = windowClassName();
     HINSTANCE hi = ::GetModuleHandleW(nullptr);
@@ -101,17 +114,17 @@ static inline HWND createMessageWindow(DeviceEventFilterPrivate *data, const QVe
     wc.lpszClassName = reinterpret_cast<const wchar_t *>(class_name.utf16());
     ::RegisterClassW(&wc);
 
-    HWND hwnd = ::CreateWindowW(wc.lpszClassName, // classname
-                                wc.lpszClassName, // window name
-                                0,  // style
-                                0,  // x
-                                0,  // y
-                                0,  // width
-                                0,  // height
-                                0,  // parent
-                                0,  // menu handle
-                                hi, // application
-                                0); // windows creation data.
+    hwnd = ::CreateWindowW(wc.lpszClassName, // classname
+                           wc.lpszClassName, // window name
+                           0,  // style
+                           0,  // x
+                           0,  // y
+                           0,  // width
+                           0,  // height
+                           0,  // parent
+                           0,  // menu handle
+                           hi, // application
+                           0); // windows creation data.
     if (!hwnd) {
         qDebug()<<"createMessageWindow error"<<(int)GetLastError();
     } else {
@@ -125,55 +138,53 @@ static inline HWND createMessageWindow(DeviceEventFilterPrivate *data, const QVe
             filter_data.dbcc_classguid = uuid;
             HDEVNOTIFY handle = ::RegisterDeviceNotificationW(hwnd, &filter_data, DEVICE_NOTIFY_WINDOW_HANDLE);
             if (handle) {
-                data->devNotifys.insert(uuid, handle);
+                devNotifys.insert(uuid, handle);
             } else {
                 qDebug()<<"RegisterDeviceNotification error"<<uuid;
             }
         }
-        ::SetWindowLongPtrW(hwnd, GWLP_USERDATA, (LONG_PTR)data);
+        ::SetWindowLongPtrW(hwnd, GWLP_USERDATA, (LONG_PTR)this);
     }
-    data->hwnd = hwnd;
-    return hwnd;
+    return !!hwnd;
 }
 
 // 释放
-static inline void destroyMessageWindow(DeviceEventFilterPrivate *data)
+void DeviceHotplugPrivate::destroyMessageWindow()
 {
-    if (data->hwnd) {
-        ::DestroyWindow(data->hwnd);
-        data->hwnd = nullptr;
+    if (hwnd) {
+        ::DestroyWindow(hwnd);
+        hwnd = nullptr;
 
-        for (HDEVNOTIFY handle : qAsConst(data->devNotifys))
+        for (HDEVNOTIFY handle : qAsConst(devNotifys))
         {
             ::UnregisterDeviceNotification(handle);
         }
-        data->devNotifys.clear();
+        devNotifys.clear();
     }
     ::UnregisterClassW(reinterpret_cast<const wchar_t *>(windowClassName().utf16()), ::GetModuleHandleW(nullptr));
 }
 
-
-DeviceEventFilter::DeviceEventFilter(QObject *parent)
+DeviceHotplug::DeviceHotplug(QObject *parent)
     : QObject{parent}
-    , dptr{new DeviceEventFilterPrivate}
+    , dptr{new DeviceHotplugPrivate}
 {
     dptr->ptr = this;
 }
 
-DeviceEventFilter::~DeviceEventFilter()
+DeviceHotplug::~DeviceHotplug()
 {
     free();
 }
 
-void DeviceEventFilter::init(const QVector<QUuid> &uuids)
+void DeviceHotplug::init(const QVector<QUuid> &uuids)
 {
-    HWND hwnd = createMessageWindow(dptr.get(), uuids);
-    if (!hwnd) {
-        destroyMessageWindow(dptr.get());
+    const bool ret = dptr->createMessageWindow( uuids);
+    if (!ret) {
+        dptr->destroyMessageWindow();
     }
 }
 
-void DeviceEventFilter::free()
+void DeviceHotplug::free()
 {
-    destroyMessageWindow(dptr.get());
+    dptr->destroyMessageWindow();
 }

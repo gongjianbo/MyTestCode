@@ -13,12 +13,12 @@
  * 设备类文档，可以在设备管理器找自己的设备guid
  * https://learn.microsoft.com/zh-cn/windows-hardware/drivers/install/overview-of-device-setup-classes
  */
-class DeviceEventFilterOld : public QObject, public QAbstractNativeEventFilter
+class DeviceHotplug_Old : public QObject, public QAbstractNativeEventFilter
 {
     Q_OBJECT
 public:
-    explicit DeviceEventFilterOld(QObject *parent = nullptr);
-    ~DeviceEventFilterOld();
+    explicit DeviceHotplug_Old(QObject *parent = nullptr);
+    ~DeviceHotplug_Old();
 
     // 注册设备guid关联窗口id，RegisterDeviceNotification
     // 暂未考虑注册失败的处理

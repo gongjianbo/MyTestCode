@@ -7,13 +7,13 @@ CONFIG += c++17 utf8_source
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    DeviceEventFilter.cpp \
-    DeviceEventFilterOld.cpp \
+    DeviceHotplug.cpp \
+    DeviceHtoplug_Old.cpp \
     main.cpp
 
 HEADERS += \
-    DeviceEventFilter.h \
-    DeviceEventFilterOld.h
+    DeviceHotplug.h \
+    DeviceHtoplug_Old.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

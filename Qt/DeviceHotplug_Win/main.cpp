@@ -1,46 +1,46 @@
 #include <QApplication>
 #include <QMainWindow>
 #include <QDebug>
-#include "DeviceEventFilter.h"
+#include "DeviceHotplug.h"
 
 #include <Windows.h>
 #include <Dbt.h>
 #include <devguid.h>
-// 具体的设备guid如usbiodef需要initguid
+// 具体的设备 GUID 需要 initguid, 如 usbiodef
 #include <initguid.h>
-// USB设备
+// USB 设备
 // GUID_DEVINTERFACE_USB_DEVICE
 #include <usbiodef.h>
-// HID人机交互设备-鼠标键盘等
+// HID 人机交互设备-鼠标键盘等
 #include <hidclass.h>
-// GUID_DEVINTERFACE_KEYBOARD
+// 键盘 GUID_DEVINTERFACE_KEYBOARD
 #include <ntddkbd.h>
-// GUID_DEVINTERFACE_MOUSE
+// 鼠标 GUID_DEVINTERFACE_MOUSE
 #include <ntddmou.h>
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
-    DeviceEventFilter filter;
+    DeviceHotplug filter;
     QVector<QUuid> uuids;
-    // 监测USB插拔
+    // 监测 USB 插拔
     uuids << GUID_DEVINTERFACE_USB_DEVICE;
     // 监测鼠标键盘插拔，有些有扩展功能的鼠标会同时触发键盘和鼠标的插拔事件
     // uuids << GUID_DEVINTERFACE_KEYBOARD << GUID_DEVINTERFACE_MOUSE;
     filter.init(uuids);
-    QObject::connect(&filter, &DeviceEventFilter::deviceAttached,
+    QObject::connect(&filter, &DeviceHotplug::deviceAttached,
                      &app, [](quint16 vid, quint16 pid){
         qDebug()<<"attached"<<QString::number(vid, 16)<<QString::number(pid, 16);
-    }, Qt::QueuedConnection);
-    QObject::connect(&filter, &DeviceEventFilter::deviceDetached,
+    });
+    QObject::connect(&filter, &DeviceHotplug::deviceDetached,
                      &app, [](quint16 vid, quint16 pid){
         qDebug()<<"detached"<<QString::number(vid, 16)<<QString::number(pid, 16);
-    }, Qt::QueuedConnection);
+    });
 
     QMainWindow w;
     w.resize(600, 500);
-    w.setWindowTitle("GongJianBo 1992");
+    w.setWindowTitle("DeviceHotplug (by GongJianBo 1992)");
     w.show();
 
     return app.exec();
