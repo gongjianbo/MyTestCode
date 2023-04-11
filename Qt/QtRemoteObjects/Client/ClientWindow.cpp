@@ -20,6 +20,7 @@ ClientWindow::ClientWindow(QWidget *parent)
         qDebug()<<"connectToNode finished";
         //可以设置acquire的name，和host.enableRemoting的name配对
         InterfaceReplica *irep = remoteNode.acquire<InterfaceReplica>("QRO");
+        //如果stateChanged直连槽函数调用接口，Qt5.15 mac上在拿返回值时会卡很久，可以使用QueuedConnection队列链接
         connect(irep,&InterfaceReplica::stateChanged,
                 this,[this](QRemoteObjectReplica::State state, QRemoteObjectReplica::State oldState){
             //五种状态，详见文档
@@ -34,7 +35,7 @@ ClientWindow::ClientWindow(QWidget *parent)
             const bool ok = (state == QRemoteObjectReplica::Valid);
             ui->btnConnect->setEnabled(!ok);
             ui->btnClose->setEnabled(ok);
-        });
+        }, Qt::QueuedConnection);
         //连接接口的信号槽
         connect(irep,&InterfaceReplica::dataChanged,[=](const QString &data){
             //测试直接调用槽函数获取返回值
