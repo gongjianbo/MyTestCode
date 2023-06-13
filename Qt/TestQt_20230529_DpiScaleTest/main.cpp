@@ -2,6 +2,7 @@
 #include <QQmlApplicationEngine>
 #include <QQuickWindow>
 #include <QQuickStyle>
+#include <QSurfaceFormat>
 #include <QFont>
 #include <QDebug>
 #include "MainWindow.h"
@@ -11,7 +12,7 @@ int main(int argc, char *argv[])
     // 在 pro 中修改 CONF_FILE 设置，使用 conf 设置缩放（比其他缩放优先级高），无论 qt5/6 都会模糊
     // qt6 默认开启缩放，但不支持 AA_DisableHighDpiScaling 等关闭设置
 
-#if 1
+#if 0
     // 关闭缩放
     // https://doc.qt.io/qt-6/highdpi.html
     // 参见文档，仅用于测试，且不支持 mac os 和 wayland 平台
@@ -33,10 +34,16 @@ int main(int argc, char *argv[])
 #   endif
 #endif
     // 如果是 qt5 的缩放，qml 中使用 nativetext 会有锯齿和撕裂
+    // 但是不使用 nativetext 字体又不太清晰
     QQuickWindow::setTextRenderType(QQuickWindow::NativeTextRendering);
     QQuickStyle::setStyle("Basic");
 
     QApplication app(argc, argv);
+
+    // Qt5 非 nativetext 可以设置多重采样来解决边框变粗等问题，但是 nativetext 会有模糊或者撕裂
+    //QSurfaceFormat sf = QSurfaceFormat::defaultFormat();
+    //sf.setSamples(16);
+    //QSurfaceFormat::setDefaultFormat(sf);
 
     qDebug() << app.font().families() << app.font().defaultFamily();
     QFont font;
