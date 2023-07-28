@@ -10,8 +10,9 @@ public:
     void paint(QPainter *painter) override;
 
     Q_INVOKABLE void rotate(double rotation);
+    Q_INVOKABLE void resize(int count);
 
 private:
-    int mLineCount{3600};
+    int mLineCount{360 * 4};
     double mRotation{0.0};
 };

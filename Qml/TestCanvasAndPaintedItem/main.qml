@@ -42,9 +42,15 @@ Window {
         id: timer
         repeat: true
         running: true
-        interval: 100
+        interval: 200
         property int rotation: 0
+        property int count: 360
         onTriggered: {
+            // count += 120
+            // if (count > 3600)
+            //     count = 360
+            // my_cnavas.resize(count)
+            // my_painted.resize(count)
             rotation++
             if (rotation > 360)
                 rotation = 0

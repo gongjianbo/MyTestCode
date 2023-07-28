@@ -3,12 +3,18 @@ import QtQuick 2.15
 Canvas {
     id: control
 
-    property real mLineCount: 3600
+    property real mLineCount: 360 * 4
     property real mRotation: 0
 
     function rotate(rotation)
     {
         mRotation = rotation
+        control.requestPaint()
+    }
+
+    function resize(count)
+    {
+        mLineCount = count
         control.requestPaint()
     }
 
@@ -20,16 +26,21 @@ Canvas {
 
         ctx.save()
         ctx.translate(width / 2, height / 2)
-        ctx.lineWidth = 1 + 1E-7
-        ctx.rotate((mRotation) * Math.PI / 180.0)
+        ctx.strokeStyle = Qt.rgba(0.5, 0, 0, 1)
+        ctx.lineWidth = 0.5 // + 1E-7
+        // QML Canvas 默认 flat, QPainter 默认 square
+        // 如果不使用 flat，多次旋转后可能会不均匀
+        ctx.lineCap = "square"
         for (var i = 0; i < mLineCount; i++)
         {
+            // 如果不使用 save/restore, 多次旋转后可能会不均匀
+            ctx.save()
+            ctx.rotate((mRotation + 360.0 / mLineCount * i) * Math.PI / 180.0)
             ctx.beginPath()
-            ctx.strokeStyle = Qt.rgba(i / mLineCount, 0, 0, 1)
             ctx.moveTo(0, 0)
             ctx.lineTo(r, 0)
             ctx.stroke()
-            ctx.rotate((360.0 / mLineCount) * Math.PI / 180.0)
+            ctx.restore()
         }
         ctx.restore()
         console.log("canvas end", Qt.formatDateTime(new Date, "hh:mm:ss.zzz"))

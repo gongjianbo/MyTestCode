@@ -23,14 +23,24 @@ void MyPaintedItem::paint(QPainter *painter)
     painter->setRenderHint(QPainter::Antialiasing, true);
 
     int r = qMin(rect.width(), rect.height()) / 2 - 2;
-    // QPainter 绘制的没 Canvas 均匀，加一点小数效果好一线
-    double line_width = 1.0 + 1E-7;
-    painter->rotate(mRotation);
+    double line_width = 0.5; // + 1E-7;
+    QPen pen;
+    pen.setColor(QColor(127, 0, 0));
+    pen.setWidthF(line_width);
+    pen.setJoinStyle(Qt::MiterJoin);
+    // QML Canvas 默认 flat, QPainter 默认 square
+    // 如果不使用 flat，多次旋转后可能会不均匀
+    // pen.setCapStyle(Qt::FlatCap);
     for (int i = 0; i < mLineCount; i++)
     {
-        painter->setPen(QPen(QColor(255.0 * i / mLineCount, 0, 0), line_width));
-        painter->drawLine(0, 0, r, 0);
-        painter->rotate(360.0 / mLineCount);
+        // 如果不使用 save/restore, 多次旋转后可能会不均匀
+        painter->save();
+        painter->rotate(mRotation + 360.0 / mLineCount * i);
+        QPainterPath path;
+        path.moveTo(0, 0);
+        path.lineTo(r, 0);
+        painter->strokePath(path, pen);
+        painter->restore();
     }
     painter->restore();
     qDebug() << "cpp end" << QTime::currentTime();
@@ -39,5 +49,11 @@ void MyPaintedItem::paint(QPainter *painter)
 void MyPaintedItem::rotate(double rotation)
 {
     mRotation = rotation;
+    update();
+}
+
+void MyPaintedItem::resize(int count)
+{
+    mLineCount = count;
     update();
 }
