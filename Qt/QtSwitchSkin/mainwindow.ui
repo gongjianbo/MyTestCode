@@ -55,8 +55,7 @@
        </sizepolicy>
       </property>
       <property name="text">
-       <string>龚建波 1992
-QQ交流群 647637553</string>
+       <string>龚建波1992</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>

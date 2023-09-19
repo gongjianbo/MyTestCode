@@ -9,7 +9,7 @@ Window {
     visible: true
     width: 850
     height: 600
-    title: qsTr("QML录音 (BY:龚建波1992  QQ群:647637553)")
+    title: qsTr("QML录音 (BY:龚建波1992)")
 
     AudioRecorderView{
         id: recorder
