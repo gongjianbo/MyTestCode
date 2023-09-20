@@ -77,6 +77,7 @@ Gitee（码云地址）: https://gitee.com/gongjianbo/MyTestCode
 - giflib 库学习 [[Code](./Qt/GifLib%E6%B5%8B%E8%AF%95%E4%BB%A3%E7%A0%81/)] 
 - giflib 读写 gif 文件 [[Code](https://github.com/gongjianbo/QtGifTool)] [[Blog](https://blog.csdn.net/gongjianbo1992/article/details/115449858)]
 - libsndfile 读写音频数据 [[Code](./Qt/libsndfile/)] [[Blog](https://blog.csdn.net/gongjianbo1992/article/details/99678466)]
+- httplib 基本操作及文件上传下载 [[Code](./Qt/TestQt_20230913_HttpLib/)] [[Blog](https://blog.csdn.net/gongjianbo1992/article/details/133075530)]
 - silk 音频转 wav [[Code](./Qt/SilkToWav/)] [[Blog](https://blog.csdn.net/gongjianbo1992/article/details/110351329)]
 - Win32 多进程 [[Code](./Qt/MultiProcess_Win/)] [[Blog](https://blog.csdn.net/gongjianbo1992/article/details/120030085)]
 - Win32 Dump [[Code](./Qt/TestQt_20210211_Dump/)] [[Blog](https://blog.csdn.net/gongjianbo1992/article/details/113791423)]
