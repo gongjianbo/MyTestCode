@@ -16,6 +16,16 @@ else()
     set(CL_ARCH "32")
 endif()
 
+if(WIN32)
+    set(CL_TYPE "win" ${CL_ARCH})
+elseif(ANDROID)
+    set(CL_TYPE "android")
+elseif(APPLE)
+    set(CL_TYPE "macos")
+elseif(UNIX)
+    set(CL_TYPE "linux")
+endif()
+
 if(MSVC)
     # 设置 UTF-8 编码
     add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")

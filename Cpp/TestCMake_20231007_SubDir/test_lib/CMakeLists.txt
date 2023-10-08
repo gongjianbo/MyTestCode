@@ -25,6 +25,13 @@ add_library(${LIB_NAME} SHARED
 #     target_link_libraries(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/../lib/xxx.lib)
 # endif()
 
+# 设置rpath
+if(APPLE)
+    set_target_properties(${LIB_NAME} PROPERTIES LINK_FLAGS "-Wl,-rpath,@loader_path")
+elseif(UNIX)
+    set_target_properties(${LIB_NAME} PROPERTIES LINK_FLAGS "-Wl,-rpath,$ORIGIN")
+endif()
+
 # install 放到 add_executable/add_library 之后，不然找不到
 # 安装命令的路径前缀，也可以用 install 命令的 prefix 参数指定
 # set(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/../)
