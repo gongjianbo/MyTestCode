@@ -1,6 +1,23 @@
 cmake_minimum_required(VERSION 3.10)
 
+# CMAKE_MSVC_RUNTIME_LIBRARY需要project()前设置cmake_policy
+# project()前CMAKE_CXX_COMPILER_ID无法使用，但WIN32可用
+if(WIN32 AND NOT CMAKE_VERSION VERSION_LESS 3.15)
+    cmake_policy(SET CMP0091 NEW)
+endif()
+
 project("TestCMake_20231007_SubDir")
+
+# 查看系统类型信息
+message("CMAKE_HOST_SYSTEM_NAME: ${CMAKE_HOST_SYSTEM_NAME}")
+message("CMAKE_HOST_SYSTEM: ${CMAKE_HOST_SYSTEM}")
+message("CMAKE_SYSTEM_NAME: ${CMAKE_SYSTEM_NAME}")
+message("CMAKE_SYSTEM: ${CMAKE_SYSTEM}")
+message("CMAKE_HOST_UNIX: ${CMAKE_HOST_UNIX}")
+message("CMAKE_HOST_WIN32: ${CMAKE_HOST_WIN32}")
+
+# 查看编译器类型
+message("CMAKE_CXX_COMPILER_ID: ${CMAKE_CXX_COMPILER_ID}")
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -32,6 +49,7 @@ if(MSVC)
     add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /D_UNICODE /DUNICODE")
     # 设置 MT/MTd
+    # 需要CMake版本>=3.15，且在project()语句前设置cmake_policy(SET CMP0091 NEW)
     set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 endif()
 
