@@ -27,6 +27,10 @@ int main(int argc, char *argv[])
     qDebug()<<"sys"<<font.family();
 
     qmlRegisterType<MyQuickWindow>("Test", 2, 15, "MyWindow");
+    // QWindow 里面用了很多 Q_REVISION 宏做版本控制
+    // 继承后的 QML 组件不能直接访问这些属性，需要注册下相关类型的 REVISION
+    qmlRegisterRevision<QQuickWindow, 15>("Test", 2, 15);
+    qmlRegisterRevision<QWindow, 15>("Test", 2, 15);
 
     QQmlApplicationEngine engine;
     const QUrl url(QStringLiteral("qrc:/main.qml"));
