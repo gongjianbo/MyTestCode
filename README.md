@@ -125,6 +125,7 @@ Gitee（码云地址）: https://gitee.com/gongjianbo/MyTestCode
 - Control1 TreeView 选中效果 [[Code](./Qml/TestQml_20221120_TreeSelection/)] [[Blog](https://blog.csdn.net/gongjianbo1992/article/details/127956454)]
 - 练习，多个 View 共享数据 [[Code](./Qml/TestQml_20220709_CommonData/)] [[Blog](https://blog.csdn.net/gongjianbo1992/article/details/125712442)]
 - QML Image 通过 QQuickImageProvider 加载图片 [[Code](./Qml/TestQml_20221225_ImageProvider/)] [[Blog](https://blog.csdn.net/gongjianbo1992/article/details/128439262)]
+- QML Image 通过 QQuickAsyncImageProvider 异步加载图片 [[Code](./Qml/TestQml_20240118_AsyncImageProvider/)] [[Blog](https://blog.csdn.net/gongjianbo1992/article/details/135691893)]
 - FPS 统计 [[Code](./Qml/TestQml_20230211_QmlFps/)]
 - 制作 QML 扩展插件 [[Code](https://github.com/gongjianbo/QmlExtensionPlugin)] [[Blog](https://blog.csdn.net/gongjianbo1992/article/details/104079885)]
 - 嵌套 ListView 实现 TreeView [[Code](https://github.com/gongjianbo/QmlTreeView)] [[Blog](https://blog.csdn.net/gongjianbo1992/article/details/90575519)]
