@@ -11,20 +11,19 @@ Window {
         id: image
         anchors.centerIn: parent
         cache: false
-        //image://provider id/image id
+        // image://provider_id/image_id
         source: "image://Provider/imageTag/0"
-        //指定Image的sourceSize会作为requestedSize参数
-        //sourceSize: Qt.size(120, 120)
+        // 指定 Image 的 sourceSize 会作为 requestedSize 参数，默认是 QSize(-1, -1)
+        // sourceSize: Qt.size(120, 120)
     }
 
-    property int id: 0
+    property int updateNum: 0
     Connections {
         target: provider
         function onImageChanged(imageTag) {
-            //Image的load接口不是public的，所以只能切换url来重新加载数据
-            //可能Image的设计就是用于加载静态图像的
-            id++
-            image.source = "image://Provider/" + imageTag + "/" + id
+            // Image 的 load 接口不是 public 的，所以只能切换 url 来重新加载数据
+            updateNum++
+            image.source = "image://Provider/" + imageTag + "/" + updateNum
         }
     }
 }
