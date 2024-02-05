@@ -128,6 +128,7 @@ Gitee（码云地址）: https://gitee.com/gongjianbo/MyTestCode
 - QML Image 通过 QQuickAsyncImageProvider 异步加载图片 [[Code](./Qml/TestQml_20240118_AsyncImageProvider/)] [[Blog](https://blog.csdn.net/gongjianbo1992/article/details/135691893)]
 - FPS 统计 [[Code](./Qml/TestQml_20230211_QmlFps/)]
 - 制作 QML 扩展插件 [[Code](https://github.com/gongjianbo/QmlExtensionPlugin)] [[Blog](https://blog.csdn.net/gongjianbo1992/article/details/104079885)]
+- ListView 实现带 section 的 GridView [[Code](./Qml/TestQml_20240205_SectionGrid/)] [[Blog](https://blog.csdn.net/gongjianbo1992/article/details/136039983)]
 - 嵌套 ListView 实现 TreeView [[Code](https://github.com/gongjianbo/QmlTreeView)] [[Blog](https://blog.csdn.net/gongjianbo1992/article/details/90575519)]
 - 封装 QPainter 在 QML 中使用 [[Code](https://github.com/gongjianbo/QmlPainter)] 
 - Qt6 QML TreeView 基本使用 [[Code](./Qml/TestQml_20220422_Qt6TreeView/)] [[Blog](https://blog.csdn.net/gongjianbo1992/article/details/124373674)]
