@@ -61,6 +61,7 @@ Gitee（码云地址）: https://gitee.com/gongjianbo/MyTestCode
 - 隐式共享练习 [[Code](./Qt/TestQt_20211225_SharedData/)]
 - 事件流程练习 [[Code](./Qt/TestQt_20220915_EventFlow/)]
 - 自定义事件 [[Code](./Qt/TestQt_20230710_CustomEvent/)]
+- Qt zip 读写类 QZipReader/QZipWriter [[Code](./Qt/TestQt_20240226_QZip/)]
 - Qt 获取 DPI 缩放比 [[Code](./Qt/TestQt_20231221_Dpi/)] [[Blog](https://blog.csdn.net/gongjianbo1992/article/details/135128484)]
 - Qt DPI 缩放测试 [[Code](./Qt/TestQt_20230529_DpiScaleTest/)]
 - Qt Widgets 换肤 [[Code](./Qt/QtSwitchSkin/)] [[Blog](https://blog.csdn.net/gongjianbo1992/article/details/106608353)]
