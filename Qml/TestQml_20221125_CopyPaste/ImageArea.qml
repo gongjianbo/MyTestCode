@@ -85,7 +85,8 @@ Rectangle {
         //hotSpot是鼠标与imageSource的偏移距离
         Drag.hotSpot.x: 5
         Drag.hotSpot.y: 5
-        //拖拽类型默认Drag.Internal不知道干嘛的
+        //拖拽类型默认Drag.Internal动画是拖动Item
+        //Drag.Automatic动画是拖动imageSource，结束后才移动Item
         Drag.dragType: Drag.Automatic
         //拖拽拷贝文件，默认好像是移动了文件
         Drag.supportedActions: Qt.CopyAction
