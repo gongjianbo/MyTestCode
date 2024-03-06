@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>flower.png</file>
+        <file>TestInternal.qml</file>
+        <file>TestAutomatic.qml</file>
+        <file>TestDragHandler.qml</file>
+        <file>TestNone.qml</file>
+    </qresource>
+</RCC>
