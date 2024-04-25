@@ -1,6 +1,7 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include "MyMouseArea.h"
+#include "MyMouseFilter.h"
 
 int main(int argc, char *argv[])
 {
@@ -9,6 +10,7 @@ int main(int argc, char *argv[])
 #endif
     QGuiApplication app(argc, argv);
 
+    qmlRegisterType<MyMouseFilter>("Test", 1, 0, "MyMouseFilter");
     qmlRegisterType<MyMouseArea>("Test", 1, 0, "MyMouseArea");
     qmlRegisterRevision<QQuickMouseArea, 15>("Test", 1, 0);
 
