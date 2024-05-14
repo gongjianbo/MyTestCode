@@ -1,0 +1,66 @@
+syntax = "proto3";
+package MyPackage;
+
+// void 空参数
+message Empty {
+
+}
+
+// 用户信息
+message UserInfo {
+    // 用户信息
+    string user = 1; 
+}
+
+// 消息类型
+enum MsgType {
+    TipMsg = 0;
+    // 图片增删改查的消息
+    InsertImageMsg = 1;
+    DeleteImageMsg = 2;
+    UpdateImageMsg = 3;
+    SelectImageMsg = 4;
+}
+
+// 同步消息
+message MsgInfo {
+    // 消息类型
+    MsgType type = 1; 
+    // 消息内容
+    string msg = 2;
+}
+
+// 图片信息
+message ImageInfo {
+    // 图片 ID
+    int64 id = 1;
+    // 更新信息
+    int64 time = 2;
+    // 备注信息
+    string comment = 3;
+    // JSON 放到字符串中
+    string json = 4;
+    // 图片文件的内容
+    // 新增/修改时 Request 设置
+    // 查询时 Response 设置
+    bytes data = 5;
+}
+
+// 定义服务
+service MyServer {
+    // 客户端登录，登陆后添加到已连接列表，开始缓存待推送消息
+    rpc login (UserInfo) returns (Empty);
+    // 客户端退出，从列表移除
+    rpc logout (UserInfo) returns (Empty);
+    // 消息查询，将缓存的消息全部发送给客户端
+    rpc syncMessage (MsgInfo) returns (stream MsgInfo);
+
+    // 新增图片
+    rpc insertImage (ImageInfo) returns (ImageInfo);
+    // 删除图片
+    rpc deleteImage (ImageInfo) returns (ImageInfo);
+    // 修改图片
+    rpc updateImage (ImageInfo) returns (ImageInfo);
+    // 查询图片
+    rpc selectImage (ImageInfo) returns (ImageInfo);
+}
