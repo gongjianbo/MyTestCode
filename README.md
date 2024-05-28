@@ -45,6 +45,7 @@ Gitee（码云地址）: https://gitee.com/gongjianbo/MyTestCode
 - QTextEdit 几种高亮设置 [[Code](./Qt/TextEditHighlight/)] [[Blog](https://blog.csdn.net/gongjianbo1992/article/details/122527076)]
 - QDataWidgetMapper，数据 Model 与组件属性绑定 [[Code](./Qt/TestQt_20200615_DataMapper/)] [[Blog](https://blog.csdn.net/gongjianbo1992/article/details/106772319)]
 - UI 线程与子线程交互 [[Code](./Qt/UiAndSubThread/)] [[Blog](https://blog.csdn.net/gongjianbo1992/article/details/105171077)]
+- 多线程进度值同步 [[Code](./Qt/Qt/TestQt_20240528_Progress/)] 
 - 打开文件夹并选中文件 [[Code](./Qt/TestQt_20230218_ShowInFolder/)] [[Blog](https://blog.csdn.net/gongjianbo1992/article/details/129233861)]
 - QCharts 练习 [[Code](./Qt/TestQt_20190907_QChartsSeries/)]
 - QCharts 添加背景图片 [[Code](./Qt/TestQt_20190806_QChartsBackground/)] [[Blog](https://blog.csdn.net/gongjianbo1992/article/details/98615059)]
