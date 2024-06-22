@@ -106,6 +106,7 @@ Gitee（码云地址）: https://gitee.com/gongjianbo/MyTestCode
 - QML 实现程序退出确认功能 [[Code](./Qml/QmlCloseEvent/)] [[Blog](https://blog.csdn.net/gongjianbo1992/article/details/108270551)]
 - QML 实现输入框 Completer 自动补全 [[Code](./Qml/QmlCompleter/)] [[Blog](https://blog.csdn.net/gongjianbo1992/article/details/122569547)]
 - QML 实现分页组件 [[Code](./Qml/QmlPagination/)] [[Blog](https://blog.csdn.net/gongjianbo1992/article/details/111820528)]
+- QML 实现上浮后消失的提示框 [[Code](./Qml/TestQml_20240622_Toast/)] [[Blog](https://blog.csdn.net/gongjianbo1992/article/details/139891612)]
 - QML 实现一个 IP 地址输入框 [[Code](./Qml/TestQml_20210717_IpInput/)] [[Blog](https://blog.csdn.net/gongjianbo1992/article/details/118860100)]
 - QML 用 PathView 实现轮播图 [[Blog](https://blog.csdn.net/gongjianbo1992/article/details/103517663)]
 - QML 自定义 Loading 等待样式（一） [[Code](https://github.com/gongjianbo/QmlComponentStyle)] [[Blog](https://blog.csdn.net/gongjianbo1992/article/details/112748866)]
