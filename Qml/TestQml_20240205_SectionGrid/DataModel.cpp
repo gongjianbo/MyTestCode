@@ -59,21 +59,26 @@ void DataModel::appendData(int value, const QString &date)
         item.date = date;
         SectionInfo inner;
         inner.index = 0;
-        beginInsertRows(QModelIndex(), 0, 0);
+        // 这里本来应该insert到0，但是在Qt5.15实测有bug
+        // 如果顶部不可见再insert到0，会新增一个section，原来的section没有移动到最前
+        // 所以取巧insert到1，然后再把这个分组整体刷新一下
+        beginInsertRows(QModelIndex(), 1, 1);
         datas.push_front(item);
         inners.push_front(inner);
         endInsertRows();
-        // 刷新该组
-        int update_count = 0;
+
+        // 刷新该组index
+        int last_index = 0;
         // 0 是新插入，1 是旧 0
         for (int i = 1; i < inners.size(); i++) {
             auto &&inner_i = inners[i];
             if (i > 1 && inner_i.index == 0)
                 break;
             inner_i.index = i;
-            update_count ++;
+            last_index++;
         }
-        emit dataChanged(QAbstractListModel::index(1, 0), QAbstractListModel::index(1 + update_count, 0));
+        // 没更新数据的可以置顶具体role刷新
+        emit dataChanged(QAbstractListModel::index(0, 0), QAbstractListModel::index(last_index, 0));
     }
 }
 

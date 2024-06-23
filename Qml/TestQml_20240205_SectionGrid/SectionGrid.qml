@@ -25,6 +25,27 @@ Rectangle {
                           ? 1
                           : (list_view.width + spacing - padding) / delegateWidth
 
+    // 增删测试
+    Row {
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        anchors.margins: 10
+        z: 10
+        spacing: 10
+        Button {
+            text: "append"
+            onClicked: {
+                list_model.appendData(10, "2022.2.22")
+            }
+        }
+        Button {
+            text: "remove"
+            onClicked: {
+                list_model.removeData(0)
+            }
+        }
+    }
+
     // 套一层 Item clip 剪去 ListView 尾巴上多余的部分不显示出来
     Item {
         anchors.fill: parent
