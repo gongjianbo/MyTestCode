@@ -56,8 +56,8 @@ Window {
                 }
             }
             // 内部嵌套弹框
-            // 如果内部是 NoAutoClose 会把外部关闭，如果内部接收 ESC 则关闭内部，可能是特定版本 BUG
-            // 安卓返回内外会同时触发 close，可能是特定版本 BUG
+            // 如果内部是 NoAutoClose 会把外部关闭，如果内部接收 ESC 则关闭内部，Qt6 已修复
+            // 安卓返回内外会同时触发 close，Qt6 已修复
             QC2.Dialog {
                 id: qc2_sub
                 closePolicy: QC2.Dialog.NoAutoClose
@@ -114,7 +114,15 @@ Window {
         // 模态设置不影响安卓返回触发
         modality: Qt.NonModal
         // 安卓上 Window 默认全屏，所以用透明背景的方式来显示，但是不能点击外层组件
-        color: "transparent"
+        color: "#88282828"
+        // 安卓侧滑操作后会导致当前 Window 的 MouseArea 失效
+        // 因为上次的 touch press 还没 release，Qt6 已修复
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {
+                console.log("Window outsize clicked")
+            }
+        }
         Rectangle {
             anchors.centerIn: parent
             width: 200
@@ -123,7 +131,7 @@ Window {
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
-                    // hide 在安卓上界面会残留，可能是特定版本 BUG
+                    // hide 在安卓上界面会残留，Qt6 已修复
                     // win.hide()
                     win_sub.show()
                 }
@@ -133,7 +141,7 @@ Window {
                 width: 200
                 height: 200
                 modality: Qt.NonModal
-                color: "transparent"
+                color: "#88282828"
                 Rectangle {
                     anchors.centerIn: parent
                     width: 100

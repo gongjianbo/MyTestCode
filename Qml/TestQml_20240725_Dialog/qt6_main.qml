@@ -84,7 +84,13 @@ Window {
         // 模态设置不影响安卓返回触发
         modality: Qt.NonModal
         // 安卓上 Window 默认全屏，所以用透明背景的方式来显示，但是不能点击外层组件
-        color: "transparent"
+        color: "#88282828"
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {
+                console.log("Window outsize clicked")
+            }
+        }
         Rectangle {
             anchors.centerIn: parent
             width: 200
@@ -101,7 +107,7 @@ Window {
                 width: 200
                 height: 200
                 modality: Qt.NonModal
-                color: "transparent"
+                color: "#88282828"
                 Rectangle {
                     anchors.centerIn: parent
                     width: 100
