@@ -128,6 +128,7 @@ Gitee（码云地址）: https://gitee.com/gongjianbo/MyTestCode
 - PathView 实现环形菜单 [[Code](./Qml/TestQml_20220313_PathView/)] [[Blog](https://blog.csdn.net/gongjianbo1992/article/details/123465756)]
 - QML 实现图片拖入拖出、剪贴板复制粘贴 [[Code](./Qml/TestQml_20221125_CopyPaste/)] [[Blog](https://blog.csdn.net/gongjianbo1992/article/details/128058766)]
 - Drag Drop 测试 [[Code](./Qml/TestQml_20240305_DragDrop/)] 
+- Dialog / Window 对于 ESC 返回和安卓返回的测试 [[Code](./Qml/TestQml_20240725_Dialog/)]
 - Control1 TreeView 选中效果 [[Code](./Qml/TestQml_20221120_TreeSelection/)] [[Blog](https://blog.csdn.net/gongjianbo1992/article/details/127956454)]
 - 练习，多个 View 共享数据 [[Code](./Qml/TestQml_20220709_CommonData/)] [[Blog](https://blog.csdn.net/gongjianbo1992/article/details/125712442)]
 - QML Image 通过 QQuickImageProvider 加载图片 [[Code](./Qml/TestQml_20221225_ImageProvider/)] [[Blog](https://blog.csdn.net/gongjianbo1992/article/details/128439262)]
