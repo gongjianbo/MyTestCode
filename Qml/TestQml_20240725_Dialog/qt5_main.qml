@@ -4,44 +4,41 @@ import QtQuick.Controls 2.15 as QC2
 import QtQuick.Dialogs 1.3 as QD1
 
 Window {
+    id: win_root
     width: 640
     height: 480
     visible: true
     title: qsTr("QML Dialog")
     color: "orange"
-    onClosing: (event)=>{
-                   console.log("Window root closing")
-                   event.accepted = false
-               }
 
     Row {
         spacing: 10
         QC2.Button {
             text: "qc2"
             onClicked: {
-                qc2.open()
+                qc2_pop.open()
             }
         }
         QC2.Button {
             text: "qd1"
             onClicked: {
-                qd1.open()
+                qd1_pop.open()
             }
         }
         QC2.Button {
             text: "win"
             onClicked: {
-                win.show()
+                win_pop.show()
             }
         }
     }
     // 叠加 Dialog 时，内部 Dialog 需要 parent 可见才能显示
-    // 安卓返回时 Dialog 和 Window 的 close 都会触发，不好解决
+    // 安卓返回时 Dialog 如果是 CloseOnPressOutside，Window 的 close 也会触发
     QC2.Dialog {
-        id: qc2
+        id: qc2_pop
         width: 200
         height: 200
-        // modal: true
+        modal: true
         padding: 0
         // closePolicy 会影响 ESC 响应以及安卓返回处理
         // 默认 Popup.CloseOnEscape | Popup.CloseOnPressOutside
@@ -56,11 +53,11 @@ Window {
                 }
             }
             // 内部嵌套弹框
-            // 如果内部是 NoAutoClose 会把外部关闭，如果内部接收 ESC 则关闭内部，Qt6 已修复
+            // 如果内部是非模态 NoAutoClose 会把外部关闭，如果内部接收 ESC 则关闭内部，Qt6 已修复
             // 安卓返回内外会同时触发 close，Qt6 已修复
             QC2.Dialog {
                 id: qc2_sub
-                closePolicy: QC2.Dialog.NoAutoClose
+                // closePolicy: QC2.Dialog.NoAutoClose
                 width: 100
                 height: 100
                 Rectangle {
@@ -70,7 +67,7 @@ Window {
                         anchors.fill: parent
                         onClicked: {
                             qc2_sub.close()
-                            qc2.close()
+                            qc2_pop.close()
                         }
                     }
                 }
@@ -80,12 +77,12 @@ Window {
             }
         }
         onClosed: {
-            console.log("Dialog close")
+            console.log("Dialog pop close")
         }
     }
     // Qt6 只能用他的子类了，不能直接用来自定义弹窗
     QD1.Dialog {
-        id: qd1
+        id: qd1_pop
         // 默认 WindowModal
         // modality: Qt.NonModal
         // 默认的 contentItem 会处理 ESC 关闭窗口
@@ -99,15 +96,29 @@ Window {
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
-                    qd1.close()
+                    qd1_pop.close()
                 }
             }
         }
     }
+    // 安卓侧滑返回按键后会触发 close，还导致当前 Window 的点击区域永久失效
+    // 安卓侧滑Home按键后不会触发 close，还会导致当前 Window 的点击区域失效一次
+    // 因为上次的 touch press 还没 release，Qt6 已修复
+    MouseArea {
+        z: -1
+        anchors.fill: parent
+        onClicked: {
+            console.log("Window root clicked")
+        }
+    }
+    onClosing: (event)=>{
+                   console.log("Window root closing")
+                   event.accepted = false
+               }
     // 叠加 Window，安卓返回会依次处理 close
     // 没有模态阴影和点外部自动关闭的效果，但是可以自定义
     Window {
-        id: win
+        id: win_pop
         width: 200
         height: 200
         // 默认 WindowModal
@@ -115,12 +126,10 @@ Window {
         modality: Qt.NonModal
         // 安卓上 Window 默认全屏，所以用透明背景的方式来显示，但是不能点击外层组件
         color: "#88282828"
-        // 安卓侧滑操作后会导致当前 Window 的 MouseArea 失效
-        // 因为上次的 touch press 还没 release，Qt6 已修复
         MouseArea {
             anchors.fill: parent
             onClicked: {
-                console.log("Window outsize clicked")
+                console.log("Window pop clicked")
             }
         }
         Rectangle {
@@ -132,7 +141,7 @@ Window {
                 anchors.fill: parent
                 onClicked: {
                     // hide 在安卓上界面会残留，Qt6 已修复
-                    // win.hide()
+                    // win_pop.hide()
                     win_sub.show()
                 }
             }
@@ -151,7 +160,7 @@ Window {
                         anchors.fill: parent
                         onClicked: {
                             win_sub.close()
-                            win.close()
+                            win_pop.close()
                         }
                     }
                 }
@@ -161,7 +170,7 @@ Window {
             }
         }
         onClosing: (event)=>{
-                       console.log("Window closing")
+                       console.log("Window pop closing")
                    }
     }
 }

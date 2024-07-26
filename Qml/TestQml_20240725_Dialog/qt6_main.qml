@@ -2,35 +2,32 @@ import QtQuick
 import QtQuick.Controls as QC2
 
 Window {
+    id: win_root
     width: 640
     height: 480
     visible: true
     title: qsTr("QML Dialog")
     color: "orange"
-    onClosing: (event)=>{
-                   console.log("Window root closing")
-                   event.accepted = true
-               }
 
     Row {
         spacing: 10
         QC2.Button {
             text: "qc2"
             onClicked: {
-                qc2.open()
+                qc2_pop.open()
             }
         }
         QC2.Button {
             text: "win"
             onClicked: {
-                win.show()
+                win_pop.show()
             }
         }
     }
     // 叠加 Dialog 时，内部 Dialog 需要 parent 可见才能显示
-    // 安卓返回时 Dialog 和 Window 的 close 都会触发，不好解决
+    // 安卓返回时 Dialog 如果是 CloseOnPressOutside，Window 的 close 也会触发
     QC2.Dialog {
-        id: qc2
+        id: qc2_pop
         width: 200
         height: 200
         modal: true
@@ -48,7 +45,7 @@ Window {
                 }
             }
             // 内部嵌套弹框
-            // 逐层处理 ESC 和安卓返回
+            // 逐层处理 ESC 和安卓返回，但是如果处理了返回就会触发 Window 的 close
             QC2.Dialog {
                 id: qc2_sub
                 // closePolicy: QC2.Dialog.NoAutoClose
@@ -61,7 +58,7 @@ Window {
                         anchors.fill: parent
                         onClicked: {
                             qc2_sub.close()
-                            qc2.close()
+                            qc2_pop.close()
                         }
                     }
                 }
@@ -71,13 +68,27 @@ Window {
             }
         }
         onClosed: {
-            console.log("Dialog close")
+            console.log("Dialog pop close")
         }
     }
+    // 安卓侧滑返回按键后会触发 close
+    // 安卓侧滑Home按键后不会触发 close
+    // Qt6.7.2 Home 后再打开会弹出软键盘
+    MouseArea {
+        z: -1
+        anchors.fill: parent
+        onClicked: {
+            console.log("Window root clicked")
+        }
+    }
+    onClosing: (event)=>{
+                   console.log("Window root closing")
+                   event.accepted = false
+               }
     // 叠加 Window，安卓返回会依次处理 close
     // 没有模态阴影和点外部自动关闭的效果，但是可以自定义
     Window {
-        id: win
+        id: win_pop
         width: 200
         height: 200
         // 默认 WindowModal
@@ -88,7 +99,7 @@ Window {
         MouseArea {
             anchors.fill: parent
             onClicked: {
-                console.log("Window outsize clicked")
+                console.log("Window pop clicked")
             }
         }
         Rectangle {
@@ -117,7 +128,7 @@ Window {
                         anchors.fill: parent
                         onClicked: {
                             win_sub.close()
-                            win.close()
+                            win_pop.close()
                         }
                     }
                 }
@@ -127,7 +138,7 @@ Window {
             }
         }
         onClosing: (event)=>{
-                       console.log("Window closing")
+                       console.log("Window pop closing")
                    }
     }
 }
