@@ -138,6 +138,7 @@ Gitee（码云地址）: https://gitee.com/gongjianbo/MyTestCode
 - ListView 实现带 section 的 GridView [[Code](./Qml/TestQml_20240205_SectionGrid/)] [[Blog](https://blog.csdn.net/gongjianbo1992/article/details/136039983)]
 - 嵌套 ListView 实现 TreeView [[Code](https://github.com/gongjianbo/QmlTreeView)] [[Blog](https://blog.csdn.net/gongjianbo1992/article/details/90575519)]
 - 封装 QPainter 在 QML 中使用 [[Code](https://github.com/gongjianbo/QmlPainter)] 
+- 测试结构体在 QML 中的释放问题 [[Code](./Qml/TestQml_20240823_Struct/)]
 - Qt6 QML TreeView 基本使用 [[Code](./Qml/TestQml_20220422_Qt6TreeView/)] [[Blog](https://blog.csdn.net/gongjianbo1992/article/details/124373674)]
 - Qt6 QML 日历样式自定义 [[Code](./Qml/TestQml_20220416_Qt6Calendar/)] [[Blog](https://blog.csdn.net/gongjianbo1992/article/details/124212915)]
 
