@@ -127,6 +127,7 @@ Gitee（码云地址）: https://gitee.com/gongjianbo/MyTestCode
 - Qt 多语言翻译（国际化）[[Code](./Qml/TestQml_20211215_Translator/)] [[Blog](https://blog.csdn.net/gongjianbo1992/article/details/122014168)]
 - PathView 实现环形菜单 [[Code](./Qml/TestQml_20220313_PathView/)] [[Blog](https://blog.csdn.net/gongjianbo1992/article/details/123465756)]
 - QML 实现图片拖入拖出、剪贴板复制粘贴 [[Code](./Qml/TestQml_20221125_CopyPaste/)] [[Blog](https://blog.csdn.net/gongjianbo1992/article/details/128058766)]
+- QML 对组件截图 [[Code](./Qml/TestQml_20240905_GrabImage/)] 
 - Drag Drop 测试 [[Code](./Qml/TestQml_20240305_DragDrop/)] 
 - Dialog / Window 对于 ESC 返回和安卓返回的测试 [[Code](./Qml/TestQml_20240725_Dialog/)]
 - Control1 TreeView 选中效果 [[Code](./Qml/TestQml_20221120_TreeSelection/)] [[Blog](https://blog.csdn.net/gongjianbo1992/article/details/127956454)]
