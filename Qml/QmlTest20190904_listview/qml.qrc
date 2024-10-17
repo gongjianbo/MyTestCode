@@ -1,7 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file>main.qml</file>
-        <file>AbnormalSignal.qml</file>
-        <file>AbnormalTableView.qml</file>
-    </qresource>
-</RCC>
