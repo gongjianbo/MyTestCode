@@ -53,6 +53,7 @@ int main(int argc, char *argv[])
                 if (req.is_multipart_form_data()) {
                     httplib::MultipartFormDataItems files;
                     // 先拿到 file 信息，再流式读取
+                    // 通过file信息创建文件，然后持续写data数据，结束后关闭文件
                     content_reader(
                         [&](const httplib::MultipartFormData &file) {
                             files.push_back(file);

@@ -12,6 +12,8 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    // 操作说明
+    ui->textResult->setPlainText(R"(httpbin网站只测试请求方式，测试文件传输用本地server)");
     // 数值也用字符串简化转换操作
     ui->textRequest->setPlainText(R"({
 "user":"gongjianbo",
@@ -162,6 +164,7 @@ void MainWindow::doUp()
     httplib::Result res = cli.Post("/upload", form_items);
 #else
     // 大文件用流式接口
+    // 打开文件后，provider回调读分片数据并发送，判断发完后调用done结束，传输完后关闭文件
     httplib::MultipartFormDataProvider provider;
     provider.name = "myfile";
     provider.filename = "hello.txt";
