@@ -84,6 +84,7 @@ Gitee（码云地址）: https://gitee.com/gongjianbo/MyTestCode
 - silk 音频转 wav [[Code](./Qt/SilkToWav/)] [[Blog](https://blog.csdn.net/gongjianbo1992/article/details/110351329)]
 - Win32 多进程 [[Code](./Qt/MultiProcess_Win/)] [[Blog](https://blog.csdn.net/gongjianbo1992/article/details/120030085)]
 - Win32 Dump [[Code](./Qt/TestQt_20210211_Dump/)] [[Blog](https://blog.csdn.net/gongjianbo1992/article/details/113791423)]
+- Win32 判断窗口是否活跃 [[Code](./Qt/TestQt_20250314_WindowActiveHook/)]
 - lodepng / stb_image / fpng / QImage 读写 png 速度测试 [[Code](./Qt/TestQt_20241017_PNG/)] 
 - grpc 同步模式练习（不含库文件） [[Code](./Qt/TestQt_20240511_GRPC/)] 
 
