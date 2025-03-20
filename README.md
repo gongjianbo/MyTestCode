@@ -74,6 +74,7 @@ Gitee（码云地址）: https://gitee.com/gongjianbo/MyTestCode
 - USB 热插拔检测（Windows） [[Code](./Qt/DeviceHotplug_Win/)] [[Blog](https://blog.csdn.net/gongjianbo1992/article/details/128702423)]
 - USB 热插拔检测（MacOS） [[Code](./Qt/DeviceHotplug_Mac/)] [[Blog](https://blog.csdn.net/gongjianbo1992/article/details/129780213)]
 - axcontainer 写 doc 和 xls [[Code](./Qt/TestQt_20211012_DocXls/)]
+- uchardet 检测文本编码 [[Code](./Qt/TestQt_20250320_TextDecode/)]
 - 自定义 ini 读写类 [[Code](./Qt/TestQt_20210425_ini/)] [[Blog](https://blog.csdn.net/gongjianbo1992/article/details/116239087)]
 - Assimp 加载 3D 模型 [[Code](./Qt/TestQt_20211018_Assimp/)] [[Blog](https://blog.csdn.net/gongjianbo1992/article/details/120857151)]
 - FFmpeg 获取音频信息 [[Code](./Qt/GetAudioInfo/)] [[Blog-1](https://blog.csdn.net/gongjianbo1992/article/details/109832829)] [[Blog-2](https://blog.csdn.net/gongjianbo1992/article/details/109975687)]
