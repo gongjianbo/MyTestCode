@@ -1,6 +1,6 @@
-QT       += core gui widgets
+QT += core gui widgets
 
-CONFIG += c++11 utf8_source
+CONFIG += c++17 utf8_source
 
 DESTDIR = $$PWD/bin
 
@@ -16,14 +16,18 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    CustomSettings.cpp \
     EasyIni.cpp \
     main.cpp \
     mainwindow.cpp \
+    settingio.cpp \
     settings.cpp
 
 HEADERS += \
+    CustomSettings.h \
     EasyIni.h \
     mainwindow.h \
+    settingio.h \
     settings.h
 
 FORMS += \

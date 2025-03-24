@@ -24,21 +24,21 @@ EasyIni::~EasyIni()
 
 void EasyIni::dumpInfo() const
 {
-    qDebug()<<"[dump ini info]";
-    for(auto agroup:iniData.datas)
+    qDebug() << "[dump ini info]";
+    for (auto agroup : qAsConst(iniData.datas))
     {
-        if(!agroup.isHead)
-            qDebug()<<"[group]"<<agroup.group;
-        for(auto arow:agroup.rows)
+        if (!agroup.isHead)
+            qDebug() << "[group]" << agroup.group;
+        for (auto arow : qAsConst(agroup.rows))
         {
-            if(arow.isValid){
-                qDebug()<<"\t[key]"<<arow.key<<"[value]"<<arow.value;
-            }else{
-                qDebug()<<"\t[unknown]"<<arow.key;
+            if (arow.isValid) {
+                qDebug() << "\t[key]" << arow.key << "[value]" << arow.value;
+            } else {
+                qDebug() << "\t[unknown]" << arow.key;
             }
         }
     }
-    //qDebug()<<iniData.allgroups;
+    // qDebug() << iniData.allgroups;
 }
 
 QStringList EasyIni::groups() const
@@ -52,7 +52,7 @@ QStringList EasyIni::keys(const QString &group) const
 {
     QStringList key_list;
     int group_index = iniData.allgroups.indexOf(group);
-    if(group.isEmpty()||group_index<0)
+    if (group.isEmpty() || group_index < 0)
         return key_list;
     auto result = iniData.datas.at(group_index).allkeys;
     result.removeAll(QString());
@@ -62,11 +62,11 @@ QStringList EasyIni::keys(const QString &group) const
 QVariant EasyIni::value(const QString &group, const QString &key) const
 {
     int group_index = iniData.allgroups.indexOf(group);
-    if(group.isEmpty()||key.isEmpty()||group_index<0)
+    if (group.isEmpty() || key.isEmpty() || group_index < 0)
         return QVariant();
 
     int key_index = iniData.datas.at(group_index).allkeys.indexOf(key);
-    if(key_index<0)
+    if (key_index < 0)
         return QVariant();
 
     return iniData.datas.at(group_index).rows.at(key_index).value;
@@ -74,61 +74,61 @@ QVariant EasyIni::value(const QString &group, const QString &key) const
 
 void EasyIni::setValue(const QString &group, const QString &key, const QVariant &value)
 {
-    if(group.isEmpty()||key.isEmpty())
+    if (group.isEmpty() || key.isEmpty())
         return;
-    //如果是不存在的分组则创建
+    // 如果是不存在的分组则创建
     int group_index = iniData.allgroups.indexOf(group);
-    if(group_index<0){
+    if (group_index < 0) {
         IniGroup ini_group;
         ini_group.isHead = false;
         ini_group.group = group;
         iniData.datas.push_back(ini_group);
         iniData.allgroups.push_back(group);
-        group_index = iniData.allgroups.count()-1;
+        group_index = iniData.allgroups.count() - 1;
     }
-    //如果不存在key则创建
+    // 如果不存在key则创建
     int key_index = iniData.datas.at(group_index).allkeys.indexOf(key);
-    if(key_index<0){
+    if (key_index < 0) {
         IniRow ini_row;
         ini_row.isValid = true;
         ini_row.key = key;
-        //ini_row.value = value;
+        // ini_row.value = value;
         iniData.datas[group_index].rows.push_back(ini_row);
         iniData.datas[group_index].allkeys.push_back(key);
-        key_index = iniData.datas.at(group_index).allkeys.count()-1;
+        key_index = iniData.datas.at(group_index).allkeys.count() - 1;
     }
-    //插入这里有点疑问，就是
+    // 插入这里有点疑问，就是
     iniData.datas[group_index].rows[key_index].value = value;
-    //标记为已修改状态，在save时判断
+    // 标记为已修改状态，在save时判断
     iniData.change = true;
 }
 
 void EasyIni::save()
 {
-    //只读
-    if(EasyIni::ReadOnly == iniMode)
+    // 只读
+    if (EasyIni::ReadOnly == iniMode)
         return;
 
-    if(iniData.change && isWritable()){
-        qDebug()<<"save ini"<<inipath;
+    if (iniData.change && isWritable()) {
+        qDebug() << "save ini" << inipath;
         QFile file(inipath);
-        //QIODevice::Text on windows endl=\r\n
-        if(file.open(QIODevice::WriteOnly|QIODevice::Truncate|QIODevice::Text))
+        // QIODevice::Text on windows endl=\r\n
+        if (file.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text))
         {
             QTextStream t_s(&file);
             t_s.setCodec("utf-8");
-            for(auto agroup:iniData.datas)
+            for (auto agroup : qAsConst(iniData.datas))
             {
-                if(!agroup.isHead){
-                    t_s<<'['<<agroup.group<<']'<<endl;
+                if (!agroup.isHead) {
+                    t_s << '[' << agroup.group << ']' << endl;
                 }
 
-                for(auto arow:agroup.rows)
+                for (auto arow : qAsConst(agroup.rows))
                 {
-                    if(arow.isValid){
-                        t_s<<arow.key<<'='<<variantToString(arow.value)<<endl;
-                    }else{
-                        t_s<<arow.key<<endl;
+                    if (arow.isValid) {
+                        t_s << arow.key << '=' << variantToString(arow.value) << endl;
+                    } else {
+                        t_s << arow.key << endl;
                     }
                 }
             }
@@ -139,89 +139,89 @@ void EasyIni::save()
 
 void EasyIni::load(const QString &filepath)
 {
-    //保存当前的
+    // 保存当前的
     save();
 
     iniData = IniData{ };
-    const QString path = filepath.isEmpty()?inipath:filepath;
+    const QString path = filepath.isEmpty() ? inipath : filepath;
     inipath = path;
 
     QFile file(path);
-    if((EasyIni::WriteOnly == iniMode) ||
-            !file.exists() ||
-            !file.open(QIODevice::ReadOnly|QIODevice::Text)){
+    if ((EasyIni::WriteOnly == iniMode) ||
+        !file.exists() ||
+        !file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         return;
     }
 
-    qDebug()<<"load ini"<<inipath;
+    qDebug() << "load ini" << inipath;
 
     IniData ini_data;
     IniGroup ini_group;
     IniRow ini_row;
     QTextStream t_s(&file);
     t_s.setCodec("utf-8");
-    //qDebug()<<"all"<<t_s.readAll();
+    // qDebug() << "all" << t_s.readAll();
 
-    //默认分组
-    ini_group.isHead=true;
-    while(!t_s.atEnd()){
-        //去掉首尾空格
-        QString line_data=t_s.readLine().trimmed();
-        //qDebug()<<"-- line:"<<line_data<<line_data.length();
+    // 默认分组
+    ini_group.isHead = true;
+    while (!t_s.atEnd()) {
+        // 去掉首尾空格
+        QString line_data = t_s.readLine().trimmed();
+        // qDebug() << "-- line:" << line_data << line_data.length();
 
-        if(line_data.count()<3||
-                line_data[0]==';'||
-                line_data[0]=='#'){
-            //长度小于三无效: a=0 or [a] 注释暂不考虑
-            ini_row.isValid=false;
-            ini_row.key=line_data;
+        if (line_data.count() < 3 ||
+            line_data[0] == ';' ||
+            line_data[0] == '#') {
+            // 长度小于三无效: a=0 or [a] 注释暂不考虑
+            ini_row.isValid = false;
+            ini_row.key = line_data;
             ini_row.value.clear();
 
             ini_group.rows.push_back(ini_row);
             ini_group.allkeys.push_back(QString());
-            //qDebug()<<"invalid"<<line_data;
-        }else if(line_data[0]=='['&&
-                 line_data[line_data.length()-1]==']'){
-            //分组
+            // qDebug() << "invalid" << line_data;
+        } else if (line_data[0] == '[' &&
+                   line_data[line_data.length()-1] == ']') {
+            // 分组
             ini_data.datas.push_back(ini_group);
             ini_data.allgroups.push_back(ini_group.group);
 
-            ini_group.isHead=false;
-            ini_group.group=line_data.mid(1,line_data.count()-2);
+            ini_group.isHead = false;
+            ini_group.group = line_data.mid(1, line_data.count() - 2);
 
             ini_group.rows.clear();
             ini_group.allkeys.clear();
-            //qDebug()<<"group"<<ini_group.group;
-        }else{
-            ini_row.isValid=false;
-            int split_index=line_data.indexOf('=');
-            if(split_index>0&&split_index<line_data.length()-1){
-                QString key=line_data.mid(0,split_index).trimmed();
-                QString value=line_data.mid(split_index+1,line_data.length()-split_index-1).trimmed();
-                if(!key.isEmpty()&&!value.isEmpty()){
-                    ini_row.isValid=true;
-                    ini_row.key=key;
-                    ini_row.value=stringToVariant(value);
+            // qDebug() << "group" << ini_group.group;
+        } else {
+            ini_row.isValid = false;
+            int split_index = line_data.indexOf('=');
+            if (split_index > 0 && split_index < line_data.length() - 1) {
+                QString key = line_data.mid(0, split_index).trimmed();
+                QString value = line_data.mid(split_index + 1, line_data.length() - split_index - 1).trimmed();
+                if (!key.isEmpty() && !value.isEmpty()) {
+                    ini_row.isValid = true;
+                    ini_row.key = key;
+                    ini_row.value = stringToVariant(value);
 
                     ini_group.rows.push_back(ini_row);
                     ini_group.allkeys.push_back(key);
-                    //qDebug()<<"key-value"<<key<<value;
+                    // qDebug() << "key-value" << key << value;
                 }
             }
-            if(!ini_row.isValid){
-                ini_row.key=line_data;
+            if (!ini_row.isValid) {
+                ini_row.key = line_data;
                 ini_row.value.clear();
 
                 ini_group.rows.push_back(ini_row);
                 ini_group.allkeys.push_back(QString());
-                //qDebug()<<"invalid"<<line_data;
+                // qDebug() << "invalid" << line_data;
             }
         }
     }
     file.close();
 
-    //最后一个分组的数据
-    if(ini_group.isHead||(ini_data.allgroups.count()>0&&ini_group.isHead!=true)){
+    // 最后一个分组的数据
+    if (ini_group.isHead || (ini_data.allgroups.count() > 0 && ini_group.isHead != true)) {
         ini_data.datas.push_back(ini_group);
         ini_data.allgroups.push_back(ini_group.group);
     }
@@ -231,18 +231,18 @@ void EasyIni::load(const QString &filepath)
 
 bool EasyIni::isWritable() const
 {
-    bool result=false;
+    bool result = false;
     QFileInfo fileinfo(inipath);
-    if(fileinfo.exists()){
+    if (fileinfo.exists()) {
         QFile file(inipath);
-        result=file.open(QFile::ReadWrite);
+        result = file.open(QFile::ReadWrite);
         file.close();
-    }else{
+    } else {
         QDir dir(fileinfo.absolutePath());
-        if(dir.exists()||dir.mkpath(dir.absolutePath())){
-            //临时文件
+        if (dir.exists() || dir.mkpath(dir.absolutePath())) {
+            // 临时文件
             QTemporaryFile file(inipath);
-            result=file.open();
+            result = file.open();
             file.close();
         }
     }
@@ -261,8 +261,8 @@ QString EasyIni::variantToString(const QVariant &v)
     case QVariant::ByteArray: {
         QByteArray a = v.toByteArray();
         result = QLatin1String("@ByteArray(")
-                + QLatin1String(a.constData(), a.size())
-                + QLatin1Char(')');
+                 + QLatin1String(a.constData(), a.size())
+                 + QLatin1Char(')');
         break;
     }
 
@@ -318,8 +318,8 @@ QString EasyIni::variantToString(const QVariant &v)
         }
 
         result = QLatin1String(typeSpec)
-                + QLatin1String(a.constData(), a.size())
-                + QLatin1Char(')');
+                 + QLatin1String(a.constData(), a.size())
+                 + QLatin1Char(')');
 #else
         Q_ASSERT(!"stringToVariant: Cannot save custom types without QDataStream support");
 #endif

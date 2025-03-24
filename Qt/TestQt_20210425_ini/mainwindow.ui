@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>488</width>
-    <height>344</height>
+    <width>431</width>
+    <height>300</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -25,21 +25,21 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QLineEdit" name="lineEdit">
+       <widget class="QLineEdit" name="qtEdit">
         <property name="text">
          <string>qsettings.ini</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="btnWrite">
+       <widget class="QPushButton" name="qtWrite">
         <property name="text">
          <string>write</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="btnRead">
+       <widget class="QPushButton" name="qtRead">
         <property name="text">
          <string>read</string>
         </property>
@@ -50,28 +50,60 @@
     <item>
      <widget class="QLabel" name="label_2">
       <property name="text">
-       <string>My EasyIni</string>
+       <string>CustomSettings</string>
       </property>
      </widget>
     </item>
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
-       <widget class="QLineEdit" name="myEdit">
+       <widget class="QLineEdit" name="customEdit">
         <property name="text">
-         <string>easyini.ini</string>
+         <string>custom_utf16le.ini</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="myWrite">
+       <widget class="QPushButton" name="customWrite">
         <property name="text">
          <string>write</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="myRead">
+       <widget class="QPushButton" name="customRead">
+        <property name="text">
+         <string>read</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <widget class="QLabel" name="label_3">
+      <property name="text">
+       <string>EasyIni</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_3">
+      <item>
+       <widget class="QLineEdit" name="easyEdit">
+        <property name="text">
+         <string>easyini.ini</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="easyWrite">
+        <property name="text">
+         <string>write</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="easyRead">
         <property name="text">
          <string>read</string>
         </property>
@@ -99,8 +131,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>488</width>
-     <height>23</height>
+     <width>431</width>
+     <height>21</height>
     </rect>
    </property>
   </widget>
