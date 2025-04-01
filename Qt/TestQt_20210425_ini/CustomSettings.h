@@ -44,8 +44,8 @@ private:
  * 借鉴：qt-everywhere-src-5.15.2/qtbase/src/corelib/io/qsettings.h
  * 借鉴：https://github.com/linuxdeepin/deepin-terminal
  * @note
- * QSettings有缓存，如果先用A编码读取，那再用B编码打开依然会用到之前的数据
- * 不同QSettings::Format不能混用操作同一个文件，
+ * QSettings有缓存，如果先用A编码读取，那再用B编码打开依然会用到之前的数据，文件修改后才会重新读取
+ * 不同QSettings::Format不能混用操作同一个文件
  */
 class CustomSettings : public QSettings
 {
