@@ -9,6 +9,20 @@
 #include <QSize>
 #include <QDebug>
 
+// QSettings默认会把未分组的放到general分组，用户general分组放到%general分组
+// 考虑到general比较常用，改为放custom_settings分组，且不转义用户已有的分组
+#define CustomDefaultSection "custom_settings"
+// QSttings内部的读写接口map key是QSettingsKey类型，可以保存原始的顺序，但是公有回调接口没有
+// 可以在map中存放顺序相关的内容，在回写到文件时根据顺序写入
+#define CustomSectionList "SectionList"
+// 分组数据
+struct CustomSettingsSection
+{
+    int originIndex;
+    QString section;
+    QMap<QString, QVariant> settings;
+};
+
 QTextCodec *CustomSettingsIO::iniCodec = QTextCodec::codecForName("UTF-16LE");
 
 bool CustomSettingsIO::readIniFunc(QIODevice &device, QSettings::SettingsMap &settingsMap)
@@ -17,6 +31,9 @@ bool CustomSettingsIO::readIniFunc(QIODevice &device, QSettings::SettingsMap &se
     QTextStream stream(&device);
     stream.setCodec(parseCodec(device));
 
+    // 原始的sectionList
+    QStringList sectionList;
+    sectionList.append(CustomDefaultSection);
     QString currentSection;
     QString line;
     while (!stream.atEnd()) {
@@ -37,16 +54,22 @@ bool CustomSettingsIO::readIniFunc(QIODevice &device, QSettings::SettingsMap &se
                 section = line.mid(1);
             else
                 section = line.mid(1, idx - 1);
+            // 暂不支持带/的section，丢弃/后半段
+            if (section.contains('/')) {
+                section = section.left(section.indexOf('/'));
+            }
             section = section.trimmed();
-            // QSettings默认会把未分组的放到general分组，用户general分组放到%general分组
-            // 考虑到general比较常用，改为放custom_settings分组，且不转义用户已有的分组
-            if (0 == section.compare(QString("custom_settings"), Qt::CaseInsensitive)) {
-                currentSection.clear();
+            if (0 == section.compare(QString(CustomDefaultSection), Qt::CaseInsensitive)) {
+                currentSection = CustomDefaultSection;
             } else {
                 currentSection = section;
-                // 加的/分隔符是放到QSettings::SettingsMap时和ini-key拼接成map-key用的
-                currentSection += QChar('/');
             }
+            // 保存section顺序
+            if (!sectionList.contains(currentSection)) {
+                sectionList.append(currentSection);
+            }
+            // 加的/分隔符是放到QSettings::SettingsMap时和ini-key拼接成map-key用的
+            currentSection += QChar('/');
         } else {
             // 取key-value键值对
             int idx = line.indexOf('=');
@@ -59,6 +82,7 @@ bool CustomSettingsIO::readIniFunc(QIODevice &device, QSettings::SettingsMap &se
             // qDebug() << "insert" << key << value;
         }
     }
+    settingsMap[CustomDefaultSection "/" CustomSectionList] = sectionList;
     return true;
 }
 
@@ -70,6 +94,48 @@ bool CustomSettingsIO::writeIniFunc(QIODevice &device, const QSettings::Settings
 #else
     const char *eol = "\n";
 #endif
+
+    // 根据保存的section顺序重新排序
+    QVector<CustomSettingsSection> settingsVec;
+    {
+        QStringList sectionList = settingsMap.value(CustomDefaultSection "/" CustomSectionList).toStringList();
+        CustomSettingsSection lastSection;
+        QMapIterator<QString, QVariant> it(settingsMap);
+        while (it.hasNext()) {
+            it.next();
+            QString key = it.key();
+            QString section;
+            int idx = key.indexOf(QChar('/'));
+            if (-1 == idx) {
+                // 异常值，暂时放到默认分组
+                section = CustomDefaultSection;
+            } else {
+                section = key.left(idx);
+                key = key.mid(idx + 1);
+            }
+            if (section.compare(lastSection.section, Qt::CaseInsensitive)) {
+                if (section == CustomDefaultSection && key == CustomSectionList)
+                    continue;
+                if (!lastSection.section.isEmpty())
+                    settingsVec.append(lastSection);
+                lastSection.originIndex = sectionList.indexOf(section);
+                // 无效index设置为较大的值用于排序到末尾
+                if (lastSection.originIndex == -1) {
+                    lastSection.originIndex = 99999;
+                }
+                lastSection.section = section;
+                lastSection.settings.clear();
+            }
+            lastSection.settings.insert(key, it.value());
+        }
+        if (!lastSection.section.isEmpty())
+            settingsVec.append(lastSection);
+        settingsVec[0].settings.remove(CustomSectionList);
+        std::sort(settingsVec.begin(), settingsVec.end(), [](const CustomSettingsSection &left, const CustomSettingsSection &right) {
+            return left.originIndex < right.originIndex;
+        });
+    }
+
     QTextStream stream(&device);
     // 设置编码
     stream.setCodec(iniCodec);
@@ -77,34 +143,19 @@ bool CustomSettingsIO::writeIniFunc(QIODevice &device, const QSettings::Settings
     stream.setGenerateByteOrderMark(true);
 
     bool writeError = false;
-    QString lastSection;
-    QMapIterator<QString, QVariant> it(settingsMap);
-    while (it.hasNext() && !writeError) {
-        it.next();
-        QString key = it.key();
-        QString section;
-        int idx = key.indexOf(QChar('/'));
-        if (-1 == idx) {
-            // QSettings默认会把未分组的放到general分组，用户general分组放到%general分组
-            // 考虑到general比较常用，改为放custom_settings分组，且不转义用户已有的分组
-            section = QString("custom_settings");
-        } else {
-            section = key.left(idx);
-            key = key.mid(idx + 1);
-            section.prepend(QChar('['));
-            section.append(QChar(']'));
-        }
-        if (section.compare(lastSection, Qt::CaseInsensitive)) {
-            if (!lastSection.isEmpty())
-                stream << eol;
-            lastSection = section;
-            stream << section << eol;
+    for (auto &&section : qAsConst(settingsVec))
+    {
+        stream << "[" << section.section << "]" << eol;
+        if (stream.status() != QTextStream::Ok)
+            break;
+        QMapIterator<QString, QVariant> it(section.settings);
+        while (it.hasNext() && !writeError) {
+            it.next();
+            stream << it.key() << "=" << variantToString(it.value()) << eol;
             if (stream.status() != QTextStream::Ok)
                 writeError = true;
         }
-        stream << key << "=" << variantToString(it.value()) << eol;
-        if (stream.status() != QTextStream::Ok)
-            writeError = true;
+        stream << eol;
     }
     return true;
 }

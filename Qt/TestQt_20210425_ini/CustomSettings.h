@@ -8,16 +8,15 @@
  * @brief 自定义ini读写
  * @author 龚建波
  * @date 2025-03-21
- * @details
- * 因为读写接口没法传入额外的信息，如QSetting设置的codec编码信息，只能根据设置注册不同的QSettings::Format
- * 可以不判断设置的codec，用固定的编码
- * 也可以根据文件bom判断格式，不支持的就用默认utf8读写，但是没法获取文件名不能保证读写编码一致
+ * @note
+ * 1.QSttings内部的读写接口map key是QSettingsKey类型，可以保存原始的顺序，但是公有回调接口没有
+ * 2.读写接口只有map来传递数据，可以把文件编码/key顺序等信息存在map中，在回写时使用
  */
 class CustomSettingsIO
 {
 public:
     // QSettings::registerFormat注册用到的读取回调
-    static bool readIniFunc(QIODevice &device,  QSettings::SettingsMap &settingsMap);
+    static bool readIniFunc(QIODevice &device, QSettings::SettingsMap &settingsMap);
     // QSettings::registerFormat注册用到的写入回调
     static bool writeIniFunc(QIODevice &device, const QSettings::SettingsMap &settingsMap);
 
@@ -44,8 +43,9 @@ private:
  * 借鉴：qt-everywhere-src-5.15.2/qtbase/src/corelib/io/qsettings.h
  * 借鉴：https://github.com/linuxdeepin/deepin-terminal
  * @note
- * QSettings有缓存，如果先用A编码读取，那再用B编码打开依然会用到之前的数据，文件修改后才会重新读取
- * 不同QSettings::Format不能混用操作同一个文件
+ * 1.QSettings有缓存，如果先用A编码读取，那再用B编码打开依然会用到之前的数据，文件修改后才会重新读取
+ * 2.不同QSettings::Format不能混用操作同一个文件
+ * 3.要支持section带/字符，参考deepin-terminal项目
  */
 class CustomSettings : public QSettings
 {
