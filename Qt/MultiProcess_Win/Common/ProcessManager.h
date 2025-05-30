@@ -26,72 +26,72 @@ private:
 public:
     ~ProcessManager();
 
-    //单例操作，每个应用只有一个manager和worker
+    // 单例操作，每个应用只有一个manager和worker
     static ProcessManager *getInstance();
 
-    //初始化，启动时调用一次
-    //limit=worker进程的最大限制数
+    // 初始化，启动时调用一次
+    // limit=worker进程的最大限制数
     bool init(int limit = 10);
-    //是否处于活动状态
-    //未初始化默认false
-    //init时置为true
-    //释放时置为false
+    // 是否处于活动状态
+    // 未初始化默认false
+    // init时置为true
+    // 释放时置为false
     bool isActive() const;
 
-    //获取exe所在目录
+    // 获取exe所在目录
     Q_INVOKABLE static QString getAppPath();
 
-    //启动进程
-    //exePath: 可执行文件的路径
-    //key: 做为表唯一键，用以区分相同文件多次启动
-    //argList: 启动参数
-    //visible: 如果要显示界面则置位true，对应SW_SHOW
-    //autoRestart: 循环检测进程是否正常运行，异常时会重启该进程
+    // 启动进程
+    // exePath: 可执行文件的路径
+    // key: 做为表唯一键，用以区分相同文件多次启动
+    // argList: 启动参数
+    // visible: 如果要显示界面则置位true，对应SW_SHOW
+    // autoRestart: 循环检测进程是否正常运行，异常时会重启该进程
     bool startProcess(const QString &exePath,
                       const QString &key = QString(),
                       const QStringList &argList = QStringList(),
                       bool visible = false,
                       bool autoRestart = true);
 
-    //结束进程
-    //key: 做为表唯一键，用以区分相同文件多次启动
-    //     如果startProcess没填key，也可以传exe路径来查找
+    // 结束进程
+    // key: 做为表唯一键，用以区分相同文件多次启动
+    // 如果startProcess没填key，也可以传exe路径来查找
     bool stopProcess(const QString &key);
 
 private:
-    //启动进程
+    // 启动进程
     bool doStart(const ProcessInfo &proInfo);
-    //结束进程
-    //tableKey: processTable的键，key参数空则使用exePath作为键
+    // 结束进程
+    // tableKey: processTable的键，key参数空则使用exePath作为键
     bool doStop(const QString &tableKey);
-    //退出轮询线程
+    // 退出轮询线程
     void freeGuard();
-    //轮询检测并重启autoRestart=true的异常进程
+    // 轮询检测并重启autoRestart=true的异常进程
     void initGuard();
-    //轮询状态，guardProcess中调用
+    // 轮询状态，guardProcess中调用
     void patrol();
-    //更新当前管理的进程key列表
+    // 更新当前管理的进程key列表
     void updateKeys();
 
 signals:
-    //某个进程异常结束了
-    //todo 因为检测多次后才重启，所以会重复触发该信号
+    // 某个进程异常结束了
+    // todo 因为检测多次后才重启，所以会重复触发该信号
     void processCrashed(const QString &exePath, const QString &key);
-    //某个进程重启了
+    // 某个进程重启了
     void processRestarted(const QString &exePath, const QString &key);
-    //进程列表更新
+    // 进程列表更新
     void keysChanged(const QStringList &keys);
 
 private:
-    //预设进程数上限
+    // 预设进程数上限
     int processLimit{ 10 };
-    //管理的进程列表
+    // 管理的进程列表
     QHash<QString,ProcessInfo> processTable;
-    //会在多线程环境调用操作接口
+    // 会在多线程环境调用操作接口
     std::mutex theMtx;
-    //轮询线程启停标志
+    // 轮询线程启停标志
     std::atomic_bool guardFlag{ false };
-    //轮询线程
+    // 轮询线程
     std::thread *guardThread{ nullptr };
 };
 

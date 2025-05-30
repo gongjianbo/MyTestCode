@@ -5,7 +5,7 @@
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
-    //初始化进程管理
+    // 初始化进程管理
     ProcessManager::getInstance()->init(5);
 
     MainWindow w;

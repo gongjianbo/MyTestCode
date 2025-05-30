@@ -24,34 +24,34 @@ private:
 public:
     ~ProcessWorker();
 
-    //单例操作，每个应用只有一个manager和worker
+    // 单例操作，每个应用只有一个manager和worker
     static ProcessWorker *getInstance();
 
-    //根据pid初始化
+    // 根据pid初始化
     bool init(DWORD pid);
-    //是否处于活动状态
-    //未初始化默认false
-    //init时置为true
-    //managerFinished时置为false
+    // 是否处于活动状态
+    // 未初始化默认false
+    // init时置为true
+    // managerFinished时置为false
     bool isActive() const;
 
 private:
-    //轮询检测manager进程是否存在
+    // 轮询检测manager进程是否存在
     void initWorker();
-    //正常退出
+    // 正常退出
     void freeWorker();
-    //检测manager进程
+    // 检测manager进程
     bool pidActive(DWORD pid) const;
 
 signals:
-    //主进程退出了，提示本进程也可以结束了
+    // 主进程退出了，提示本进程也可以结束了
     void managerFinished();
 
 private:
-    //worker进程保存manager进程的pid，判断是否退出了
+    // worker进程保存manager进程的pid，判断是否退出了
     DWORD processPid{ 0 };
-    //轮询线程启停标志
+    // 轮询线程启停标志
     std::atomic_bool guardFlag{ false };
-    //轮询线程
+    // 轮询线程
     std::thread *guardThread{ nullptr };
 };
