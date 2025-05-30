@@ -96,7 +96,7 @@ LRESULT CALLBACK DeviceHotplugPrivate::windowMessageProcess(HWND hwnd, UINT mess
 // 窗口类名
 QString DeviceHotplugPrivate::windowClassName()
 {
-    return QLatin1String("Qt_DeviceHotplug_Window_") + QString::number(quintptr(windowMessageProcess));
+    return QLatin1String("Qt_DeviceHotplug_Window_") + QString::number(::GetCurrentProcessId());
 }
 
 // 创建一个用于接收消息的窗口，注册消息回调
