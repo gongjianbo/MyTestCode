@@ -15,11 +15,13 @@ DEFINES += NOMINMAX
 DEFINES += QT_DEPRECATED_WARNINGS
 
 HEADERS += \
+    MessageObject.h \
     ProcessDefine.h \
     ProcessManager.h \
     ProcessWorker.h
 
 SOURCES += \
+    MessageObject.cpp \
     ProcessManager.cpp \
     ProcessWorker.cpp
 
