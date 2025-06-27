@@ -1,6 +1,6 @@
 #include <QApplication>
 #include <QQmlApplicationEngine>
-#include "FileDialogWrap.h"
+#include "BasicFileDialog.h"
 
 int main(int argc, char *argv[])
 {
@@ -9,8 +9,7 @@ int main(int argc, char *argv[])
 #endif
     QApplication app(argc, argv);
 
-    FileDialogWrap::initSetting(qApp->applicationDirPath() + "/filedialog.ini");
-    qmlRegisterType<FileDialogWrap>("GongJianBo", 1, 0, "FileDialog");
+    qmlRegisterType<BasicFileDialog>("GongJianBo", 1, 0, "BasicFileDialog");
 
     QQmlApplicationEngine engine;
     const QUrl url(QStringLiteral("qrc:/main.qml"));

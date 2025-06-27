@@ -1,5 +1,7 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
+        <file>FileDialogManager.qml</file>
+        <file>qmldir</file>
     </qresource>
 </RCC>
