@@ -5,13 +5,13 @@ QML_IMPORT_NAME = MyModel
 QML_IMPORT_MAJOR_VERSION = 1
 
 SOURCES += \
-        MyTreeModel.cpp \
-        main.cpp
+    MyTreeModel.cpp \
+    main.cpp
 
 HEADERS += \
     MyTreeModel.h
 
-resources.files = main.qml MyTreeView.qml
+resources.files = main.qml BaseTreeView.qml MyTreeView.qml
 resources.prefix = /$${TARGET}
 RESOURCES += resources
 

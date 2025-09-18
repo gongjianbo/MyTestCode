@@ -2,62 +2,90 @@ import QtQuick
 import QtQuick.Controls
 import MyModel
 
+// qt6 qml TreeView样式自定义
+// 龚建波 2025-09-19
 TreeView {
     id: control
+    clip: true
 
     model: MyTreeModel {
         id: tree_model
         Component.onCompleted: {
-            tree_model.resetItems();
+            tree_model.resetItems()
         }
     }
 
-    //可以用预定义的TreeViewDelegate样式，也可以自定义
-    //delegate: TreeViewDelegate { }
-    delegate: Item {
-        id: root
+    selectionModel: ItemSelectionModel {
+        id: tree_selection
+    }
 
-        implicitWidth: padding + label.x + label.implicitWidth + padding
-        implicitHeight: label.implicitHeight * 1.5
+    // 行样式
+    delegate: TreeViewDelegate {
+        id: tree_del
+        readonly property real _padding: 5
+        readonly property real szHeight: contentItem.implicitHeight * 2
 
-        readonly property real indent: 20
-        readonly property real padding: 5
+        implicitWidth: _padding + contentItem.x + contentItem.implicitWidth + _padding
+        implicitHeight: szHeight
 
-        //标记为required的属性将由TreeView填充，与附加属性类似。
-        //delegate间接通知TreeView它应该负责为它们分配值。可以将以下必需属性添加到delegate：
-        //
-        //指向包含delegate Item的TreeView
-        required property TreeView treeView
-        //项目是否代表树中的一个节点
-        //视图中只有一列将用于绘制树，因此，只有该列中的delegate Item项才会将此属性设置为true。
-        //树中的节点通常应根据其缩进，如果是则depth显示指示符。
-        //其他列中的delegate Item将将此属性设置为，并将显示模型中其余列的数据（通常不缩进）。
-        required property bool isTreeNode
-        //绘制的model Item是否在视图中展开
-        required property bool expanded
-        //绘制的model Item是否在模型中有子项
-        required property int hasChildren
-        //包含delegate绘制的model Item的深度。model Item的深度与其在模型中的祖先数量相同
-        required property int depth
-
-        //鼠标点击
-        TapHandler {
-            onTapped: treeView.toggleExpanded(row)
+        background: Rectangle { // Background rectangle enabled to show the alternative row colors
+            id: background
+            anchors.fill: parent
+            color: {
+                if (tree_del.model.row === tree_del.treeView.currentRow) {
+                    return "lightBlue"
+                } else {
+                    // 隔行变色
+                    if (tree_del.treeView.alternatingRows && tree_del.model.row % 2 !== 0) {
+                        return "#F8F8F8"
+                    } else {
+                        return "#F0F0F0"
+                    }
+                }
+            }
+            Rectangle { // The selection indicator shown on the left side of the highlighted row
+                width: tree_del._padding
+                height: parent.height
+                visible: !tree_del.model.column
+                color: {
+                    if (tree_del.model.row === tree_del.treeView.currentRow) {
+                        return (Application.styleHints.colorScheme === Qt.Light) ?
+                                    Qt.darker(palette.highlight, 1.25) :
+                                    Qt.lighter(palette.highlight, 2.)
+                    } else {
+                        return "transparent"
+                    }
+                }
+            }
         }
 
-        Text {
-            id: indicator
-            visible: root.isTreeNode && root.hasChildren
-            x: padding + (root.depth * root.indent)
-            text: root.expanded ? "▼" : "▶"
+        // 展开收起按钮
+        indicator: Item {
+            x: tree_del._padding + tree_del.depth * tree_del.indentation
+            implicitWidth: tree_del.szHeight
+            implicitHeight: tree_del.szHeight
+            visible: tree_del.isTreeNode && tree_del.hasChildren
+            rotation: tree_del.expanded ? 90 : 0
+            // TreeViewDelegate内部自动给indicator创建了TapHandler
+            // TapHandler {
+            //     onSingleTapped: {
+            //         let index = tree_del.treeView.index(tree_del.model.row, tree_del.model.column)
+            //         tree_del.treeView.selectionModel.setCurrentIndex(index, ItemSelectionModel.NoUpdate)
+            //         tree_del.treeView.toggleExpanded(tree_del.model.row)
+            //     }
+            // }
+            Text {
+                anchors.centerIn: parent
+                text: "▶"
+            }
         }
 
-        Text {
-            id: label
-            x: padding + (root.isTreeNode ? (root.depth + 1) * root.indent : 0)
-            width: root.width - root.padding - x
-            clip: true
-            text: model.display
+        // 文本内容，会根据model的行列取值
+        contentItem: Label {
+            x: tree_del._padding + (tree_del.depth + 1 * tree_del.indentation)
+            width: parent.width - tree_del._padding - x
+            text: tree_del.model.display
+            elide: Text.ElideRight
         }
     }
 }

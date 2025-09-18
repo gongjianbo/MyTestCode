@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;
 
-    const QUrl url(u"qrc:/TestQml_20220422_Qt6TreeView/main.qml"_qs);
+    const QUrl url("qrc:/TestQml_20220422_Qt6TreeView/main.qml");
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
                      &app, [url](QObject *obj, const QUrl &objUrl) {
         if (!obj && url == objUrl)
