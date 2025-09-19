@@ -11,7 +11,7 @@ SOURCES += \
 HEADERS += \
     MyTreeModel.h
 
-resources.files = main.qml BaseTreeView.qml MyTreeView.qml
+resources.files = main.qml QmlTreeView.qml MyTreeView.qml
 resources.prefix = /$${TARGET}
 RESOURCES += resources
 

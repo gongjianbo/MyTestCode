@@ -3,6 +3,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 
 Window {
+    id: root
     width: 640
     height: 480
     visible: true
@@ -12,13 +13,12 @@ Window {
         anchors.fill: parent
         anchors.margins: 10
         spacing: 10
-        Row {
-            spacing: 10
-            MyButton {
-                text: "Clear"
-                onClicked: tree_model.clear()
-            }
-        }
+        // Row {
+        //     spacing: 10
+        //     MyButton {
+        //         text: "Test"
+        //     }
+        // }
         Rectangle {
             Layout.fillWidth: true
             Layout.fillHeight: true

@@ -105,7 +105,7 @@ void MyTreeModel::resetItems()
 void MyTreeModel::clear()
 {
     beginResetModel();
-    rootItem.clear();
+    rootItem->subItems.clear();
     endResetModel();
 }
 
@@ -119,4 +119,3 @@ MyTreeItem *MyTreeModel::getItem(const QModelIndex &idx) const
     }
     return rootItem.get();
 }
-
