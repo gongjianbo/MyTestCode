@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="FixedGLWidget" name="view1"/>
+    </item>
+    <item row="0" column="1">
+     <widget class="ProgramGLWidget" name="view2"/>
+    </item>
+    <item row="1" column="0">
+     <widget class="QOpenGLWidget" name="view3"/>
+    </item>
+    <item row="1" column="1">
+     <widget class="QOpenGLWidget" name="view4"/>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuOp">
+    <property name="title">
+     <string>操作</string>
+    </property>
+    <addaction name="loadImage"/>
+   </widget>
+   <addaction name="menuOp"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="loadImage">
+   <property name="text">
+    <string>加载图片</string>
+   </property>
+  </action>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>FixedGLWidget</class>
+   <extends>QOpenGLWidget</extends>
+   <header>FixedGLWidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>ProgramGLWidget</class>
+   <extends>QOpenGLWidget</extends>
+   <header>ProgramGLWidget.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

@@ -77,6 +77,7 @@ Gitee（码云地址）: https://gitee.com/gongjianbo/MyTestCode
 - uchardet 检测文本编码 [[Code](./Qt/TestQt_20250320_TextDecode/)]
 - 自定义 ini 读写类 [[Code](./Qt/TestQt_20210425_ini/)] [[Blog](https://blog.csdn.net/gongjianbo1992/article/details/116239087)]
 - QSettings::registerFormat 自定义 ini 读写 [[Code](./Qt/TestQt_20210425_ini/)] [[Blog](https://blog.csdn.net/gongjianbo1992/article/details/146471593)]
+- OpenGL 纹理渲染测试 [[code](./Qt/TestQt_20251030_GLWidget/)]
 - Assimp 加载 3D 模型 [[Code](./Qt/TestQt_20211018_Assimp/)] [[Blog](https://blog.csdn.net/gongjianbo1992/article/details/120857151)]
 - FFmpeg 获取音频信息 [[Code](./Qt/GetAudioInfo/)] [[Blog-1](https://blog.csdn.net/gongjianbo1992/article/details/109832829)] [[Blog-2](https://blog.csdn.net/gongjianbo1992/article/details/109975687)]
 - giflib 库学习 [[Code](./Qt/GifLib%E6%B5%8B%E8%AF%95%E4%BB%A3%E7%A0%81/)] 
