@@ -1,5 +1,7 @@
 <RCC>
     <qresource prefix="/">
-        <file>default_data.json</file>
+        <file>complex_data.json</file>
+        <file>simple_data.json</file>
+        <file>simple_array.json</file>
     </qresource>
 </RCC>

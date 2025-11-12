@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>龚建波1992</string>
+   <string>GongJianBo1992</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -27,7 +27,7 @@
       <item>
        <widget class="QLineEdit" name="editLoadPath">
         <property name="text">
-         <string>://default_data.json</string>
+         <string>://simple_data.json</string>
         </property>
        </widget>
       </item>
@@ -114,7 +114,7 @@
      <x>0</x>
      <y>0</y>
      <width>630</width>
-     <height>23</height>
+     <height>25</height>
     </rect>
    </property>
   </widget>
